@@ -7,7 +7,9 @@ using Microsoft.VisualBasic.ApplicationServices;
 using OfficeOpenXml;
 using Project_SHOE.Controller.Repositori;
 using Project_SHOE.Controller.Servicer;
+using System.Text.RegularExpressions;
 using System;
+
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,9 +22,8 @@ using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using OfficeOpenXml;
 using System.ComponentModel;
-using PRL.View;
-using Project_SHOE.View;
-using System.Text.RegularExpressions;
+using Microsoft.IdentityModel.Tokens;
+using System.Reflection.Metadata;
 
 namespace PRL.Views
 {
@@ -48,9 +49,6 @@ namespace PRL.Views
             SanPhamRepos = new SanPhamSer();
             InitializeComponent();
         }
-
-
-
         private void HoaDon_Load(object sender, EventArgs e)
         {
             cbb_KieuKH.Items.Add("Khách Lẻ");
@@ -85,7 +83,7 @@ namespace PRL.Views
             txt_SoLuongSP.Enabled = false;
             txt_TongTienHang.Enabled = false;
             txt_XoaSP.Enabled = false;
-          
+            
             cbb_SizeSP.Enabled = false;
             cbb_mauSP.Enabled = false;
             txt_diachiKH.Enabled = false;
@@ -96,8 +94,6 @@ namespace PRL.Views
             cbb_SanPham.Enabled = false;
             txt_MaKhuyenMai.Enabled = false;
             Cbb_MKM.Enabled = false;
-
-
             txt_KhachHangMoi.KeyPress += txt_KhachHangMoi_KeyPress;
             txt_sdtKH.KeyPress += txt_sdtKH_KeyPress;
             txt_SoLuongSP.KeyPress += txt_sdtKH_KeyPress;
@@ -122,23 +118,16 @@ namespace PRL.Views
                 txt_XoaSP.Enabled = true;
             }
         }
-        private void txt_KhachHangMoi_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            // Kiểm tra nếu ký tự được nhập không phải là chữ cái, khoảng trắng hoặc phím Backspace
-            if (!char.IsLetter(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar) && e.KeyChar != (char)Keys.Back)
-            {
-                // Chặn việc nhập ký tự và số bằng cách huỷ bỏ sự kiện KeyPress
-                e.Handled = true;
-            }
-        }
         private void comboBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = true; // Ngăn chặn ComboBox nhận ký tự từ bàn phím
         }
+
         private void comboBox1_KeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true; // Ngăn chặn ComboBox nhận sự kiện phím từ bàn phím
         }
+
 
         private void cbb_KhachHang_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -154,10 +143,6 @@ namespace PRL.Views
                 MessageBox.Show("Không có dữ liệu khách hàng để hiển thị!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
-
-
-
         private void cbb_KieuKH_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbb_KieuKH.Text == "Khách Lẻ")
@@ -202,14 +187,8 @@ namespace PRL.Views
                 ResetCustomerData();
             }
         }
-        private void ResetCustomerData()
-        {
-            txt_sdtKH.Text = "";
-            txt_diachiKH.Text = "";
-            cbb_KhachHang.SelectedIndex = -1;
-            txt_KhachHangMoi.Text = "";
-            txt_MaKhuyenMai.Text = "";
-        }
+
+        // Phương thức để vô hiệu hóa tất cả các control
         private void DisableAllControls()
         {
             txt_sdtKH.Enabled = false;
@@ -222,6 +201,15 @@ namespace PRL.Views
             cbb_SanPham.Enabled = false;
         }
 
+        // Phương thức để xoá dữ liệu trong các TextBox và ComboBox
+        private void ResetCustomerData()
+        {
+            txt_sdtKH.Text = "";
+            txt_diachiKH.Text = "";
+            cbb_KhachHang.SelectedIndex = -1;
+            txt_KhachHangMoi.Text = "";
+            txt_MaKhuyenMai.Text = "";
+        }
         private void label8_Click(object sender, EventArgs e)
         {
 
@@ -241,7 +229,7 @@ namespace PRL.Views
                 e.Handled = true;
             }
         }
-        private void btn_ThemKH_Click(object sender, EventArgs e)
+        private void btn_ThemKH_Click()
         {
             // Lấy thông tin khách hàng từ các TextBox
             string tenKhachHang = txt_KhachHangMoi.Text;
@@ -306,6 +294,8 @@ namespace PRL.Views
                 }
             }
         }
+
+        // Phương thức kiểm tra định dạng số điện thoại
         private bool IsValidPhoneNumber(string phoneNumber)
         {
             // Sử dụng biểu thức chính quy để kiểm tra định dạng số điện thoại
@@ -341,7 +331,6 @@ namespace PRL.Views
             txt_diachiKH.Text = customer.Diachi;
         }
         private string previousSelectedItem;
-
         private void cbb_SanPham_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Lấy tên sản phẩm mới được chọn
@@ -400,6 +389,7 @@ namespace PRL.Views
                 previousSelectedItem = selectedSanPham;
             }
         }
+
         private string previousSelectedMau;
         private void cbb_mauSP_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -503,7 +493,6 @@ namespace PRL.Views
             // Hiển thị thông báo lỗi trên màn hình
             MessageBox.Show("Sản phẩm không tồn tại hoặc số lượng không hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-
         private void txt_SoLuongSP_TextChanged(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txt_SoLuongSP.Text))
@@ -520,6 +509,7 @@ namespace PRL.Views
 
         private void txt_SoLuongConTrongKhoSP_TextChanged(object sender, EventArgs e)
         {
+
         }
 
         private void btn_tkSoLuong_Click(object sender, EventArgs e)
@@ -591,10 +581,7 @@ namespace PRL.Views
                 if (cbb_KieuKH.Text == "Khách Lẻ")
                 {
                     // Nếu là Khách Lẻ, tự động thêm mới khách hàng
-                    //
-                    btn_ThemKH_Click(sender, e);
-
-
+                    btn_ThemKH_Click();
                     return;
                 }
                 else if (cbb_KieuKH.Text == "Thành Viên")
@@ -738,8 +725,11 @@ namespace PRL.Views
 
                     HoaDonCTRepos.AddHoaDonCT(hoadonct);
                 }
-            }
 
+                // Hiển thị thông báo thành công
+                MessageBox.Show("Thêm hóa đơn thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                btn_InHoaDon.Enabled = true;
+            }
         }
         private void txt_ThemSP_Click(object sender, EventArgs e)
         {
@@ -831,7 +821,21 @@ namespace PRL.Views
             txt_ChietKhau.Text = chietKhau.ToString(); // Cập nhật giá trị chiết khấu
             txt_TongThanhToan.Text = tongThanhToan.ToString();
         }
+        private void capnhattienkhachphaitra()
+        {
+            decimal tienkhachtra;
 
+            decimal tienkhachphaitra = decimal.Parse( txt_TongThanhToan.Text);
+            if (!decimal.TryParse(textBox1.Text, out tienkhachtra))
+            {
+                tienkhachphaitra = 0;
+            }
+
+            decimal tongThanhToan =  tienkhachphaitra - tienkhachtra;
+
+            textBox1.Text = tienkhachtra.ToString();
+            textBox2.Text = tongThanhToan.ToString();
+        }
         private void txt_TongTienHang_TextChanged(object sender, EventArgs e)
         {
 
@@ -887,78 +891,103 @@ namespace PRL.Views
 
         private void txt_MaKhuyenMai_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void txt_KhachHangMoi_TextChanged(object sender, EventArgs e)
         {
 
         }
+        private void txt_KhachHangMoi_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Kiểm tra nếu ký tự được nhập không phải là chữ cái, khoảng trắng hoặc phím Backspace
+            if (!char.IsLetter(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar) && e.KeyChar != (char)Keys.Back)
+            {
+                // Chặn việc nhập ký tự và số bằng cách huỷ bỏ sự kiện KeyPress
+                e.Handled = true;
+            }
+        }
 
         private void btn_InHoaDon_Click(object sender, EventArgs e)
         {
+          
 
 
-            Hoadon hoaDon = new Hoadon();
 
-            // Tạo tên file Excel
-            string fileName = $"HoaDon_{hoaDon.IdHoadon}.xlsx";
+        }
 
-            // Đường dẫn để lưu tệp Excel, bạn có thể thay đổi đường dẫn này theo nhu cầu của mình
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName);
+        private void Cbb_MKM_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Lấy mã khuyến mãi từ combobox
+            string maKhuyenMai = Cbb_MKM.SelectedItem?.ToString();
 
-            // Tạo một tệp Excel mới
-            FileInfo fileInfo = new FileInfo(filePath);
-            using (ExcelPackage package = new ExcelPackage(fileInfo))
+            // Kiểm tra xem mã khuyến mãi có rỗng không
+            if (string.IsNullOrEmpty(maKhuyenMai))
             {
-                // Tạo một bảng tính mới
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("HoaDon");
-
-                // Định dạng tiêu đề
-                worksheet.Cells["A1"].Value = "Tên Sản Phẩm";
-                worksheet.Cells["B1"].Value = "Số Lượng";
-                worksheet.Cells["C1"].Value = "Giá";
-                worksheet.Cells["D1"].Value = "Màu";
-                worksheet.Cells["E1"].Value = "Kích Thước";
-
-                // Ghi thông tin hóa đơn chi tiết vào tệp Excel
-                int row = 2;
-                foreach (ListViewItem lv in listView1.Items)
-                {
-                    worksheet.Cells[$"A{row}"].Value = lv.SubItems[1].Text;
-                    worksheet.Cells[$"B{row}"].Value = lv.SubItems[2].Text;
-                    worksheet.Cells[$"C{row}"].Value = lv.SubItems[3].Text;
-                    worksheet.Cells[$"D{row}"].Value = lv.SubItems[4].Text;
-                    worksheet.Cells[$"E{row}"].Value = lv.SubItems[5].Text;
-                    row++;
-                }
-
-                // Lưu và đóng gói tệp Excel
-                package.Save();
+                // Hiển thị thông báo cho người dùng
+                MessageBox.Show("Vui lòng chọn mã khuyến mãi!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
-            // Hiển thị thông báo in hoá đơn thành công
-            MessageBox.Show($"Đã xuất hoá đơn thành công vào file {fileName}.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Gán mã khuyến mãi vào TextBox
+            txt_MaKhuyenMai.Text = maKhuyenMai;
+
+            // Gọi phương thức từ service để lấy thông tin chi tiết khuyến mãi
+            Khuyenmai khuyenMai = KhuyenMaiService.GetById(maKhuyenMai);
+
+            // Kiểm tra xem khuyến mãi có tồn tại không
+            if (khuyenMai != null)
+            {
+                // Kiểm tra xem TextBox Tổng Tiền Hàng và Chiết Khấu có chứa giá trị hợp lệ không
+                float tongTien;
+                float chietKhau;
+                if (!float.TryParse(txt_TongTienHang.Text, out tongTien) || !float.TryParse(txt_ChietKhau.Text, out chietKhau))
+                {
+                    MessageBox.Show("Vui lòng nhập giá trị hợp lệ cho Tổng Tiền Hàng và Chiết Khấu!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Kiểm tra hạn khuyến mại đã hết hạn chưa
+                if (khuyenMai.Ngayhethan < DateOnly.FromDateTime(DateTime.Today))
+                {
+                    // Nếu đã hết hạn, hiển thị thông báo và trả về -1 để chỉ ra rằng hạn khuyến mại đã hết
+                    MessageBox.Show("Mã khuyến mại đã hết hạn sử dụng. Vui lòng chọn khuyến mại khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Kiểm tra xem số lượng khuyến mại còn lại
+                if (khuyenMai.Soluong == 0)
+                {
+                    // Nếu số lượng khuyến mại là 0, hiển thị thông báo
+                    MessageBox.Show("Số lượng trong khuyến mại này đã hết.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                else
+                {
+                    // Tính toán số tiền khuyến mãi dựa trên phần trăm khuyến mãi và tổng số tiền
+                    float tongTienHang = tongTien;
+                    float tienKhuyenMai = tongTien * (float)(khuyenMai.Sophantramkhuyenmai / 100);
+
+                    // Trừ số tiền khuyến mãi từ tổng số tiền để có tổng thanh toán
+                    float tongThanhToan = tongTien - tienKhuyenMai;
+
+                    // Hiển thị tổng thanh toán trong txt_TongThanhToan
+                    txt_TongThanhToan.Text = tongThanhToan.ToString();
+                    MessageBox.Show("Thêm Khuyến Mại Thành Công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    txt_MaKhuyenMai.Enabled = false;
+                    return;
+                }
+            }
+            else
+            {
+                // Nếu không tồn tại, hiển thị thông báo cho người dùng
+                MessageBox.Show("Khuyến mãi không tồn tại!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
         }
 
-        private void thốngKêToolStripMenuItem_Click(object sender, EventArgs e)
+        private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            ThongKeForm thongKeForm = new ThongKeForm();
-            thongKeForm.Show();
-            Close();
-
-        }
-
-        private void thoátToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TrangChu trangChu = new TrangChu();
-            trangChu.Show();
-
-        }
-
-        private void txt_KhachHangMoi_KeyPress_1(object sender, KeyPressEventArgs e)
-        {
-
+            capnhattienkhachphaitra();
         }
     }
 }

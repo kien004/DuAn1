@@ -31,6 +31,16 @@ namespace DAL.Repositori
             // Ngược lại, trả về false
             return existingProduct != null;
         }
+        public string GetTenSanPhamById(int idSanPham)
+        {
+            var sanPham = _Contex.Sanphams.FirstOrDefault(sp => sp.IdSanpham == idSanPham);
+            if (sanPham != null)
+            {
+                return sanPham.Tensanpham;
+            }
+            return null; // Trả về null nếu không tìm thấy sản phẩm
+        }
+
         public bool CheckDuplicateForUpdate(string tenSanPham, int maSanPham)
         {
             // Kiểm tra xem tên sản phẩm có tồn tại và không trùng với sản phẩm khác (trừ sản phẩm đang cập nhật) không
@@ -53,15 +63,6 @@ namespace DAL.Repositori
                 // Ở đây, ta có thể trả về giá trị mặc định là -1 hoặc một giá trị thích hợp khác
                 return -1;
             }
-        }
-        public string GetTenSanPhamById(int idSanPham)
-        {
-            var sanPham = _Contex.Sanphams.FirstOrDefault(sp => sp.IdSanpham == idSanPham);
-            if (sanPham != null)
-            {
-                return sanPham.Tensanpham;
-            }
-            return null; // Trả về null nếu không tìm thấy sản phẩm
         }
         public int AddSP(Sanpham sp)
         {

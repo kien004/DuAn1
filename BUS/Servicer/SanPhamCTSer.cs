@@ -25,17 +25,13 @@ namespace BUS.Services
         public SanPhamCTSer()
         {
         }
-        public int GetSanPhamId(string mau1)
+        public List<Sanphamct> GetSizeBySanPhamId(int idSanPham, int idMau)
         {
-            return _repos.GetSanPhamId(mau1);
+            return _repos.GetSizeBySanPhamId(idSanPham, idMau);
         }
         public List<Sanphamct> GetMauBySanPhamId(int idSanPham)
         {
             return _repos.GetMauBySanPhamId(idSanPham);
-        }
-        public string GetMauById(int idSanPham)
-        {
-            return _repos.GetMauById(idSanPham);
         }
         public Sanphamct GetById(int id)
         {
@@ -119,7 +115,14 @@ namespace BUS.Services
         {
             return _repos.GetAllSPCT().ToList();
         }
-
+        public string GetMauById(int idSanPham)
+        {
+            return _repos.GetMauById(idSanPham);
+        }
+        public int? GetSizeById(int idKichThuoc)
+        {
+            return _repos.GetSizeById(idKichThuoc);
+        }
         public List<Mau> GetAllSPCT_Mau()
         {
             return _repos.GetAllSPCT_Mau().ToList();
@@ -128,17 +131,21 @@ namespace BUS.Services
         {
             return _repos.GetAllSPCT_LSP().ToList();
         }
-        public List<Sanphamct> GetSizeBySanPhamId(int idSanPham, int idMau)
-        {
-            return _repos.GetSizeBySanPhamId(idSanPham, idMau);
-        }
-        public int? GetSizeById(int idKichThuoc)
-        {
-            return _repos.GetSizeById(idKichThuoc);
-        }
         public List<Kichthuoc> GetAllSPCT_KichThuoc()
         {
             return _repos.GetAllSPCT_KichThuoc().ToList();
+        }
+        public int GetByIdSanPham(int idSanPhamCT, int idSanPham)
+        {
+            return _repos.GetByIdSanPham(idSanPhamCT, idSanPham);
+        }
+        public string GetTenSanPhamById(int idSanPham)
+        {
+            return _repos.GetTenSanPhamById(idSanPham);
+        }
+        public int GetSanPhamId(string mau1)
+        {
+            return _repos.GetSanPhamId(mau1);
         }
         public List<Chatlieu> GetAllSPCT_ChatLieu()
         {

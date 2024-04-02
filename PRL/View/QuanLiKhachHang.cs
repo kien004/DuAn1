@@ -46,6 +46,12 @@ namespace Project_SHOE
                     MessageBox.Show("Số điện thoại không được chứa chữ hoặc kí tự đặc biệt");
                     return;
                 }
+                //Khách hàng không được trùng số điện thoại
+                if (_service.GetAll(null).Any(x => x.Sdt == txt_phonenumber.Text))
+                {
+                    MessageBox.Show("Số điện thoại đã tồn tại");
+                    return;
+                }
                 MessageBox.Show("Số điện thoại không được để trống");
                 return;
             }

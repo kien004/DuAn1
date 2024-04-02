@@ -52,6 +52,12 @@ namespace Project_SHOE.View
                     MessageBox.Show("Tên không được chứa số hoặc kí tự đặc biệt");
                     return;
                 }
+                //Nếu tên bị trùng thì lập tức sẽ thông báo
+                if (_service.GetAll(null).Any(x => x.Hovaten == txt_name.Text))
+                {
+                    MessageBox.Show("Tên đã tồn tại");
+                    return;
+                }
                 MessageBox.Show("Tên không được để trống");
                 return;
             }

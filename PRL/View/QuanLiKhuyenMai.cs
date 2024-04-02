@@ -113,7 +113,7 @@ namespace Project_SHOE
             dataGridView1.Columns[6].Name = "Ngày Tạo";
             dataGridView1.Columns[7].Name = "Số Lượng";
             dataGridView1.Columns[8].Name = "ID Khuyến Mãi";
-            dataGridView1.Columns[8].Visible = false;
+          
 
 
             dataGridView1.Rows.Clear();
@@ -148,8 +148,6 @@ namespace Project_SHOE
             km.Sophantramkhuyenmai = decimal.Parse(txt_chietkhau.Text);
             btn_xoa.Enabled = true;
             btn_them.Enabled = false;
-
-
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -159,6 +157,7 @@ namespace Project_SHOE
             txt_tenKM.Text = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
             txt_chietkhau.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
             txt_soluong.Text = dataGridView1.Rows[e.RowIndex].Cells[7].Value.ToString();
+       textBox1.Text = dataGridView1.Rows[e.RowIndex].Cells[8].Value.ToString();
             if (dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString() == "Đang Hoạt Động")
             {
                 radioButton2.Checked = true;
@@ -175,6 +174,10 @@ namespace Project_SHOE
             dateTimePicker2.Value = DateTime.Parse(dataGridView1.Rows[e.RowIndex].Cells[5].Value.ToString());
             dateTimePicker3.Value = DateTime.Parse(dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString());
 
+            txt_idKM.Enabled = false;
+            btn_sua.Enabled = true;
+            btn_xoa.Enabled = true;
+            btn_them.Enabled = false;
 
 
 
@@ -217,6 +220,18 @@ namespace Project_SHOE
         {
             //tôi muốn tìm theo tên khuyến mãi
             LoadData();
+        }
+
+        private void QuanLiKhuyenMai_Load(object sender, EventArgs e)
+        {
+            txt_idKM.Enabled = true;
+            btn_sua.Enabled = false;
+            btn_xoa.Enabled = false;
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

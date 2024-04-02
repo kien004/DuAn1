@@ -28,10 +28,6 @@ namespace Project_SHOE.Controller.Repositori
         {
             return _dbContext.Khachhangs.ToList();
         }
-        public IEnumerable<Khachhang> GetAllKH1()
-        {
-            return _dbContext.Khachhangs.ToList();
-        }
         public bool IsSDTExist(string? sdt)
         {
             // Kiểm tra xem sdt có null không
@@ -42,6 +38,11 @@ namespace Project_SHOE.Controller.Repositori
 
             // Kiểm tra xem có bất kỳ khách hàng nào có số điện thoại như vậy không
             return _dbContext.Khachhangs.Any(kh => kh.Sdt == sdt);
+        }
+
+        public IEnumerable<Khachhang> GetAllKH1()
+        {
+            return _dbContext.Khachhangs.ToList();
         }
 
         public int GetIdSPCT(string hovaten, string sdt)

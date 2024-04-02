@@ -26,7 +26,10 @@ namespace BUS.Services
         {
             return _repos.CheckDuplicate(tenSanPham);
         }
-
+        public string GetTenSanPhamById(int idSanPham)
+        {
+            return _repos.GetTenSanPhamById(idSanPham);
+        }
         public bool CheckDuplicateForUpdate(string tenSanPham, int maSanPham)
         {
             // Kiểm tra xem tên sản phẩm có tồn tại và không trùng với sản phẩm khác (trừ sản phẩm đang cập nhật) không
@@ -65,10 +68,6 @@ namespace BUS.Services
         public bool DeleteSP(int id)
         {
             return _repos.DeleteSP(id);
-        }
-        public string GetTenSanPhamById(int idSanPham)
-        {
-            return _repos.GetTenSanPhamById(idSanPham);
         }
         public Sanpham GetById(int id)
         {

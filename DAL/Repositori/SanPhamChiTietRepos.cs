@@ -24,6 +24,15 @@ namespace DAL.Repositori
         {
         }
 
+        public List<Sanphamct> GetMauBySanPhamId(int idSanPham)
+        {
+            return _Contex.Sanphamcts.Where(spct => spct.IdSanpham == idSanPham).ToList();
+        }
+        public List<Sanphamct> GetSizeBySanPhamId(int idSanPham, int idMau)
+        {
+            return _Contex.Sanphamcts.Where(spct => spct.IdSanpham == idSanPham && spct.IdMau == idMau).ToList();
+        }
+
         public int AddSPCT(Sanphamct spct)
         {
             try
@@ -123,6 +132,44 @@ namespace DAL.Repositori
                 throw new InvalidOperationException($"Không tìm thấy sản phẩm chi tiết có IdSanPhamCT = {idSanPhamCT}");
             }
         }
+        public int GetByIdSanPham(int idSanPhamCT, int idSanPham)
+        {
+            var spct = _Contex.Sanphamcts.FirstOrDefault(sp => sp.IdSanphamct == idSanPhamCT);
+            if (spct != null)
+            {
+                spct.IdSanpham = idSanPham;
+                _Contex.SaveChanges(); // Lưu thay đổi vào cơ sở dữ liệu
+                return 1;
+            }
+            return -1; // Trả về -1 nếu không tìm thấy sản phẩm chi tiết
+        }
+        public string GetTenSanPhamById(int idSanPham)
+        {
+            var sanPham = _Contex.Sanphams.FirstOrDefault(sp => sp.IdSanpham == idSanPham);
+            if (sanPham != null)
+            {
+                return sanPham.Tensanpham;
+            }
+            return null; // Trả về null nếu không tìm thấy sản phẩm
+        }
+        public string GetMauById(int idSanPham)
+        {
+            var sanPham = _Contex.Maus.FirstOrDefault(sp => sp.IdMau == idSanPham);
+            if (sanPham != null)
+            {
+                return sanPham.Tenmau;
+            }
+            return null; // Trả về null nếu không tìm thấy sản phẩm
+        }
+        public int? GetSizeById(int idKichThuoc)
+        {
+            var kichThuoc = _Contex.Kichthuocs.FirstOrDefault(kt => kt.IdKichthuoc == idKichThuoc);
+            if (kichThuoc != null)
+            {
+                return kichThuoc.Size;
+            }
+            return null; // Trả về null nếu không tìm thấy kích thước
+        }
 
         public int GetMauId(string mau1)
         {
@@ -132,6 +179,22 @@ namespace DAL.Repositori
             {
                 // Nếu tìm thấy, trả về IdSanphamct
                 return mau.IdMau;
+            }
+            else
+            {
+                // Nếu không tìm thấy, trả về giá trị mặc định hoặc thực hiện xử lý phù hợp
+                // Ở đây, ta có thể trả về giá trị mặc định là -1 hoặc một giá trị thích hợp khác
+                return -1;
+            }
+        }
+        public int GetSanPhamId(string mau1)
+        {
+            // Lấy ID của sản phẩm từ tên sản phẩm
+            var mau = _Contex.Sanphams.FirstOrDefault(sp => sp.Tensanpham == mau1);
+            if (mau != null)
+            {
+                // Nếu tìm thấy, trả về IdSanphamct
+                return mau.IdSanpham;
             }
             else
             {
@@ -238,7 +301,7 @@ namespace DAL.Repositori
                 return false;
             }
         }
-
+    
         public int UpdateSPCT(int id, Sanphamct spct)
         {
             try
@@ -283,53 +346,6 @@ namespace DAL.Repositori
         public Kichthuoc GetById_Size(int size)
         {
             return _Contex.Kichthuocs.FirstOrDefault(c => c.Size == size);
-        }
-
-        public int GetSanPhamId(string mau1)
-        {
-            // Lấy ID của sản phẩm từ tên sản phẩm
-            var mau = _Contex.Sanphams.FirstOrDefault(sp => sp.Tensanpham == mau1);
-            if (mau != null)
-            {
-                // Nếu tìm thấy, trả về IdSanphamct
-                return mau.IdSanpham;
-            }
-            else
-            {
-                // Nếu không tìm thấy, trả về giá trị mặc định hoặc thực hiện xử lý phù hợp
-                // Ở đây, ta có thể trả về giá trị mặc định là -1 hoặc một giá trị thích hợp khác
-                return -1;
-            }
-        }
-
-        public List<Sanphamct> GetMauBySanPhamId(int idSanPham)
-        {
-            return _Contex.Sanphamcts.Where(p => p.IdSanpham == idSanPham).ToList();
-        }
-
-        public string GetMauById(int idSanPham)
-        {
-            var sanPham = _Contex.Maus.FirstOrDefault(sp => sp.IdMau == idSanPham);
-            if (sanPham != null)
-            {
-                return sanPham.Tenmau;
-            }
-            return null; // Trả về null nếu không tìm thấy sản phẩm
-        }
-
-        public List<Sanphamct> GetSizeBySanPhamId(int idSanPham, int idMau)
-        {
-            return _Contex.Sanphamcts.Where(p => p.IdSanpham == idSanPham && p.IdMau == idMau).ToList();
-        }
-
-        public int? GetSizeById(int idKichThuoc)
-        {
-            var kichThuoc = _Contex.Kichthuocs.FirstOrDefault(kt => kt.IdKichthuoc == idKichThuoc);
-            if (kichThuoc != null)
-            {
-                return kichThuoc.Size;
-            }
-            return null; // Trả về null nếu không tìm thấy kích thước
         }
     }
 }
