@@ -52,6 +52,7 @@
             label9 = new Label();
             pictureBox1 = new PictureBox();
             label1 = new Label();
+            txt_viewpasswork = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -184,6 +185,7 @@
             txt_pass.Location = new Point(560, 87);
             txt_pass.Margin = new Padding(3, 4, 3, 4);
             txt_pass.Name = "txt_pass";
+            txt_pass.PasswordChar = '*';
             txt_pass.Size = new Size(238, 27);
             txt_pass.TabIndex = 11;
             // 
@@ -305,11 +307,22 @@
             label1.TabIndex = 28;
             label1.Text = "Quản Lí Nhân Viên";
             // 
+            // txt_viewpasswork
+            // 
+            txt_viewpasswork.Location = new Point(869, 430);
+            txt_viewpasswork.Name = "txt_viewpasswork";
+            txt_viewpasswork.Size = new Size(141, 29);
+            txt_viewpasswork.TabIndex = 29;
+            txt_viewpasswork.Text = "Hiện Mật Khẩu";
+            txt_viewpasswork.UseVisualStyleBackColor = true;
+            txt_viewpasswork.Click += txt_viewpasswork_Click;
+            // 
             // QuanLiNhanVien
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1028, 697);
+            Controls.Add(txt_viewpasswork);
             Controls.Add(label1);
             Controls.Add(txt_seach);
             Controls.Add(label9);
@@ -354,5 +367,6 @@
         private Label label9;
         private PictureBox pictureBox1;
         private Label label1;
+        private Button txt_viewpasswork;
     }
 }

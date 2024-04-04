@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Project_SHOE.Controller.Repositori;
 
 namespace BUS.Services
 {
@@ -15,6 +16,7 @@ namespace BUS.Services
     {
         SanPhamChiTietRepos _repos = new SanPhamChiTietRepos();
         SanPhamRepos _sprepos = new SanPhamRepos();
+        NhanvienRepository _nhanvien = new NhanvienRepository();
 
         public SanPhamCTSer(SanPhamChiTietRepos repos, SanPhamRepos sprepos)
         {
@@ -41,6 +43,7 @@ namespace BUS.Services
         {
             return _repos.GetIdSPCT(idsp, idmau, idkichthuoc);
         }
+
         public int GetMauId(string mau1)
         {
             return _repos.GetMauId(mau1);
@@ -58,6 +61,7 @@ namespace BUS.Services
                 p.IdChatlieu == newProduct.IdChatlieu &&
                 p.IdMau == newProduct.IdMau &&
                 p.IdKichthuoc == newProduct.IdKichthuoc);
+
 
             return isDuplicate;
         }
@@ -82,6 +86,7 @@ namespace BUS.Services
                 spct.IdMau == updatedProduct.IdMau &&
                 spct.IdChatlieu == updatedProduct.IdChatlieu &&
                 spct.IdKichthuoc == updatedProduct.IdKichthuoc);
+
         }
 
         public string AddSPCT(Sanphamct sp)
@@ -168,6 +173,7 @@ namespace BUS.Services
                            join mau in _repos.GetAllSPCT_Mau() on spct.IdMau equals mau.IdMau
                            join lsp in _repos.GetAllSPCT_LSP() on spct.IdLoaisanpham equals lsp.IdLoaisanpham
                            join chatlieu in _repos.GetAllSPCT_ChatLieu() on spct.IdChatlieu equals chatlieu.IdChatlieu
+                           join nhanvien in _nhanvien.GetAllNV() on sp.IdNhanvien equals nhanvien.IdNhanvien
                            select new SanPhamCT
                            {
                                IdSanphamct = spct.IdSanphamct,
@@ -178,6 +184,8 @@ namespace BUS.Services
                                ChatLieu = chatlieu.Tenchatlieu,
                                Soluong = spct.Soluong,
                                Dongia = spct.Dongia,
+                               IdNhanvien = spct.IdNhanvien,
+                              
                            };
             return joinData.ToList();
         }
@@ -189,6 +197,7 @@ namespace BUS.Services
                            join mau in _repos.GetAllSPCT_Mau() on spct.IdMau equals mau.IdMau
                            join lsp in _repos.GetAllSPCT_LSP() on spct.IdLoaisanpham equals lsp.IdLoaisanpham
                            join chatlieu in _repos.GetAllSPCT_ChatLieu() on spct.IdChatlieu equals chatlieu.IdChatlieu
+                           join nhanvien in _nhanvien.GetAllNV() on sp.IdNhanvien equals nhanvien.IdNhanvien
                            select new SanPhamCT
                            {
                                IdSanphamct = spct.IdSanphamct,
@@ -199,6 +208,7 @@ namespace BUS.Services
                                ChatLieu = chatlieu.Tenchatlieu,
                                Soluong = spct.Soluong,
                                Dongia = spct.Dongia,
+                               IdNhanvien = spct.IdNhanvien,
                            };
 
             if (searchCombobox != 0)

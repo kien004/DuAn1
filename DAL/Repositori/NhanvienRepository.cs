@@ -23,7 +23,19 @@ namespace Project_SHOE.Controller.Repositori
             _dbContext.SaveChanges();
             return true;
         }
+        public int GetIdNhanVien(int sdt)
+        {
+            var khachhang = _dbContext.Nhanviens.FirstOrDefault(kh => kh.Sdt == sdt);
 
+            if (khachhang != null)
+            {
+                return khachhang.IdNhanvien;
+            }
+            else
+            {
+                return -1;
+            }
+        }
         public List<Nhanvien> GetAllNV()
         {
             return _dbContext.Nhanviens.ToList();

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DAL.IRepository
 {
-    public class IHoaDonCTRepos : HoaDonCTRepos
+    public class IHoaDonCTRepos : HoaDonRepos
     {
         DBContext dbContext = new DBContext();
         public int AddHoaDonCT(Hoadonct hoadonct)

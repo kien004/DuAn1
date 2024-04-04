@@ -11,5 +11,6 @@ namespace BUS.Viewmoder
         public int IdSanpham { get; set; }
         public string? TenSanPham { get; set; }
         public string? TenThuongHieu { get; set; }
+        public int IdNhanvien { get; set; }
     }
 }

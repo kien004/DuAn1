@@ -49,8 +49,8 @@
             label4 = new Label();
             thuonghieuBindingSource = new BindingSource(components);
             menuStrip1 = new MenuStrip();
-            thoátToolStripMenuItem = new ToolStripMenuItem();
             sảnPhẩmChiTiếtToolStripMenuItem = new ToolStripMenuItem();
+            label_NhanVien = new Label();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             groupBox1.SuspendLayout();
@@ -65,7 +65,7 @@
             groupBox2.Controls.Add(btn_TimKiem);
             groupBox2.Controls.Add(txt_TimKiem);
             groupBox2.Controls.Add(dataGridView1);
-            groupBox2.Location = new Point(14, 358);
+            groupBox2.Location = new Point(14, 357);
             groupBox2.Margin = new Padding(3, 4, 3, 4);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(3, 4, 3, 4);
@@ -76,7 +76,7 @@
             // 
             // btn_TimKiem
             // 
-            btn_TimKiem.Location = new Point(231, 26);
+            btn_TimKiem.Location = new Point(231, 27);
             btn_TimKiem.Margin = new Padding(3, 4, 3, 4);
             btn_TimKiem.Name = "btn_TimKiem";
             btn_TimKiem.Size = new Size(89, 27);
@@ -87,7 +87,7 @@
             // 
             // txt_TimKiem
             // 
-            txt_TimKiem.Location = new Point(8, 26);
+            txt_TimKiem.Location = new Point(8, 27);
             txt_TimKiem.Margin = new Padding(3, 4, 3, 4);
             txt_TimKiem.Name = "txt_TimKiem";
             txt_TimKiem.Size = new Size(212, 27);
@@ -105,7 +105,6 @@
             dataGridView1.Size = new Size(869, 257);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellClick += dataGridView1_CellClick;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
             // groupBox1
             // 
@@ -145,7 +144,7 @@
             // 
             // txt_maSP
             // 
-            txt_maSP.Location = new Point(77, 34);
+            txt_maSP.Location = new Point(77, 35);
             txt_maSP.Margin = new Padding(3, 4, 3, 4);
             txt_maSP.Name = "txt_maSP";
             txt_maSP.Size = new Size(212, 27);
@@ -164,7 +163,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(308, 38);
+            label2.Location = new Point(309, 37);
             label2.Name = "label2";
             label2.Size = new Size(56, 20);
             label2.TabIndex = 1;
@@ -227,7 +226,7 @@
             groupBox3.Controls.Add(btn_add);
             groupBox3.Controls.Add(btn_update);
             groupBox3.Controls.Add(btn_delete);
-            groupBox3.Location = new Point(117, 254);
+            groupBox3.Location = new Point(117, 253);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(686, 97);
             groupBox3.TabIndex = 20;
@@ -259,20 +258,14 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { thoátToolStripMenuItem, sảnPhẩmChiTiếtToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { sảnPhẩmChiTiếtToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(914, 28);
+            menuStrip1.Padding = new Padding(6, 3, 0, 3);
+            menuStrip1.Size = new Size(914, 30);
             menuStrip1.TabIndex = 22;
             menuStrip1.Text = "menuStrip1";
             menuStrip1.ItemClicked += menuStrip1_ItemClicked;
-            // 
-            // thoátToolStripMenuItem
-            // 
-            thoátToolStripMenuItem.Name = "thoátToolStripMenuItem";
-            thoátToolStripMenuItem.Size = new Size(61, 24);
-            thoátToolStripMenuItem.Text = "Thoát";
-            thoátToolStripMenuItem.Click += thoátToolStripMenuItem_Click;
             // 
             // sảnPhẩmChiTiếtToolStripMenuItem
             // 
@@ -281,11 +274,21 @@
             sảnPhẩmChiTiếtToolStripMenuItem.Text = "Sản Phẩm Chi Tiết";
             sảnPhẩmChiTiếtToolStripMenuItem.Click += sảnPhẩmChiTiếtToolStripMenuItem_Click;
             // 
+            // label_NhanVien
+            // 
+            label_NhanVien.AutoSize = true;
+            label_NhanVien.Location = new Point(823, 35);
+            label_NhanVien.Name = "label_NhanVien";
+            label_NhanVien.Size = new Size(58, 20);
+            label_NhanVien.TabIndex = 39;
+            label_NhanVien.Text = "label11";
+            // 
             // QuanLiSanPham
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(914, 690);
+            ClientSize = new Size(914, 691);
+            Controls.Add(label_NhanVien);
             Controls.Add(label4);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
@@ -330,9 +333,9 @@
         private BindingSource thuonghieuBindingSource;
         private Button btn_Clean;
         private MenuStrip menuStrip1;
-        private ToolStripMenuItem thoátToolStripMenuItem;
         private Button btn_TimKiem;
         private TextBox txt_TimKiem;
         private ToolStripMenuItem sảnPhẩmChiTiếtToolStripMenuItem;
+        private Label label_NhanVien;
     }
 }

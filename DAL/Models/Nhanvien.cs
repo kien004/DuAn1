@@ -38,7 +38,16 @@ public partial class Nhanvien
     [StringLength(50)]
     public string? Matkhau { get; set; }
 
+    [InverseProperty("IdNhanvienNavigation")]
+    public virtual ICollection<Hoadon> Hoadons { get; set; } = new List<Hoadon>();
+
     [ForeignKey("IdChucvu")]
     [InverseProperty("Nhanviens")]
     public virtual Chucvu? IdChucvuNavigation { get; set; }
+
+    [InverseProperty("IdNhanvienNavigation")]
+    public virtual ICollection<Sanphamct> Sanphamcts { get; set; } = new List<Sanphamct>();
+
+    [InverseProperty("IdNhanvienNavigation")]
+    public virtual ICollection<Sanpham> Sanphams { get; set; } = new List<Sanpham>();
 }

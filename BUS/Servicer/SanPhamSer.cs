@@ -1,6 +1,7 @@
 ﻿using BUS.Viewmoder;
 using DAL.Models;
 using DAL.Repositori;
+using Project_SHOE.Controller.Repositori;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace BUS.Services
     {
         SanPhamRepos _repos = new SanPhamRepos();
         Thuonghieu _thuonghieu = new Thuonghieu();
+        NhanvienRepository _nhanvien = new NhanvienRepository();
 
         public SanPhamSer(SanPhamRepos repos)
         {
@@ -85,11 +87,14 @@ namespace BUS.Services
         {
             var joinData = from SanPham in _repos.GetAllSP()
                            join Thuonghieu in _repos.GetAllTH() on SanPham.IdThuonghieu equals Thuonghieu.IdThuonghieu
+                           join nhanvien in _nhanvien.GetAllNV() on SanPham.IdNhanvien equals nhanvien.IdNhanvien
                            select new ThuongHieuSP
                            {
                                IdSanpham = SanPham.IdSanpham,
                                TenSanPham = SanPham.Tensanpham,
                                TenThuongHieu = Thuonghieu.Tenthuonghieu,
+                               IdNhanvien = nhanvien.IdNhanvien,
+                               
                            };
             return joinData.ToList();
         }
@@ -97,11 +102,13 @@ namespace BUS.Services
         {
             var joinData = from SanPham in _repos.GetAllSP()
                            join Thuonghieu in _repos.GetAllTH() on SanPham.IdThuonghieu equals Thuonghieu.IdThuonghieu
+                           join nhanvien in _nhanvien.GetAllNV() on SanPham.IdNhanvien equals nhanvien.IdNhanvien
                            select new ThuongHieuSP
                            {
                                IdSanpham = SanPham.IdSanpham,
                                TenSanPham = SanPham.Tensanpham,
                                TenThuongHieu = Thuonghieu.Tenthuonghieu,
+                               IdNhanvien = nhanvien.IdNhanvien,
                            };
             if (string.IsNullOrWhiteSpace(searchText))
             {

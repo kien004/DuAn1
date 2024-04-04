@@ -34,6 +34,9 @@ public partial class Sanphamct
     [Column("ID_LOAISANPHAM")]
     public int? IdLoaisanpham { get; set; }
 
+    [Column("ID_NHANVIEN")]
+    public int? IdNhanvien { get; set; }
+
     [InverseProperty("IdSanphamctNavigation")]
     public virtual ICollection<Hoadonct> Hoadoncts { get; set; } = new List<Hoadonct>();
 
@@ -52,6 +55,10 @@ public partial class Sanphamct
     [ForeignKey("IdMau")]
     [InverseProperty("Sanphamcts")]
     public virtual Mau? IdMauNavigation { get; set; }
+
+    [ForeignKey("IdNhanvien")]
+    [InverseProperty("Sanphamcts")]
+    public virtual Nhanvien? IdNhanvienNavigation { get; set; }
 
     [ForeignKey("IdSanpham")]
     [InverseProperty("Sanphamcts")]

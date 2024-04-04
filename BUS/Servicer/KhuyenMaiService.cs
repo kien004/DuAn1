@@ -1,4 +1,5 @@
-﻿using DAL.Models;
+﻿using BUS.Viewmoder;
+using DAL.Models;
 using Project_SHOE.Controller.IService;
 using Project_SHOE.Controller.Repositori;
 using System;
@@ -32,6 +33,11 @@ namespace Project_SHOE.Controller.Servicer
                 return "Thêm thất bại";
             }
         }
+        public string CheckKhuyenMai(int idkhachang, string idkhuyenmai)
+        {
+            return _repos.CheckKhuyenMai(idkhachang, idkhuyenmai);
+        }
+
         public string UpdateSoLuongKhuyenMai(string idKhuyenMai)
         {
             return _repos.UpdateSoLuongKhuyenMai(idKhuyenMai);

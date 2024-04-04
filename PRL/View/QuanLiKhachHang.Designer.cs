@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             groupBox2 = new GroupBox();
+            btn_Clean = new Button();
             txt_update = new Button();
             txt_delete = new Button();
             txt_add = new Button();
@@ -52,6 +53,7 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(btn_Clean);
             groupBox2.Controls.Add(txt_update);
             groupBox2.Controls.Add(txt_delete);
             groupBox2.Controls.Add(txt_add);
@@ -70,12 +72,23 @@
             groupBox2.TabStop = false;
             groupBox2.Text = " ";
             // 
+            // btn_Clean
+            // 
+            btn_Clean.Location = new Point(401, 227);
+            btn_Clean.Margin = new Padding(3, 4, 3, 4);
+            btn_Clean.Name = "btn_Clean";
+            btn_Clean.Size = new Size(75, 36);
+            btn_Clean.TabIndex = 29;
+            btn_Clean.Text = "Clean";
+            btn_Clean.UseVisualStyleBackColor = true;
+            btn_Clean.Click += btn_Clean_Click;
+            // 
             // txt_update
             // 
-            txt_update.Location = new Point(172, 222);
+            txt_update.Location = new Point(144, 227);
             txt_update.Margin = new Padding(3, 4, 3, 4);
             txt_update.Name = "txt_update";
-            txt_update.Size = new Size(123, 43);
+            txt_update.Size = new Size(89, 38);
             txt_update.TabIndex = 13;
             txt_update.Text = "Sửa";
             txt_update.UseVisualStyleBackColor = true;
@@ -83,10 +96,10 @@
             // 
             // txt_delete
             // 
-            txt_delete.Location = new Point(331, 222);
+            txt_delete.Location = new Point(276, 227);
             txt_delete.Margin = new Padding(3, 4, 3, 4);
             txt_delete.Name = "txt_delete";
-            txt_delete.Size = new Size(123, 43);
+            txt_delete.Size = new Size(89, 38);
             txt_delete.TabIndex = 12;
             txt_delete.Text = "Xóa";
             txt_delete.UseVisualStyleBackColor = true;
@@ -94,10 +107,10 @@
             // 
             // txt_add
             // 
-            txt_add.Location = new Point(8, 222);
+            txt_add.Location = new Point(15, 227);
             txt_add.Margin = new Padding(3, 4, 3, 4);
             txt_add.Name = "txt_add";
-            txt_add.Size = new Size(123, 43);
+            txt_add.Size = new Size(89, 38);
             txt_add.TabIndex = 10;
             txt_add.Text = "Thêm";
             txt_add.UseVisualStyleBackColor = true;
@@ -153,6 +166,7 @@
             txt_name.Name = "txt_name";
             txt_name.Size = new Size(316, 27);
             txt_name.TabIndex = 1;
+            txt_name.TextChanged += txt_name_TextChanged;
             // 
             // label4
             // 
@@ -170,6 +184,7 @@
             txt_seach.Name = "txt_seach";
             txt_seach.Size = new Size(316, 27);
             txt_seach.TabIndex = 3;
+            txt_seach.Tag = "Tìm Kiếm Theo Tên";
             txt_seach.TextChanged += txt_seach_TextChanged;
             // 
             // groupBox1
@@ -232,6 +247,7 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "QuanLiKhachHang";
             Text = "QuanLiKhachHang";
+            Load += QuanLiKhachHang_Load;
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             groupBox1.ResumeLayout(false);
@@ -259,5 +275,6 @@
         private DataGridView dataGridView1;
         private PictureBox pictureBox1;
         private Label label5;
+        private Button btn_Clean;
     }
 }

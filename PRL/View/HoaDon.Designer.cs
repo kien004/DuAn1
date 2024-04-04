@@ -1,6 +1,6 @@
 ﻿namespace PRL.Views
 {
-    partial class HoaDon
+    partial class QuanLiBanHang
     {
         /// <summary>
         /// Required designer variable.
@@ -66,6 +66,8 @@
             cbb_SanPham = new ComboBox();
             label7 = new Label();
             groupBox4 = new GroupBox();
+            btn_Clean = new Button();
+            btn_ThanhToan = new Button();
             textBox2 = new TextBox();
             label18 = new Label();
             textBox1 = new TextBox();
@@ -82,15 +84,16 @@
             label12 = new Label();
             groupBox5 = new GroupBox();
             Cbb_MKM = new ComboBox();
-            txt_MaKhuyenMai = new TextBox();
-            label11 = new Label();
-            printDialog1 = new PrintDialog();
+            groupBox6 = new GroupBox();
+            cbb_PhuongThucThanhToan = new ComboBox();
+            label_NhanVien = new Label();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox3.SuspendLayout();
             groupBox4.SuspendLayout();
             groupBox5.SuspendLayout();
+            groupBox6.SuspendLayout();
             SuspendLayout();
             // 
             // label4
@@ -106,7 +109,7 @@
             // 
             // txt_sdtKH
             // 
-            txt_sdtKH.Location = new Point(132, 172);
+            txt_sdtKH.Location = new Point(133, 172);
             txt_sdtKH.Margin = new Padding(3, 4, 3, 4);
             txt_sdtKH.Name = "txt_sdtKH";
             txt_sdtKH.Size = new Size(150, 27);
@@ -115,7 +118,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(12, 179);
+            label2.Location = new Point(11, 179);
             label2.Name = "label2";
             label2.Size = new Size(105, 20);
             label2.TabIndex = 1;
@@ -155,7 +158,7 @@
             // 
             // txt_SDTTK
             // 
-            txt_SDTTK.Location = new Point(132, 25);
+            txt_SDTTK.Location = new Point(133, 25);
             txt_SDTTK.Margin = new Padding(3, 4, 3, 4);
             txt_SDTTK.Name = "txt_SDTTK";
             txt_SDTTK.Size = new Size(141, 27);
@@ -163,17 +166,17 @@
             // 
             // txt_KhachHangMoi
             // 
-            txt_KhachHangMoi.Location = new Point(140, 136);
+            txt_KhachHangMoi.Location = new Point(133, 136);
             txt_KhachHangMoi.Margin = new Padding(3, 4, 3, 4);
             txt_KhachHangMoi.Name = "txt_KhachHangMoi";
-            txt_KhachHangMoi.Size = new Size(141, 27);
+            txt_KhachHangMoi.Size = new Size(148, 27);
             txt_KhachHangMoi.TabIndex = 16;
             txt_KhachHangMoi.TextChanged += txt_KhachHangMoi_TextChanged;
             // 
             // label17
             // 
             label17.AutoSize = true;
-            label17.Location = new Point(12, 144);
+            label17.Location = new Point(11, 144);
             label17.Name = "label17";
             label17.Size = new Size(122, 20);
             label17.TabIndex = 15;
@@ -182,7 +185,7 @@
             // cbb_KieuKH
             // 
             cbb_KieuKH.FormattingEnabled = true;
-            cbb_KieuKH.Location = new Point(132, 59);
+            cbb_KieuKH.Location = new Point(133, 59);
             cbb_KieuKH.Name = "cbb_KieuKH";
             cbb_KieuKH.Size = new Size(116, 28);
             cbb_KieuKH.TabIndex = 13;
@@ -210,7 +213,7 @@
             // 
             // txt_diachiKH
             // 
-            txt_diachiKH.Location = new Point(132, 210);
+            txt_diachiKH.Location = new Point(133, 211);
             txt_diachiKH.Margin = new Padding(3, 4, 3, 4);
             txt_diachiKH.Name = "txt_diachiKH";
             txt_diachiKH.Size = new Size(150, 27);
@@ -219,7 +222,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(12, 218);
+            label3.Location = new Point(11, 219);
             label3.Name = "label3";
             label3.Size = new Size(60, 20);
             label3.TabIndex = 9;
@@ -228,7 +231,7 @@
             // cbb_KhachHang
             // 
             cbb_KhachHang.FormattingEnabled = true;
-            cbb_KhachHang.Location = new Point(132, 96);
+            cbb_KhachHang.Location = new Point(133, 96);
             cbb_KhachHang.Name = "cbb_KhachHang";
             cbb_KhachHang.Size = new Size(150, 28);
             cbb_KhachHang.TabIndex = 8;
@@ -237,7 +240,7 @@
             // groupBox2
             // 
             groupBox2.Controls.Add(listView1);
-            groupBox2.Location = new Point(133, 609);
+            groupBox2.Location = new Point(133, 656);
             groupBox2.Margin = new Padding(3, 4, 3, 4);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(3, 4, 3, 4);
@@ -252,7 +255,7 @@
             listView1.FullRowSelect = true;
             listView1.GridLines = true;
             listView1.ImeMode = ImeMode.NoControl;
-            listView1.Location = new Point(13, 17);
+            listView1.Location = new Point(13, 24);
             listView1.Name = "listView1";
             listView1.Size = new Size(615, 295);
             listView1.TabIndex = 1;
@@ -289,12 +292,10 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Image = Properties.Resources.z5226148314135_0842741586d8fa7aca6c0d1cf49c9da2;
-            pictureBox1.Location = new Point(19, 30);
+            pictureBox1.Location = new Point(19, 41);
             pictureBox1.Margin = new Padding(3, 4, 3, 4);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(109, 112);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 23;
             pictureBox1.TabStop = false;
             // 
@@ -313,11 +314,11 @@
             groupBox3.Controls.Add(label5);
             groupBox3.Controls.Add(cbb_SanPham);
             groupBox3.Controls.Add(label7);
-            groupBox3.Location = new Point(316, 174);
+            groupBox3.Location = new Point(315, 187);
             groupBox3.Margin = new Padding(3, 4, 3, 4);
             groupBox3.Name = "groupBox3";
             groupBox3.Padding = new Padding(3, 4, 3, 4);
-            groupBox3.Size = new Size(561, 236);
+            groupBox3.Size = new Size(561, 224);
             groupBox3.TabIndex = 25;
             groupBox3.TabStop = false;
             groupBox3.Text = "Sản Phẩm";
@@ -346,6 +347,7 @@
             txt_GiaSP.Name = "txt_GiaSP";
             txt_GiaSP.Size = new Size(150, 27);
             txt_GiaSP.TabIndex = 21;
+            txt_GiaSP.TextChanged += txt_GiaSP_TextChanged;
             // 
             // txt_SoLuongConTrongKhoSP
             // 
@@ -377,9 +379,9 @@
             label10.AutoSize = true;
             label10.Location = new Point(310, 79);
             label10.Name = "label10";
-            label10.Size = new Size(34, 20);
+            label10.Size = new Size(66, 20);
             label10.TabIndex = 15;
-            label10.Text = "Giá:";
+            label10.Text = "Giá 1 SP:";
             // 
             // label9
             // 
@@ -439,6 +441,8 @@
             // 
             // groupBox4
             // 
+            groupBox4.Controls.Add(btn_Clean);
+            groupBox4.Controls.Add(btn_ThanhToan);
             groupBox4.Controls.Add(textBox2);
             groupBox4.Controls.Add(label18);
             groupBox4.Controls.Add(textBox1);
@@ -453,18 +457,37 @@
             groupBox4.Controls.Add(label13);
             groupBox4.Controls.Add(dtp_NgayTao);
             groupBox4.Controls.Add(label12);
-            groupBox4.Location = new Point(70, 418);
+            groupBox4.Location = new Point(43, 419);
             groupBox4.Margin = new Padding(3, 4, 3, 4);
             groupBox4.Name = "groupBox4";
             groupBox4.Padding = new Padding(3, 4, 3, 4);
-            groupBox4.Size = new Size(599, 183);
+            groupBox4.Size = new Size(630, 229);
             groupBox4.TabIndex = 26;
             groupBox4.TabStop = false;
             groupBox4.Text = "Hoá Đơn";
             // 
+            // btn_Clean
+            // 
+            btn_Clean.Location = new Point(465, 170);
+            btn_Clean.Name = "btn_Clean";
+            btn_Clean.Size = new Size(96, 45);
+            btn_Clean.TabIndex = 40;
+            btn_Clean.Text = "Clean";
+            btn_Clean.UseVisualStyleBackColor = true;
+            // 
+            // btn_ThanhToan
+            // 
+            btn_ThanhToan.Location = new Point(343, 170);
+            btn_ThanhToan.Name = "btn_ThanhToan";
+            btn_ThanhToan.Size = new Size(96, 45);
+            btn_ThanhToan.TabIndex = 39;
+            btn_ThanhToan.Text = "Thanh Toán";
+            btn_ThanhToan.UseVisualStyleBackColor = true;
+            btn_ThanhToan.Click += btn_ThanhToan_Click;
+            // 
             // textBox2
             // 
-            textBox2.Location = new Point(430, 99);
+            textBox2.Location = new Point(464, 130);
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(150, 27);
             textBox2.TabIndex = 38;
@@ -472,15 +495,15 @@
             // label18
             // 
             label18.AutoSize = true;
-            label18.Location = new Point(307, 102);
+            label18.Location = new Point(333, 134);
             label18.Name = "label18";
-            label18.Size = new Size(114, 20);
+            label18.Size = new Size(117, 20);
             label18.TabIndex = 37;
-            label18.Text = "Số Tiền Phải Trả";
+            label18.Text = "Số Tiền Phải Trả:";
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(149, 96);
+            textBox1.Location = new Point(154, 124);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(150, 27);
             textBox1.TabIndex = 36;
@@ -489,15 +512,15 @@
             // label16
             // 
             label16.AutoSize = true;
-            label16.Location = new Point(9, 99);
+            label16.Location = new Point(14, 133);
             label16.Name = "label16";
-            label16.Size = new Size(134, 20);
+            label16.Size = new Size(137, 20);
             label16.TabIndex = 35;
-            label16.Text = "Số Tiền Khách Đưa";
+            label16.Text = "Số Tiền Khách Đưa:";
             // 
             // btn_InHoaDon
             // 
-            btn_InHoaDon.Location = new Point(206, 131);
+            btn_InHoaDon.Location = new Point(55, 170);
             btn_InHoaDon.Name = "btn_InHoaDon";
             btn_InHoaDon.Size = new Size(125, 45);
             btn_InHoaDon.TabIndex = 34;
@@ -507,7 +530,7 @@
             // 
             // btn_Luu
             // 
-            btn_Luu.Location = new Point(364, 131);
+            btn_Luu.Location = new Point(213, 170);
             btn_Luu.Name = "btn_Luu";
             btn_Luu.Size = new Size(96, 45);
             btn_Luu.TabIndex = 22;
@@ -517,7 +540,7 @@
             // 
             // txt_TongThanhToan
             // 
-            txt_TongThanhToan.Location = new Point(430, 65);
+            txt_TongThanhToan.Location = new Point(465, 84);
             txt_TongThanhToan.Name = "txt_TongThanhToan";
             txt_TongThanhToan.Size = new Size(150, 27);
             txt_TongThanhToan.TabIndex = 31;
@@ -526,7 +549,7 @@
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(307, 68);
+            label15.Location = new Point(333, 87);
             label15.Name = "label15";
             label15.Size = new Size(126, 20);
             label15.TabIndex = 30;
@@ -534,7 +557,7 @@
             // 
             // txt_ChietKhau
             // 
-            txt_ChietKhau.Location = new Point(430, 25);
+            txt_ChietKhau.Location = new Point(465, 33);
             txt_ChietKhau.Name = "txt_ChietKhau";
             txt_ChietKhau.Size = new Size(150, 27);
             txt_ChietKhau.TabIndex = 29;
@@ -543,7 +566,7 @@
             // label14
             // 
             label14.AutoSize = true;
-            label14.Location = new Point(307, 31);
+            label14.Location = new Point(333, 42);
             label14.Name = "label14";
             label14.Size = new Size(83, 20);
             label14.TabIndex = 28;
@@ -551,7 +574,7 @@
             // 
             // txt_TongTienHang
             // 
-            txt_TongTienHang.Location = new Point(149, 24);
+            txt_TongTienHang.Location = new Point(153, 29);
             txt_TongTienHang.Name = "txt_TongTienHang";
             txt_TongTienHang.Size = new Size(150, 27);
             txt_TongTienHang.TabIndex = 27;
@@ -560,7 +583,7 @@
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(9, 28);
+            label13.Location = new Point(13, 36);
             label13.Name = "label13";
             label13.Size = new Size(118, 20);
             label13.TabIndex = 26;
@@ -568,16 +591,17 @@
             // 
             // dtp_NgayTao
             // 
-            dtp_NgayTao.Location = new Point(149, 63);
+            dtp_NgayTao.Location = new Point(130, 80);
             dtp_NgayTao.Name = "dtp_NgayTao";
-            dtp_NgayTao.Size = new Size(151, 27);
+            dtp_NgayTao.Size = new Size(174, 27);
             dtp_NgayTao.TabIndex = 25;
             dtp_NgayTao.Value = new DateTime(2024, 3, 28, 0, 0, 0, 0);
+            dtp_NgayTao.ValueChanged += dtp_NgayTao_ValueChanged;
             // 
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(9, 63);
+            label12.Location = new Point(13, 85);
             label12.Name = "label12";
             label12.Size = new Size(76, 20);
             label12.TabIndex = 24;
@@ -586,13 +610,11 @@
             // groupBox5
             // 
             groupBox5.Controls.Add(Cbb_MKM);
-            groupBox5.Controls.Add(txt_MaKhuyenMai);
-            groupBox5.Controls.Add(label11);
-            groupBox5.Location = new Point(675, 418);
+            groupBox5.Location = new Point(680, 419);
             groupBox5.Margin = new Padding(3, 4, 3, 4);
             groupBox5.Name = "groupBox5";
             groupBox5.Padding = new Padding(3, 4, 3, 4);
-            groupBox5.Size = new Size(170, 163);
+            groupBox5.Size = new Size(197, 93);
             groupBox5.TabIndex = 36;
             groupBox5.TabStop = false;
             groupBox5.Text = "Khuyến Mại";
@@ -600,38 +622,49 @@
             // Cbb_MKM
             // 
             Cbb_MKM.FormattingEnabled = true;
-            Cbb_MKM.Location = new Point(19, 63);
+            Cbb_MKM.Location = new Point(33, 39);
             Cbb_MKM.Name = "Cbb_MKM";
-            Cbb_MKM.Size = new Size(136, 28);
+            Cbb_MKM.Size = new Size(127, 28);
             Cbb_MKM.TabIndex = 36;
             Cbb_MKM.SelectedIndexChanged += Cbb_MKM_SelectedIndexChanged;
             // 
-            // txt_MaKhuyenMai
+            // groupBox6
             // 
-            txt_MaKhuyenMai.Location = new Point(18, 108);
-            txt_MaKhuyenMai.Name = "txt_MaKhuyenMai";
-            txt_MaKhuyenMai.Size = new Size(137, 27);
-            txt_MaKhuyenMai.TabIndex = 33;
-            txt_MaKhuyenMai.TextChanged += txt_MaKhuyenMai_TextChanged;
+            groupBox6.Controls.Add(cbb_PhuongThucThanhToan);
+            groupBox6.Location = new Point(680, 545);
+            groupBox6.Margin = new Padding(3, 4, 3, 4);
+            groupBox6.Name = "groupBox6";
+            groupBox6.Padding = new Padding(3, 4, 3, 4);
+            groupBox6.Size = new Size(197, 103);
+            groupBox6.TabIndex = 37;
+            groupBox6.TabStop = false;
+            groupBox6.Text = "Phương Thức Thanh Toán";
             // 
-            // label11
+            // cbb_PhuongThucThanhToan
             // 
-            label11.AutoSize = true;
-            label11.Location = new Point(12, 24);
-            label11.Name = "label11";
-            label11.Size = new Size(152, 20);
-            label11.TabIndex = 32;
-            label11.Text = "Chọn Mã Khuyến Mại:";
+            cbb_PhuongThucThanhToan.FormattingEnabled = true;
+            cbb_PhuongThucThanhToan.Location = new Point(33, 44);
+            cbb_PhuongThucThanhToan.Name = "cbb_PhuongThucThanhToan";
+            cbb_PhuongThucThanhToan.Size = new Size(127, 28);
+            cbb_PhuongThucThanhToan.TabIndex = 37;
+            cbb_PhuongThucThanhToan.SelectedIndexChanged += cbb_PhuongThucThanhToan_SelectedIndexChanged;
             // 
-            // printDialog1
+            // label_NhanVien
             // 
-            printDialog1.UseEXDialog = true;
+            label_NhanVien.AutoSize = true;
+            label_NhanVien.Location = new Point(805, 9);
+            label_NhanVien.Name = "label_NhanVien";
+            label_NhanVien.Size = new Size(58, 20);
+            label_NhanVien.TabIndex = 38;
+            label_NhanVien.Text = "label11";
             // 
-            // HoaDon
+            // QuanLiBanHang
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(920, 944);
+            ClientSize = new Size(920, 988);
+            Controls.Add(label_NhanVien);
+            Controls.Add(groupBox6);
             Controls.Add(groupBox5);
             Controls.Add(groupBox4);
             Controls.Add(groupBox3);
@@ -639,7 +672,7 @@
             Controls.Add(groupBox1);
             Controls.Add(groupBox2);
             Controls.Add(pictureBox1);
-            Name = "HoaDon";
+            Name = "QuanLiBanHang";
             Text = "HoaDon";
             Load += HoaDon_Load;
             groupBox1.ResumeLayout(false);
@@ -651,7 +684,7 @@
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
             groupBox5.ResumeLayout(false);
-            groupBox5.PerformLayout();
+            groupBox6.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -704,8 +737,6 @@
         private TextBox txt_KhachHangMoi;
         private Label label17;
         private GroupBox groupBox5;
-        private TextBox txt_MaKhuyenMai;
-        private Label label11;
         private ComboBox cbb_SizeSP;
         private Label label6;
         private ListView listView1;
@@ -719,6 +750,10 @@
         private Label label18;
         private TextBox textBox1;
         private Label label16;
-        private PrintDialog printDialog1;
+        private Button btn_ThanhToan;
+        private GroupBox groupBox6;
+        private ComboBox cbb_PhuongThucThanhToan;
+        private Label label_NhanVien;
+        private Button btn_Clean;
     }
 }

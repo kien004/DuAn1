@@ -38,6 +38,13 @@ public partial class Khuyenmai
     [Column("NGAYBATDAU")]
     public DateOnly? Ngaybatdau { get; set; }
 
+    [Column("ID_KHACHHANG")]
+    public int? IdKhachhang { get; set; }
+
     [InverseProperty("IdKhuyenmaiNavigation")]
     public virtual ICollection<Hoadon> Hoadons { get; set; } = new List<Hoadon>();
+
+    [ForeignKey("IdKhachhang")]
+    [InverseProperty("Khuyenmais")]
+    public virtual Khachhang? IdKhachhangNavigation { get; set; }
 }

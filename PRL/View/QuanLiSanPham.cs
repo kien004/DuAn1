@@ -1,6 +1,7 @@
 ﻿using BUS.Services;
 using DAL.Models;
 using Microsoft.Data.SqlClient;
+using Project_SHOE.Controller.Servicer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,28 +19,31 @@ namespace Project_SHOE.View
     {
         SanPhamSer _sanPhamSer = new SanPhamSer();
         SanPhamCTSer _sanPhamCTSer = new SanPhamCTSer();
-
+        NhanVienService NhanVienService = new NhanVienService();
         private int _idSP;
         int idCellClick = -1;
-        public QuanLiSanPham()
+        string username;
+        public QuanLiSanPham(string username)
         {
             InitializeComponent();
+            this.username = username;
         }
         private void LoadData(dynamic data)
         {
             dataGridView1.Rows.Clear();
             int stt = 1;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView1.ColumnCount = 4;
+            dataGridView1.ColumnCount = 5;
             // Đặt tên cho các cột
             dataGridView1.Columns[0].Name = "STT";
             dataGridView1.Columns[1].Name = "Mã Sản Phẩm";
             dataGridView1.Columns[2].Name = "Tên Sản Phẩm";
             dataGridView1.Columns[3].Name = "Hãng";
+            dataGridView1.Columns[4].Name = "Nhân Viên";
 
             foreach (var sp in data)
             {
-                dataGridView1.Rows.Add(stt++, sp.IdSanpham, sp.TenSanPham, sp.TenThuongHieu);
+                dataGridView1.Rows.Add(stt++, sp.IdSanpham, sp.TenSanPham, sp.TenThuongHieu, sp.IdNhanvien);
             }
         }
 
@@ -118,6 +122,7 @@ namespace Project_SHOE.View
 
         private void btn_add_Click(object sender, EventArgs e)
         {
+            int idnhanvien = NhanVienService.GetIdNhanVien(int.Parse(label_NhanVien.Text));
             int m = cbb_Hang.SelectedIndex;
             var s1 = new Sanpham();
             s1.Tensanpham = txt_tenSP.Text;
@@ -141,6 +146,7 @@ namespace Project_SHOE.View
                     LoadData(_sanPhamSer.Getview());
                     return; // Ngăn chặn tiếp tục thêm sản phẩm
                 }
+                s1.IdNhanvien = idnhanvien;
                 s1.IdThuonghieu = _sanPhamSer.GetAllTH().ElementAt(m).IdThuonghieu;
                 MessageBox.Show(_sanPhamSer.AddSP(s1));
                 LoadData(_sanPhamSer.Getview());
@@ -153,6 +159,7 @@ namespace Project_SHOE.View
 
         private void btn_update_Click(object sender, EventArgs e)
         {
+            int idnhanvien = NhanVienService.GetIdNhanVien(int.Parse(label_NhanVien.Text));
             int m = cbb_Hang.SelectedIndex;
             int maSP = int.Parse(txt_maSP.Text);
             string tenSanPhamMoi = txt_tenSP.Text;
@@ -166,8 +173,8 @@ namespace Project_SHOE.View
             var result = _sanPhamSer.UpdateSP(maSP, new Sanpham()
             {
                 Tensanpham = txt_tenSP.Text,
-                IdThuonghieu = _sanPhamSer.GetAllTH().ElementAt(m).IdThuonghieu
-
+                IdThuonghieu = _sanPhamSer.GetAllTH().ElementAt(m).IdThuonghieu,
+                IdNhanvien = idnhanvien
             });
             if (result == 3)
             {
@@ -197,6 +204,18 @@ namespace Project_SHOE.View
             btn_delete.Enabled = false;
             btn_update.Enabled = false;
             txt_maSP.Enabled = false;
+            cbb_Hang.KeyPress += comboBox1_KeyPress;
+            cbb_Hang.KeyDown += comboBox1_KeyDown;
+            label_NhanVien.Text = username;
+        }
+        private void comboBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true; // Ngăn chặn ComboBox nhận ký tự từ bàn phím
+        }
+
+        private void comboBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = true; // Ngăn chặn ComboBox nhận sự kiện phím từ bàn phím
         }
 
         private void btn_Clean_Click(object sender, EventArgs e)
@@ -237,10 +256,6 @@ namespace Project_SHOE.View
 
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
 
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
@@ -250,7 +265,7 @@ namespace Project_SHOE.View
         private void sảnPhẩmChiTiếtToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Tạo đối tượng của Form2
-            QuanLiSanPhamChiTiet form2 = new QuanLiSanPhamChiTiet();
+            QuanLiSanPhamChiTiet form2 = new QuanLiSanPhamChiTiet(username);
 
             //// Lưu tham chiếu đến form hiện tại vào biến cục bộ
             //Form currentForm = this;

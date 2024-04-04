@@ -48,7 +48,7 @@ namespace BUS.Services
                            select new HoaDon
                            {
                                IdHoaDon = HoaDon1.IdHoadon,
-                               NgayTao = HoaDon1.NgayTao,
+                               NgayTao = HoaDon1.Ngaytao,
                                TongTien = HoaDon1.Tongtien,
                                TenKhachHang = Khachhang.Hovaten,
                                SoDienThoai = Khachhang.Sdt,

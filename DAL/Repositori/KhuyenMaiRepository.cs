@@ -27,6 +27,39 @@ namespace Project_SHOE.Controller.Repositori
             _dbContext.SaveChanges();
             return true;
         }
+        public string CheckKhuyenMai(int idkhachang, string idkhuyenmai)
+        {
+            var khuyenmai = _dbContext.Khuyenmais.FirstOrDefault(km => km.IdKhuyenmai == idkhuyenmai);
+
+            if (khuyenmai != null)
+            {
+                // Kiểm tra xem khách hàng đã được thêm vào mã khuyến mại chưa
+                var existingKhachHang = _dbContext.KhachHangKhuyenMais.FirstOrDefault(kh => kh.IdKhachHang == idkhachang && kh.IdKhuyenMai == idkhuyenmai);
+
+                if (existingKhachHang != null)
+                {
+                    return "Khách hàng đã sử dụng mã khuyến mại.";
+                }
+                else
+                {
+                    // Thêm khách hàng vào mã khuyến mại
+                    var khachHangKhuyenMai = new KhachHangKhuyenMai
+                    {
+                        IdKhachHang = idkhachang,
+                        IdKhuyenMai = idkhuyenmai
+                    };
+
+                    _dbContext.KhachHangKhuyenMais.Add(khachHangKhuyenMai);
+                    _dbContext.SaveChanges();
+
+                    return "Thêm khách hàng vào mã khuyến mại thành công.";
+                }
+            }
+            else
+            {
+                return "Mã khuyến mại không tồn tại.";
+            }
+        }
         public string UpdateSoLuongKhuyenMai(string idKhuyenMai)
         {
             var khuyenMai = _dbContext.Khuyenmais.FirstOrDefault(km => km.IdKhuyenmai == idKhuyenMai);

@@ -18,5 +18,6 @@ namespace BUS.Viewmoder
         public string? TenSanPham { get; set; }
         public double? Dongia { get; set; }
         public string? LoaiSanPham { get; set; }
+        public int? IdNhanvien { get; set; }
     }
 }

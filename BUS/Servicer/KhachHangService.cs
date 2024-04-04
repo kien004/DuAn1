@@ -74,5 +74,38 @@ namespace Project_SHOE.Controller.Servicer
             else { return "Sửa Thất Bại"; }
 
         }
+        public List<Khachhang> GetSearch1(string searchText)
+        {
+            var searchTextLower = searchText.ToLower(); // Chuyển đổi chuỗi tìm kiếm về chữ thường
+
+            var joinData = from kh in _repos.GetAllKH()
+                           select new Khachhang
+                           {
+                               IdKhachhang = kh.IdKhachhang,
+                               Hovaten = kh.Hovaten,
+                               Sdt = kh.Sdt,
+                               Diachi = kh.Diachi,
+                           };
+
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                return joinData.ToList();
+            }
+
+            // Chuyển đổi dữ liệu trong cơ sở dữ liệu về chữ thường và thực hiện tìm kiếm
+            return joinData.Where(c => c.Hovaten.ToLower().Contains(searchTextLower)).ToList();
+        }
+        public List<Khachhang> Getview()
+        {
+            var joinData = from Khachhang in _repos.GetAllKH()
+                           select new Khachhang
+                           {
+                               IdKhachhang = Khachhang.IdKhachhang,
+                               Hovaten = Khachhang.Hovaten,
+                               Sdt = Khachhang.Sdt,
+                               Diachi = Khachhang.Diachi,
+                           };
+            return joinData.ToList();
+        }
     }
 }

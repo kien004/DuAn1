@@ -1,6 +1,7 @@
 using BUS.Viewmoder;
 using DAL.Models;
 using OfficeOpenXml;
+using PRL.View;
 using PRL.Views;
 using Project_SHOE;
 using Project_SHOE.View;
@@ -18,7 +19,7 @@ namespace PRL
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Views.HoaDon());
+            Application.Run(new Form1());
         }
     }
 }

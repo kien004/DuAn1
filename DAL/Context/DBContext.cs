@@ -24,6 +24,8 @@ public partial class DBContext : DbContext
 
     public virtual DbSet<Hoadonct> Hoadoncts { get; set; }
 
+    public virtual DbSet<KhachHangKhuyenMai> KhachHangKhuyenMais { get; set; }
+
     public virtual DbSet<Khachhang> Khachhangs { get; set; }
 
     public virtual DbSet<Khuyenmai> Khuyenmais { get; set; }
@@ -44,95 +46,110 @@ public partial class DBContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=HHUNGDZ\\SQLEXPRESS;Initial Catalog=CuaHangBanHang_1;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=HHUNGDZ\\SQLEXPRESS;Initial Catalog=CuaHangBanHang_1;Integrated Security=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Chatlieu>(entity =>
         {
-            entity.HasKey(e => e.IdChatlieu).HasName("PK__CHATLIEU__3912AF289F0644BF");
+            entity.HasKey(e => e.IdChatlieu).HasName("PK__CHATLIEU__3912AF2857494BEC");
         });
 
         modelBuilder.Entity<Chucvu>(entity =>
         {
-            entity.HasKey(e => e.IdChucvu).HasName("PK__CHUCVU__ACDE8E29231C707F");
+            entity.HasKey(e => e.IdChucvu).HasName("PK__CHUCVU__ACDE8E29665B8532");
         });
 
         modelBuilder.Entity<Hoadon>(entity =>
         {
-            entity.HasKey(e => e.IdHoadon).HasName("PK__HOADON__018FF0B57137B976");
+            entity.HasKey(e => e.IdHoadon).HasName("PK__HOADON__018FF0B5C92EDE58");
 
-            entity.HasOne(d => d.IdKhachhangNavigation).WithMany(p => p.Hoadons).HasConstraintName("FK__HOADON__ID_KHACH__403A8C7D");
+            entity.HasOne(d => d.IdKhachhangNavigation).WithMany(p => p.Hoadons).HasConstraintName("FK__HOADON__ID_KHACH__60A75C0F");
 
-            entity.HasOne(d => d.IdKhuyenmaiNavigation).WithMany(p => p.Hoadons).HasConstraintName("FK__HOADON__ID_KHUYE__412EB0B6");
+            entity.HasOne(d => d.IdKhuyenmaiNavigation).WithMany(p => p.Hoadons).HasConstraintName("FK__HOADON__ID_KHUYE__619B8048");
+
+            entity.HasOne(d => d.IdNhanvienNavigation).WithMany(p => p.Hoadons).HasConstraintName("FK__HOADON__ID_NHANV__628FA481");
         });
 
         modelBuilder.Entity<Hoadonct>(entity =>
         {
-            entity.HasKey(e => e.IdHoadonct).HasName("PK__HOADONCT__CB5C3B207A9A076B");
+            entity.HasKey(e => e.IdHoadonct).HasName("PK__HOADONCT__CB5C3B20CBDE225E");
 
-            entity.HasOne(d => d.IdHoadonNavigation).WithMany(p => p.Hoadoncts).HasConstraintName("FK__HOADONCT__ID_HOA__5CD6CB2B");
+            entity.HasOne(d => d.IdHoadonNavigation).WithMany(p => p.Hoadoncts).HasConstraintName("FK__HOADONCT__ID_HOA__66603565");
 
-            entity.HasOne(d => d.IdSanphamctNavigation).WithMany(p => p.Hoadoncts).HasConstraintName("FK__HOADONCT__ID_SAN__5BE2A6F2");
+            entity.HasOne(d => d.IdSanphamctNavigation).WithMany(p => p.Hoadoncts).HasConstraintName("FK__HOADONCT__ID_SAN__656C112C");
+        });
+
+        modelBuilder.Entity<KhachHangKhuyenMai>(entity =>
+        {
+            entity.HasOne(d => d.IdKhachHangNavigation).WithMany().HasConstraintName("FK__KhachHang__IdKha__5CD6CB2B");
+
+            entity.HasOne(d => d.IdKhuyenMaiNavigation).WithMany().HasConstraintName("FK__KhachHang__IdKhu__5DCAEF64");
         });
 
         modelBuilder.Entity<Khachhang>(entity =>
         {
-            entity.HasKey(e => e.IdKhachhang).HasName("PK__KHACHHAN__769C0DEB06885947");
+            entity.HasKey(e => e.IdKhachhang).HasName("PK__KHACHHAN__769C0DEB4E7C3056");
         });
 
         modelBuilder.Entity<Khuyenmai>(entity =>
         {
-            entity.HasKey(e => e.IdKhuyenmai).HasName("PK__KHUYENMA__C2E0A21097623CEC");
+            entity.HasKey(e => e.IdKhuyenmai).HasName("PK__KHUYENMA__C2E0A2103BC12B69");
+
+            entity.HasOne(d => d.IdKhachhangNavigation).WithMany(p => p.Khuyenmais).HasConstraintName("FK__KHUYENMAI__ID_KH__5AEE82B9");
         });
 
         modelBuilder.Entity<Kichthuoc>(entity =>
         {
-            entity.HasKey(e => e.IdKichthuoc).HasName("PK__KICHTHUO__854A5CB7E88DA72D");
+            entity.HasKey(e => e.IdKichthuoc).HasName("PK__KICHTHUO__854A5CB7226D930F");
         });
 
         modelBuilder.Entity<Loaisanpham>(entity =>
         {
-            entity.HasKey(e => e.IdLoaisanpham).HasName("PK__LOAISANP__D4D52375024DF897");
+            entity.HasKey(e => e.IdLoaisanpham).HasName("PK__LOAISANP__D4D523758FFB08B7");
         });
 
         modelBuilder.Entity<Mau>(entity =>
         {
-            entity.HasKey(e => e.IdMau).HasName("PK__MAU__276D397D5D626397");
+            entity.HasKey(e => e.IdMau).HasName("PK__MAU__276D397D24D0EFDF");
         });
 
         modelBuilder.Entity<Nhanvien>(entity =>
         {
-            entity.HasKey(e => e.IdNhanvien).HasName("PK__NHANVIEN__DE90FCA31084BD1E");
+            entity.HasKey(e => e.IdNhanvien).HasName("PK__NHANVIEN__DE90FCA3C4C213A6");
 
-            entity.HasOne(d => d.IdChucvuNavigation).WithMany(p => p.Nhanviens).HasConstraintName("FK__NHANVIEN__ID_CHU__33D4B598");
+            entity.HasOne(d => d.IdChucvuNavigation).WithMany(p => p.Nhanviens).HasConstraintName("FK__NHANVIEN__ID_CHU__45F365D3");
         });
 
         modelBuilder.Entity<Sanpham>(entity =>
         {
-            entity.HasKey(e => e.IdSanpham).HasName("PK__SANPHAM__216A05531AAF96E4");
+            entity.HasKey(e => e.IdSanpham).HasName("PK__SANPHAM__216A055354C5C1A6");
 
-            entity.HasOne(d => d.IdThuonghieuNavigation).WithMany(p => p.Sanphams).HasConstraintName("FK__SANPHAM__ID_THUO__36B12243");
+            entity.HasOne(d => d.IdNhanvienNavigation).WithMany(p => p.Sanphams).HasConstraintName("FK__SANPHAM__ID_NHAN__5070F446");
+
+            entity.HasOne(d => d.IdThuonghieuNavigation).WithMany(p => p.Sanphams).HasConstraintName("FK__SANPHAM__ID_THUO__4F7CD00D");
         });
 
         modelBuilder.Entity<Sanphamct>(entity =>
         {
-            entity.HasKey(e => e.IdSanphamct).HasName("PK__SANPHAMC__99B856117AD9B018");
+            entity.HasKey(e => e.IdSanphamct).HasName("PK__SANPHAMC__99B85611BAC612A1");
 
-            entity.HasOne(d => d.IdChatlieuNavigation).WithMany(p => p.Sanphamcts).HasConstraintName("FK__SANPHAMCT__ID_CH__3B75D760");
+            entity.HasOne(d => d.IdChatlieuNavigation).WithMany(p => p.Sanphamcts).HasConstraintName("FK__SANPHAMCT__ID_CH__5535A963");
 
-            entity.HasOne(d => d.IdKichthuocNavigation).WithMany(p => p.Sanphamcts).HasConstraintName("FK__SANPHAMCT__ID_KI__398D8EEE");
+            entity.HasOne(d => d.IdKichthuocNavigation).WithMany(p => p.Sanphamcts).HasConstraintName("FK__SANPHAMCT__ID_KI__534D60F1");
 
-            entity.HasOne(d => d.IdLoaisanphamNavigation).WithMany(p => p.Sanphamcts).HasConstraintName("FK__SANPHAMCT__ID_LO__3D5E1FD2");
+            entity.HasOne(d => d.IdLoaisanphamNavigation).WithMany(p => p.Sanphamcts).HasConstraintName("FK__SANPHAMCT__ID_LO__571DF1D5");
 
-            entity.HasOne(d => d.IdMauNavigation).WithMany(p => p.Sanphamcts).HasConstraintName("FK__SANPHAMCT__ID_MA__3A81B327");
+            entity.HasOne(d => d.IdMauNavigation).WithMany(p => p.Sanphamcts).HasConstraintName("FK__SANPHAMCT__ID_MA__5441852A");
 
-            entity.HasOne(d => d.IdSanphamNavigation).WithMany(p => p.Sanphamcts).HasConstraintName("FK__SANPHAMCT__ID_SA__3C69FB99");
+            entity.HasOne(d => d.IdNhanvienNavigation).WithMany(p => p.Sanphamcts).HasConstraintName("FK__SANPHAMCT__ID_NH__5812160E");
+
+            entity.HasOne(d => d.IdSanphamNavigation).WithMany(p => p.Sanphamcts).HasConstraintName("FK__SANPHAMCT__ID_SA__5629CD9C");
         });
 
         modelBuilder.Entity<Thuonghieu>(entity =>
         {
-            entity.HasKey(e => e.IdThuonghieu).HasName("PK__THUONGHI__1A0670700CC3CDDC");
+            entity.HasKey(e => e.IdThuonghieu).HasName("PK__THUONGHI__1A0670706A0CEDEB");
         });
 
         OnModelCreatingPartial(modelBuilder);

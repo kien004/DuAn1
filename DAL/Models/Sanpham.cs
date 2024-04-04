@@ -23,6 +23,13 @@ public partial class Sanpham
     [Column("MOTA", TypeName = "text")]
     public string? Mota { get; set; }
 
+    [Column("ID_NHANVIEN")]
+    public int? IdNhanvien { get; set; }
+
+    [ForeignKey("IdNhanvien")]
+    [InverseProperty("Sanphams")]
+    public virtual Nhanvien? IdNhanvienNavigation { get; set; }
+
     [ForeignKey("IdThuonghieu")]
     [InverseProperty("Sanphams")]
     public virtual Thuonghieu? IdThuonghieuNavigation { get; set; }

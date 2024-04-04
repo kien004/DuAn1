@@ -13,6 +13,9 @@ public partial class Hoadon
     [Column("ID_HOADON")]
     public int IdHoadon { get; set; }
 
+    [Column("NGAYTAO")]
+    public DateOnly? Ngaytao { get; set; }
+
     [Column("TONGTIEN")]
     public double? Tongtien { get; set; }
 
@@ -28,7 +31,12 @@ public partial class Hoadon
     [StringLength(50)]
     public string? Trangthai { get; set; }
 
-    public DateOnly? NgayTao { get; set; }
+    [Column("ID_NHANVIEN")]
+    public int? IdNhanvien { get; set; }
+
+    [Column("PHUONGTHUCTHANHTOAN")]
+    [StringLength(50)]
+    public string? Phuongthucthanhtoan { get; set; }
 
     [InverseProperty("IdHoadonNavigation")]
     public virtual ICollection<Hoadonct> Hoadoncts { get; set; } = new List<Hoadonct>();
@@ -40,4 +48,8 @@ public partial class Hoadon
     [ForeignKey("IdKhuyenmai")]
     [InverseProperty("Hoadons")]
     public virtual Khuyenmai? IdKhuyenmaiNavigation { get; set; }
+
+    [ForeignKey("IdNhanvien")]
+    [InverseProperty("Hoadons")]
+    public virtual Nhanvien? IdNhanvienNavigation { get; set; }
 }

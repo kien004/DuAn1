@@ -28,4 +28,7 @@ public partial class Khachhang
 
     [InverseProperty("IdKhachhangNavigation")]
     public virtual ICollection<Hoadon> Hoadons { get; set; } = new List<Hoadon>();
+
+    [InverseProperty("IdKhachhangNavigation")]
+    public virtual ICollection<Khuyenmai> Khuyenmais { get; set; } = new List<Khuyenmai>();
 }

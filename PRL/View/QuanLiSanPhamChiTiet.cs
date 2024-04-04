@@ -2,6 +2,7 @@
 using BUS.Viewmoder;
 using DAL.Models;
 using DAL.Repositori;
+using Project_SHOE.Controller.Servicer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,18 +21,21 @@ namespace Project_SHOE.View
         int idCellClick = -1;
         SanPhamCTSer _SanPhamctSer = new SanPhamCTSer();
         SanPhamSer _SanPhamSer = new SanPhamSer();
-        public QuanLiSanPhamChiTiet()
+        NhanVienService NhanVienService = new NhanVienService();
+        string username;
+        public QuanLiSanPhamChiTiet(string username)
         {
             _SanPhamSer = new SanPhamSer();
             _SanPhamctSer = new SanPhamCTSer();
             InitializeComponent();
+            this.username = username;
         }
         public void loatData(dynamic data)
         {
             dataGridView1.Rows.Clear();
             int stt = 1;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView1.ColumnCount = 9;
+            dataGridView1.ColumnCount = 10;
             dataGridView1.Columns[0].Name = "STT";
             dataGridView1.Columns[1].Name = "Mã Sản Phẩm Chi Tiết";
             dataGridView1.Columns[2].Name = "Tên Sản Phẩm";
@@ -41,9 +45,10 @@ namespace Project_SHOE.View
             dataGridView1.Columns[6].Name = "Loại Sản Phẩm";
             dataGridView1.Columns[7].Name = "Số Lượng";
             dataGridView1.Columns[8].Name = "Giá";
+            dataGridView1.Columns[9].Name = "Nhân Viên";
             foreach (var s in data)
             {
-                dataGridView1.Rows.Add(stt++, s.IdSanphamct, s.TenSanPham, s.ChatLieu, s.Mau, s.KichThuoc, s.LoaiSanPham, s.Soluong, s.Dongia);
+                dataGridView1.Rows.Add(stt++, s.IdSanphamct, s.TenSanPham, s.ChatLieu, s.Mau, s.KichThuoc, s.LoaiSanPham, s.Soluong, s.Dongia, s.IdNhanvien);
             }
         }
         private void Clean()
@@ -90,14 +95,36 @@ namespace Project_SHOE.View
             {
                 cbb_ChatLieu.Items.Add(item.Tenchatlieu);
             }
+
             btn_add.Enabled = true;
             btn_delete.Enabled = false;
             btn_update.Enabled = false;
             txt_Idspct.Enabled = false;
             txt_soluong.KeyPress += txt_soluong_KeyPress;
             txt_giaban.KeyPress += txt_soluong_KeyPress;
+            cbb_ChatLieu.KeyDown += comboBox1_KeyDown;
+            cbb_ChatLieu.KeyPress += comboBox1_KeyPress;
+            cbb_LoaiSP.KeyDown += comboBox1_KeyDown;
+            cbb_LoaiSP.KeyPress += comboBox1_KeyPress;
+            cbb_LocSize.KeyDown += comboBox1_KeyDown;
+            cbb_LocSize.KeyPress += comboBox1_KeyPress;
+            cbb_Mau.KeyDown += comboBox1_KeyDown;
+            cbb_Mau.KeyPress += comboBox1_KeyPress;
+            cbb_Size.KeyDown += comboBox1_KeyDown;
+            cbb_Size.KeyPress += comboBox1_KeyPress;
+            cbb_SP.KeyDown += comboBox1_KeyDown;
+            cbb_SP.KeyPress += comboBox1_KeyPress;
+            label_NhanVien.Text = username;
+        }
+        private void comboBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true; // Ngăn chặn ComboBox nhận ký tự từ bàn phím
         }
 
+        private void comboBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = true; // Ngăn chặn ComboBox nhận sự kiện phím từ bàn phím
+        }
         private void btn_add_Click(object sender, EventArgs e)
         {
             if (cbb_SP.Text == "")
@@ -147,6 +174,7 @@ namespace Project_SHOE.View
             }
             else
             {
+                int idnhanvien = NhanVienService.GetIdNhanVien(int.Parse(label_NhanVien.Text));
                 var s1 = new Sanphamct();
                 int m = cbb_SP.SelectedIndex;
                 int n = cbb_LoaiSP.SelectedIndex;
@@ -161,6 +189,7 @@ namespace Project_SHOE.View
                 s1.IdKichthuoc = _SanPhamctSer.GetAllSPCT_KichThuoc().ElementAt(v).IdKichthuoc;
                 s1.Soluong = Convert.ToInt32(txt_soluong.Text);
                 s1.Dongia = Convert.ToInt32(txt_giaban.Text);
+                s1.IdNhanvien = idnhanvien;
 
                 bool isDuplicate = _SanPhamctSer.CheckTrum(s1);
                 if (isDuplicate)
@@ -226,6 +255,7 @@ namespace Project_SHOE.View
             }
             else
             {
+                int idnhanvien = NhanVienService.GetIdNhanVien(int.Parse(label_NhanVien.Text));
                 int n = cbb_LoaiSP.SelectedIndex;
                 int b = cbb_Mau.SelectedIndex;
                 int v = cbb_Size.SelectedIndex;
@@ -241,8 +271,9 @@ namespace Project_SHOE.View
                     IdChatlieu = _SanPhamctSer.GetAllSPCT_ChatLieu().ElementAtOrDefault(c)?.IdChatlieu ?? 0,
                     IdKichthuoc = _SanPhamctSer.GetAllSPCT_KichThuoc().ElementAtOrDefault(v)?.IdKichthuoc ?? 0,
                     Soluong = Convert.ToInt32(txt_soluong.Text),
-                    Dongia = Convert.ToInt32(txt_giaban.Text)
-                };
+                    Dongia = Convert.ToInt32(txt_giaban.Text),
+                    IdNhanvien = idnhanvien
+            };
 
                 bool isDuplicate = _SanPhamctSer.CheckTrumSua(maSP, updatedProduct);
                 if (isDuplicate)
@@ -391,7 +422,7 @@ namespace Project_SHOE.View
         private void quảnLýSảnPhẩmToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Tạo đối tượng của Form2
-            QuanLiSanPham form2 = new QuanLiSanPham();
+            QuanLiSanPham form2 = new QuanLiSanPham(username);
 
             //// Lưu tham chiếu đến form hiện tại vào biến cục bộ
             //Form currentForm = this;

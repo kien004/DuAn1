@@ -32,15 +32,11 @@
             groupBox1 = new GroupBox();
             textBox1 = new TextBox();
             label9 = new Label();
-            radioButton3 = new RadioButton();
-            radioButton2 = new RadioButton();
-            radioButton1 = new RadioButton();
             dateTimePicker3 = new DateTimePicker();
             label8 = new Label();
             txt_seach = new TextBox();
             label7 = new Label();
             btn_sua = new Button();
-            label1 = new Label();
             btn_xoa = new Button();
             btn_them = new Button();
             dateTimePicker2 = new DateTimePicker();
@@ -56,6 +52,7 @@
             dataGridView1 = new DataGridView();
             txt_idKM = new TextBox();
             label10 = new Label();
+            linkLabel1 = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
@@ -76,15 +73,11 @@
             // 
             groupBox1.Controls.Add(textBox1);
             groupBox1.Controls.Add(label9);
-            groupBox1.Controls.Add(radioButton3);
-            groupBox1.Controls.Add(radioButton2);
-            groupBox1.Controls.Add(radioButton1);
             groupBox1.Controls.Add(dateTimePicker3);
             groupBox1.Controls.Add(label8);
             groupBox1.Controls.Add(txt_seach);
             groupBox1.Controls.Add(label7);
             groupBox1.Controls.Add(btn_sua);
-            groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(btn_xoa);
             groupBox1.Controls.Add(btn_them);
             groupBox1.Controls.Add(dateTimePicker2);
@@ -108,7 +101,7 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(106, 23);
+            textBox1.Location = new Point(119, 33);
             textBox1.Margin = new Padding(3, 4, 3, 4);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(195, 27);
@@ -117,48 +110,15 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(9, 26);
+            label9.Location = new Point(22, 36);
             label9.Name = "label9";
             label9.Size = new Size(59, 20);
             label9.TabIndex = 24;
             label9.Text = "Mã KM";
             // 
-            // radioButton3
-            // 
-            radioButton3.AutoSize = true;
-            radioButton3.Location = new Point(126, 215);
-            radioButton3.Name = "radioButton3";
-            radioButton3.Size = new Size(78, 24);
-            radioButton3.TabIndex = 23;
-            radioButton3.TabStop = true;
-            radioButton3.Text = "Đã Hết";
-            radioButton3.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            radioButton2.AutoSize = true;
-            radioButton2.Location = new Point(126, 179);
-            radioButton2.Name = "radioButton2";
-            radioButton2.Size = new Size(151, 24);
-            radioButton2.TabIndex = 22;
-            radioButton2.TabStop = true;
-            radioButton2.Text = " Đang Hoạt Động";
-            radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // radioButton1
-            // 
-            radioButton1.AutoSize = true;
-            radioButton1.Location = new Point(126, 149);
-            radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(87, 24);
-            radioButton1.TabIndex = 21;
-            radioButton1.TabStop = true;
-            radioButton1.Text = "Hết Hạn";
-            radioButton1.UseVisualStyleBackColor = true;
-            // 
             // dateTimePicker3
             // 
-            dateTimePicker3.Location = new Point(496, 197);
+            dateTimePicker3.Location = new Point(496, 149);
             dateTimePicker3.Margin = new Padding(3, 4, 3, 4);
             dateTimePicker3.Name = "dateTimePicker3";
             dateTimePicker3.Size = new Size(223, 27);
@@ -168,7 +128,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(371, 205);
+            label8.Location = new Point(371, 157);
             label8.Name = "label8";
             label8.Size = new Size(104, 20);
             label8.TabIndex = 19;
@@ -195,7 +155,7 @@
             // 
             // btn_sua
             // 
-            btn_sua.Location = new Point(198, 245);
+            btn_sua.Location = new Point(160, 245);
             btn_sua.Margin = new Padding(3, 4, 3, 4);
             btn_sua.Name = "btn_sua";
             btn_sua.Size = new Size(97, 31);
@@ -204,18 +164,9 @@
             btn_sua.UseVisualStyleBackColor = true;
             btn_sua.Click += btn_sua_Click;
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(9, 159);
-            label1.Name = "label1";
-            label1.Size = new Size(83, 20);
-            label1.TabIndex = 0;
-            label1.Text = "Trạng Thái";
-            // 
             // btn_xoa
             // 
-            btn_xoa.Location = new Point(349, 245);
+            btn_xoa.Location = new Point(286, 245);
             btn_xoa.Margin = new Padding(3, 4, 3, 4);
             btn_xoa.Name = "btn_xoa";
             btn_xoa.Size = new Size(97, 31);
@@ -255,16 +206,16 @@
             // 
             // txt_soluong
             // 
-            txt_soluong.Location = new Point(496, 148);
+            txt_soluong.Location = new Point(119, 198);
             txt_soluong.Margin = new Padding(3, 4, 3, 4);
             txt_soluong.Name = "txt_soluong";
-            txt_soluong.Size = new Size(223, 27);
+            txt_soluong.Size = new Size(195, 27);
             txt_soluong.TabIndex = 11;
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(371, 155);
+            label6.Location = new Point(22, 202);
             label6.Name = "label6";
             label6.Size = new Size(75, 20);
             label6.TabIndex = 10;
@@ -272,7 +223,7 @@
             // 
             // txt_chietkhau
             // 
-            txt_chietkhau.Location = new Point(106, 102);
+            txt_chietkhau.Location = new Point(119, 151);
             txt_chietkhau.Margin = new Padding(3, 4, 3, 4);
             txt_chietkhau.Name = "txt_chietkhau";
             txt_chietkhau.Size = new Size(195, 27);
@@ -280,7 +231,7 @@
             // 
             // txt_tenKM
             // 
-            txt_tenKM.Location = new Point(106, 67);
+            txt_tenKM.Location = new Point(119, 88);
             txt_tenKM.Margin = new Padding(3, 4, 3, 4);
             txt_tenKM.Name = "txt_tenKM";
             txt_tenKM.Size = new Size(195, 27);
@@ -307,7 +258,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(9, 109);
+            label3.Location = new Point(22, 158);
             label3.Name = "label3";
             label3.Size = new Size(84, 20);
             label3.TabIndex = 2;
@@ -316,7 +267,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(9, 70);
+            label2.Location = new Point(22, 91);
             label2.Name = "label2";
             label2.Size = new Size(62, 20);
             label2.TabIndex = 1;
@@ -354,11 +305,24 @@
             label10.TabIndex = 29;
             label10.Text = "Quản Lí Khuyến Mãi";
             // 
+            // linkLabel1
+            // 
+            linkLabel1.AutoSize = true;
+            linkLabel1.LinkColor = Color.Black;
+            linkLabel1.Location = new Point(26, 713);
+            linkLabel1.Name = "linkLabel1";
+            linkLabel1.Size = new Size(316, 20);
+            linkLabel1.TabIndex = 30;
+            linkLabel1.TabStop = true;
+            linkLabel1.Text = "Gửi Thông Tin Khuyến Mãi Đến Khách Hàng";
+            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
+            // 
             // QuanLiKhuyenMai
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(943, 717);
+            ClientSize = new Size(943, 748);
+            Controls.Add(linkLabel1);
             Controls.Add(label10);
             Controls.Add(dataGridView1);
             Controls.Add(groupBox1);
@@ -394,18 +358,15 @@
         private Label label4;
         private Label label3;
         private Label label2;
-        private Label label1;
         private DataGridView dataGridView1;
         private TextBox txt_seach;
         private Label label7;
         private DateTimePicker dateTimePicker3;
         private Label label8;
-        private RadioButton radioButton2;
-        private RadioButton radioButton1;
-        private RadioButton radioButton3;
         private TextBox txt_idKM;
         private Label label10;
         private TextBox textBox1;
         private Label label9;
+        private LinkLabel linkLabel1;
     }
 }

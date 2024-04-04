@@ -41,6 +41,7 @@
             label1 = new Label();
             pictureBox1 = new PictureBox();
             pictureBox2 = new PictureBox();
+            button1 = new Button();
             groupBox2.SuspendLayout();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -49,6 +50,7 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(button1);
             groupBox2.Controls.Add(button7);
             groupBox2.Controls.Add(button6);
             groupBox2.Controls.Add(button5);
@@ -67,7 +69,7 @@
             // button7
             // 
             button7.BackColor = Color.LightCoral;
-            button7.Location = new Point(66, 530);
+            button7.Location = new Point(66, 571);
             button7.Margin = new Padding(4, 3, 4, 3);
             button7.Name = "button7";
             button7.Size = new Size(178, 72);
@@ -209,6 +211,19 @@
             pictureBox2.TabIndex = 5;
             pictureBox2.TabStop = false;
             // 
+            // button1
+            // 
+            button1.BackColor = Color.LightSalmon;
+            button1.ForeColor = SystemColors.ActiveCaptionText;
+            button1.Location = new Point(8, 471);
+            button1.Margin = new Padding(4, 3, 4, 3);
+            button1.Name = "button1";
+            button1.Size = new Size(296, 60);
+            button1.TabIndex = 7;
+            button1.Text = "Thống Kê";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click;
+            // 
             // TrangChu
             // 
             AutoScaleDimensions = new SizeF(10F, 23F);
@@ -243,5 +258,6 @@
         private Label label1;
         private Label label4;
         private PictureBox pictureBox2;
+        private Button button1;
     }
 }
