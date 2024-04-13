@@ -19,7 +19,7 @@ namespace BUS.Services
             _topSanPhamRepos = topSanPhamRepos;
         }
 
-        public IEnumerable<TopSanPhamModel> GetTopSellingProducts(DateOnly fromDate, DateOnly toDate)
+        public IEnumerable<TopSanPhamModel> GetTopSellingProducts(DateTime fromDate, DateTime toDate)
         {
             var hoadonctList = _topSanPhamRepos.GetAllHoadonct();
             var sanphamctList = _topSanPhamRepos.GetAllSanPhamct();

@@ -28,16 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            pictureBox1 = new PictureBox();
             groupBox1 = new GroupBox();
-            textBox1 = new TextBox();
-            label9 = new Label();
+            button1 = new Button();
             dateTimePicker3 = new DateTimePicker();
             label8 = new Label();
             txt_seach = new TextBox();
             label7 = new Label();
             btn_sua = new Button();
-            btn_xoa = new Button();
             btn_them = new Button();
             dateTimePicker2 = new DateTimePicker();
             dateTimePicker1 = new DateTimePicker();
@@ -53,32 +50,22 @@
             txt_idKM = new TextBox();
             label10 = new Label();
             linkLabel1 = new LinkLabel();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            textBox1 = new TextBox();
+            label1 = new Label();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
-            // pictureBox1
-            // 
-            pictureBox1.Image = PRL.Properties.Resources.z5226148314135_0842741586d8fa7aca6c0d1cf49c9da2;
-            pictureBox1.Location = new Point(26, 33);
-            pictureBox1.Margin = new Padding(3, 4, 3, 4);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(144, 135);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabIndex = 0;
-            pictureBox1.TabStop = false;
-            // 
             // groupBox1
             // 
             groupBox1.Controls.Add(textBox1);
-            groupBox1.Controls.Add(label9);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Controls.Add(button1);
             groupBox1.Controls.Add(dateTimePicker3);
             groupBox1.Controls.Add(label8);
             groupBox1.Controls.Add(txt_seach);
             groupBox1.Controls.Add(label7);
             groupBox1.Controls.Add(btn_sua);
-            groupBox1.Controls.Add(btn_xoa);
             groupBox1.Controls.Add(btn_them);
             groupBox1.Controls.Add(dateTimePicker2);
             groupBox1.Controls.Add(dateTimePicker1);
@@ -99,22 +86,16 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Thông tin ";
             // 
-            // textBox1
+            // button1
             // 
-            textBox1.Location = new Point(119, 33);
-            textBox1.Margin = new Padding(3, 4, 3, 4);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(195, 27);
-            textBox1.TabIndex = 25;
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(22, 36);
-            label9.Name = "label9";
-            label9.Size = new Size(59, 20);
-            label9.TabIndex = 24;
-            label9.Text = "Mã KM";
+            button1.Location = new Point(378, 245);
+            button1.Margin = new Padding(3, 4, 3, 4);
+            button1.Name = "button1";
+            button1.Size = new Size(97, 31);
+            button1.TabIndex = 26;
+            button1.Text = "Clean";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // dateTimePicker3
             // 
@@ -155,7 +136,7 @@
             // 
             // btn_sua
             // 
-            btn_sua.Location = new Point(160, 245);
+            btn_sua.Location = new Point(178, 245);
             btn_sua.Margin = new Padding(3, 4, 3, 4);
             btn_sua.Name = "btn_sua";
             btn_sua.Size = new Size(97, 31);
@@ -163,17 +144,6 @@
             btn_sua.Text = "Sửa";
             btn_sua.UseVisualStyleBackColor = true;
             btn_sua.Click += btn_sua_Click;
-            // 
-            // btn_xoa
-            // 
-            btn_xoa.Location = new Point(286, 245);
-            btn_xoa.Margin = new Padding(3, 4, 3, 4);
-            btn_xoa.Name = "btn_xoa";
-            btn_xoa.Size = new Size(97, 31);
-            btn_xoa.TabIndex = 15;
-            btn_xoa.Text = "Xóa";
-            btn_xoa.UseVisualStyleBackColor = true;
-            btn_xoa.Click += btn_xoa_Click;
             // 
             // btn_them
             // 
@@ -206,16 +176,17 @@
             // 
             // txt_soluong
             // 
-            txt_soluong.Location = new Point(119, 198);
+            txt_soluong.Location = new Point(122, 143);
             txt_soluong.Margin = new Padding(3, 4, 3, 4);
             txt_soluong.Name = "txt_soluong";
             txt_soluong.Size = new Size(195, 27);
             txt_soluong.TabIndex = 11;
+            txt_soluong.KeyPress += txt_soluong_KeyPress;
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(22, 202);
+            label6.Location = new Point(25, 147);
             label6.Name = "label6";
             label6.Size = new Size(75, 20);
             label6.TabIndex = 10;
@@ -223,19 +194,22 @@
             // 
             // txt_chietkhau
             // 
-            txt_chietkhau.Location = new Point(119, 151);
+            txt_chietkhau.Location = new Point(122, 96);
             txt_chietkhau.Margin = new Padding(3, 4, 3, 4);
             txt_chietkhau.Name = "txt_chietkhau";
             txt_chietkhau.Size = new Size(195, 27);
             txt_chietkhau.TabIndex = 7;
+            txt_chietkhau.KeyPress += txt_chietkhau_KeyPress;
             // 
             // txt_tenKM
             // 
-            txt_tenKM.Location = new Point(119, 88);
+            txt_tenKM.Location = new Point(122, 61);
             txt_tenKM.Margin = new Padding(3, 4, 3, 4);
             txt_tenKM.Name = "txt_tenKM";
             txt_tenKM.Size = new Size(195, 27);
             txt_tenKM.TabIndex = 6;
+            txt_tenKM.TextChanged += txt_tenKM_TextChanged;
+            txt_tenKM.KeyPress += txt_tenKM_KeyPress;
             // 
             // label5
             // 
@@ -258,7 +232,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(22, 158);
+            label3.Location = new Point(25, 103);
             label3.Name = "label3";
             label3.Size = new Size(84, 20);
             label3.TabIndex = 2;
@@ -267,7 +241,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(22, 91);
+            label2.Location = new Point(25, 64);
             label2.Name = "label2";
             label2.Size = new Size(62, 20);
             label2.TabIndex = 1;
@@ -317,6 +291,23 @@
             linkLabel1.Text = "Gửi Thông Tin Khuyến Mãi Đến Khách Hàng";
             linkLabel1.LinkClicked += linkLabel1_LinkClicked;
             // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(122, 26);
+            textBox1.Margin = new Padding(3, 4, 3, 4);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(195, 27);
+            textBox1.TabIndex = 28;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(25, 29);
+            label1.Name = "label1";
+            label1.Size = new Size(59, 20);
+            label1.TabIndex = 27;
+            label1.Text = "Mã KM";
+            // 
             // QuanLiKhuyenMai
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
@@ -326,14 +317,12 @@
             Controls.Add(label10);
             Controls.Add(dataGridView1);
             Controls.Add(groupBox1);
-            Controls.Add(pictureBox1);
             Controls.Add(txt_idKM);
             Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 163);
             Margin = new Padding(3, 4, 3, 4);
             Name = "QuanLiKhuyenMai";
             Text = "QuanLiKhuyenMai";
             Load += QuanLiKhuyenMai_Load;
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
@@ -342,11 +331,8 @@
         }
 
         #endregion
-
-        private PictureBox pictureBox1;
         private GroupBox groupBox1;
         private Button btn_sua;
-        private Button btn_xoa;
         private Button btn_them;
         private DateTimePicker dateTimePicker2;
         private DateTimePicker dateTimePicker1;
@@ -365,8 +351,9 @@
         private Label label8;
         private TextBox txt_idKM;
         private Label label10;
-        private TextBox textBox1;
-        private Label label9;
         private LinkLabel linkLabel1;
+        private Button button1;
+        private TextBox textBox1;
+        private Label label1;
     }
 }

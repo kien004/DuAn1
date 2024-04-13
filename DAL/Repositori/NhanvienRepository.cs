@@ -23,13 +23,13 @@ namespace Project_SHOE.Controller.Repositori
             _dbContext.SaveChanges();
             return true;
         }
-        public int GetIdNhanVien(int sdt)
+        public int GetIdNhanVien(string sdt)
         {
-            var khachhang = _dbContext.Nhanviens.FirstOrDefault(kh => kh.Sdt == sdt);
+            var khanhhang = _dbContext.Nhanviens.FirstOrDefault(x => x.Sdt == sdt);
 
-            if (khachhang != null)
+            if (khanhhang != null)
             {
-                return khachhang.IdNhanvien;
+                return khanhhang.IdNhanvien;
             }
             else
             {

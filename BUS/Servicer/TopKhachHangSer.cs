@@ -23,7 +23,7 @@ namespace BUS.Services
             _topSanPhamRepos = topSanPhamRepos;
         }
 
-        public IEnumerable<TopKhachHangModel> GetTopCustomers(DateOnly fromDate, DateOnly toDate)
+        public IEnumerable<TopKhachHangModel> GetTopCustomers(DateTime fromDate, DateTime toDate)
         {
             var hoadonList = _topSanPhamRepos.GetAllHoadon();
             var khachhangList = _topSanPhamRepos.GetAllKhachHang();

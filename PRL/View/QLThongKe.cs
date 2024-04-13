@@ -17,12 +17,13 @@ namespace PRL.Views
         HoaDonSer hoadonser = new HoaDonSer();
         TopSanPhamService _sanPham = new TopSanPhamService();
         TopKhachHangSer _khachhang = new TopKhachHangSer();
-        public QLThongKe()
+        string username;
+        public QLThongKe(string username)
         {
             _khachhang = new TopKhachHangSer();
             _sanPham = new TopSanPhamService();
             InitializeComponent();
-            
+            this.username = username;
         }
         int totalOrders = 0;
         double totalPrice = 0;
@@ -103,9 +104,11 @@ namespace PRL.Views
 
         private void QLThongKe_Load(object sender, EventArgs e)
         {
-         
-            DateOnly toDate = DateOnly.FromDateTime(DateTime.Now);
-            DateOnly fromDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-7));
+
+            DateTime fromDate = DateTime.Now.Date;
+            DateTime toDate = DateTime.Now.Date;
+
+
             LoadData(_khachhang.GetTopCustomers(toDate, fromDate));
             LoadSanPham(_sanPham.GetTopSellingProducts(toDate, fromDate));
             textBox2.Text = totalOrders.ToString();
@@ -134,40 +137,13 @@ namespace PRL.Views
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBox3.SelectedIndex != null)
-            {
-                string selectedOption = comboBox3.SelectedItem.ToString();
 
-                // Dựa vào giá trị đã chọn, thay đổi dữ liệu
-                switch (selectedOption)
-                {
-                    case "Tuần": // Ví dụ, nếu lựa chọn là "Tuần"
-                         // Tạo fromDate 7 ngày trước
-                         DateOnly fromDateWeek = DateOnly.FromDateTime(DateTime.Now.AddDays(-7));
-                         // toDate là ngày hiện tại
-                         DateOnly toDateWeek = DateOnly.FromDateTime(DateTime.Now);
-                        LoadData(_khachhang.GetTopCustomers(toDateWeek, fromDateWeek)); // Load dữ liệu dựa trên khoảng thời gian này
-                        LoadSanPham(_sanPham.GetTopSellingProducts(toDateWeek, fromDateWeek)); // Load dữ liệu sản phẩm dựa trên khoảng thời gian này
-                        break;
-                    case "Tháng": // Ví dụ, nếu lựa chọn là "Tháng"
-                       // Tạo fromDate 1 tháng trước
-                       DateOnly fromDateMonth = DateOnly.FromDateTime(DateTime.Now.AddMonths(-1));
-                         // toDate là ngày hiện tại
-                         DateOnly toDateMonth = DateOnly.FromDateTime(DateTime.Now);
-                        LoadData(_khachhang.GetTopCustomers(toDateMonth, fromDateMonth)); // Load dữ liệu dựa trên khoảng thời gian này
-                        LoadSanPham(_sanPham.GetTopSellingProducts(toDateMonth, fromDateMonth)); // Load dữ liệu sản phẩm dựa trên khoảng thời gian này
-                        break;
-                    case "Năm": // Ví dụ, nếu lựa chọn là "Năm"
-                         // Tạo fromDate 1 năm trước
-                         DateOnly fromDateYear = DateOnly.FromDateTime(DateTime.Now.AddYears(-1));
-                         // toDate là ngày hiện tại
-                         DateOnly toDateYear = DateOnly.FromDateTime(DateTime.Now);
-                        LoadData(_khachhang.GetTopCustomers(toDateYear, fromDateYear)); // Load dữ liệu dựa trên khoảng thời gian này
-                        LoadSanPham(_sanPham.GetTopSellingProducts(toDateYear, fromDateYear)); // Load dữ liệu sản phẩm dựa trên khoảng thời gian này
-                        break;
-                        // Thêm các trường hợp khác nếu cần thiết
-                }
-            }
+
+        }
+
+        private void groupBox3_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

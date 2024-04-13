@@ -19,11 +19,11 @@ public partial class Khuyenmai
     [StringLength(50)]
     public string? Tenkhuyenmai { get; set; }
 
-    [Column("NGAYTAO")]
-    public DateOnly? Ngaytao { get; set; }
+    [Column("NGAYTAO", TypeName = "datetime")]
+    public DateTime? Ngaytao { get; set; }
 
-    [Column("NGAYHETHAN")]
-    public DateOnly? Ngayhethan { get; set; }
+    [Column("NGAYHETHAN", TypeName = "datetime")]
+    public DateTime? Ngayhethan { get; set; }
 
     [Column("TRANGTHAI")]
     [StringLength(50)]
@@ -35,16 +35,9 @@ public partial class Khuyenmai
     [Column("SOLUONG")]
     public int? Soluong { get; set; }
 
-    [Column("NGAYBATDAU")]
-    public DateOnly? Ngaybatdau { get; set; }
-
-    [Column("ID_KHACHHANG")]
-    public int? IdKhachhang { get; set; }
+    [Column("NGAYBATDAU", TypeName = "datetime")]
+    public DateTime? Ngaybatdau { get; set; }
 
     [InverseProperty("IdKhuyenmaiNavigation")]
     public virtual ICollection<Hoadon> Hoadons { get; set; } = new List<Hoadon>();
-
-    [ForeignKey("IdKhachhang")]
-    [InverseProperty("Khuyenmais")]
-    public virtual Khachhang? IdKhachhangNavigation { get; set; }
 }

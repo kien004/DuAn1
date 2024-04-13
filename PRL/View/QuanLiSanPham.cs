@@ -1,6 +1,7 @@
 ﻿using BUS.Services;
 using DAL.Models;
 using Microsoft.Data.SqlClient;
+using PRL.View;
 using Project_SHOE.Controller.Servicer;
 using System;
 using System.Collections.Generic;
@@ -122,75 +123,91 @@ namespace Project_SHOE.View
 
         private void btn_add_Click(object sender, EventArgs e)
         {
-            int idnhanvien = NhanVienService.GetIdNhanVien(int.Parse(label_NhanVien.Text));
-            int m = cbb_Hang.SelectedIndex;
-            var s1 = new Sanpham();
-            s1.Tensanpham = txt_tenSP.Text;
+            // Đoạn mã hiện thông báo xác nhận trước khi thêm sản phẩm
+            DialogResult result = MessageBox.Show("Bạn có muốn thêm sản phẩm này không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                int idnhanvien = NhanVienService.GetIdNhanVien(label_NhanVien.Text);
+                int m = cbb_Hang.SelectedIndex;
+                var s1 = new Sanpham();
+                s1.Tensanpham = txt_tenSP.Text;
 
-            if (cbb_Hang.Text == "")
-            {
-                MessageBox.Show("Sản Phẩm chưa có Thương Hiệu");
-                LoadData(_sanPhamSer.Getview());
-            }
-            else if (txt_tenSP.Text == "")
-            {
-                MessageBox.Show("Tên không được để trống");
-                LoadData(_sanPhamSer.Getview());
-            }
-            else
-            {
-                // Kiểm tra xem tên sản phẩm đã tồn tại chưa
-                if (_sanPhamSer.CheckDuplicate(s1.Tensanpham))
+                if (cbb_Hang.Text == "")
                 {
-                    MessageBox.Show("Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Sản Phẩm chưa có Thương Hiệu");
                     LoadData(_sanPhamSer.Getview());
-                    return; // Ngăn chặn tiếp tục thêm sản phẩm
                 }
-                s1.IdNhanvien = idnhanvien;
-                s1.IdThuonghieu = _sanPhamSer.GetAllTH().ElementAt(m).IdThuonghieu;
-                MessageBox.Show(_sanPhamSer.AddSP(s1));
-                LoadData(_sanPhamSer.Getview());
-                Clear();
+                else if (txt_tenSP.Text == "")
+                {
+                    MessageBox.Show("Tên không được để trống");
+                    LoadData(_sanPhamSer.Getview());
+                }
+                else
+                {
+                    // Kiểm tra xem tên sản phẩm đã tồn tại chưa
+                    if (_sanPhamSer.CheckDuplicate(s1.Tensanpham))
+                    {
+                        MessageBox.Show("Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        LoadData(_sanPhamSer.Getview());
+                        return; // Ngăn chặn tiếp tục thêm sản phẩm
+                    }
+                    s1.IdNhanvien = idnhanvien;
+                    s1.IdThuonghieu = _sanPhamSer.GetAllTH().ElementAt(m).IdThuonghieu;
+                    MessageBox.Show(_sanPhamSer.AddSP(s1));
+                    LoadData(_sanPhamSer.Getview());
+                    Clear();
+                }
             }
-            return;
+
         }
 
 
 
         private void btn_update_Click(object sender, EventArgs e)
         {
-            int idnhanvien = NhanVienService.GetIdNhanVien(int.Parse(label_NhanVien.Text));
-            int m = cbb_Hang.SelectedIndex;
-            int maSP = int.Parse(txt_maSP.Text);
-            string tenSanPhamMoi = txt_tenSP.Text;
-            if (_sanPhamSer.CheckDuplicateForUpdate(tenSanPhamMoi, maSP))
+            // Đoạn mã hiện thông báo xác nhận trước khi sửa sản phẩm
+            DialogResult resultConfirm = MessageBox.Show("Bạn có muốn sửa thông tin sản phẩm này không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (resultConfirm == DialogResult.Yes)
             {
-                MessageBox.Show("Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                LoadData(_sanPhamSer.Getview());
-                return; // Ngăn chặn tiếp tục sửa sản phẩm
+                int idnhanvien = NhanVienService.GetIdNhanVien(label_NhanVien.Text);
+                int m = cbb_Hang.SelectedIndex;
+                int maSP = int.Parse(txt_maSP.Text);
+                string tenSanPhamMoi = txt_tenSP.Text;
+
+                // Kiểm tra tên sản phẩm mới đã tồn tại chưa
+                if (_sanPhamSer.CheckDuplicateForUpdate(tenSanPhamMoi, maSP))
+                {
+                    MessageBox.Show("Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    LoadData(_sanPhamSer.Getview());
+                    return; // Ngăn chặn tiếp tục sửa sản phẩm
+                }
+
+                // Thực hiện sửa sản phẩm
+                var resultUpdate = _sanPhamSer.UpdateSP(maSP, new Sanpham()
+                {
+                    Tensanpham = txt_tenSP.Text,
+                    IdThuonghieu = _sanPhamSer.GetAllTH().ElementAt(m).IdThuonghieu,
+                    IdNhanvien = idnhanvien
+                });
+
+                // Xử lý kết quả sửa sản phẩm
+                if (resultUpdate == 3)
+                {
+                    MessageBox.Show("Sửa thành công");
+                    LoadData(_sanPhamSer.Getview());
+                    Clear();
+                }
+                else if (resultUpdate == 2)
+                {
+                    MessageBox.Show("Tên không được để trống");
+                    LoadData(_sanPhamSer.Getview());
+                }
+                else
+                {
+                    MessageBox.Show("Sửa thất bại");
+                }
             }
 
-            var result = _sanPhamSer.UpdateSP(maSP, new Sanpham()
-            {
-                Tensanpham = txt_tenSP.Text,
-                IdThuonghieu = _sanPhamSer.GetAllTH().ElementAt(m).IdThuonghieu,
-                IdNhanvien = idnhanvien
-            });
-            if (result == 3)
-            {
-                MessageBox.Show("Sửa thành công");
-                LoadData(_sanPhamSer.Getview());
-                Clear();
-            }
-            else if (result == 2)
-            {
-                MessageBox.Show("Tên không được để trống");
-                LoadData(_sanPhamSer.Getview());
-            }
-            else
-            {
-                MessageBox.Show("Sửa thất bại");
-            }
         }
 
         private void QuanLiSanPham_Load(object sender, EventArgs e)
@@ -275,6 +292,43 @@ namespace Project_SHOE.View
 
             // Hiển thị Form2
             form2.Show();
+        }
+
+        private void thươngHiệuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Hiển thị form thương hiệu single page
+            ThuongHieuForm form3 = new ThuongHieuForm();
+            form3.Show();
+
+        }
+
+        private void chấtLiệuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChatLieu f = new ChatLieu();
+            f.Show();
+        }
+
+        private void màuSảnPhẩmToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorForm colorForm = new ColorForm();
+            colorForm.Show();
+        }
+
+        private void loạiSảnPhẩmToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoaiSanPham loaiSanPham = new LoaiSanPham();
+            loaiSanPham.Show();
+        }
+
+        private void màuSảnPhẩmToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ColorForm colorForm = new ColorForm();
+            colorForm.Show();
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

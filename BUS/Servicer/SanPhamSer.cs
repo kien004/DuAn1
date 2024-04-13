@@ -94,7 +94,6 @@ namespace BUS.Services
                                TenSanPham = SanPham.Tensanpham,
                                TenThuongHieu = Thuonghieu.Tenthuonghieu,
                                IdNhanvien = nhanvien.IdNhanvien,
-                               
                            };
             return joinData.ToList();
         }

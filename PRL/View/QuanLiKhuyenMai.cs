@@ -22,11 +22,13 @@ namespace Project_SHOE
         //tôi muốn thêm 1 button để gửi email thông báo cho khách hàng khi khuyến mãi hết hạn
         private KhuyenMaiService _service;
         private string _id_WhenClick;
-        public QuanLiKhuyenMai()
+        string username;
+        public QuanLiKhuyenMai(string username)
         {
             InitializeComponent();
             _service = new KhuyenMaiService();
             LoadData();
+            this.username = username;
         }
 
         private void label7_Click(object sender, EventArgs e)
@@ -62,22 +64,36 @@ namespace Project_SHOE
                     return;
                 }
             }
-            //ngày bắt đầu phải nhỏ hơn ngày kết thúc
-            if (dateTimePicker1.Value > dateTimePicker2.Value)
+           
+            //ngày tạo không được để trống
+            if (dateTimePicker3.Value == null)
             {
-                MessageBox.Show("Ngày Bắt Đầu phải nhỏ hơn Ngày Kết Thúc");
+                MessageBox.Show("Ngày Tạo không được để trống");
                 return;
             }
-            //ngày tạo phải nhỏ hơn ngày kết thúc
-            if (dateTimePicker3.Value > dateTimePicker2.Value)
+            //ngày kết thúc không được để trống
+            if (dateTimePicker2.Value == null)
             {
-                MessageBox.Show("Ngày Tạo phải nhỏ hơn Ngày Kết Thúc");
+                MessageBox.Show("Ngày Kết Thúc không được để trống");
                 return;
             }
+            //ngày bắt đầu không được để trống
+            if (dateTimePicker1.Value == null)
+            {
+                MessageBox.Show("Ngày Bắt Đầu không được để trống");
+                return;
+            }
+        
             //số phần tră, khuyến mãi không được có chữ
             if (txt_chietkhau.Text.Any(char.IsLetter))
             {
                 MessageBox.Show("Số Phần Trăm Khuyến Mãi không được chứa chữ ");
+                return;
+            }
+            //nếu mã khuyến mãi trùng với mã khuyến mãi đã tồn tại thì sẽ thông báo mã khuyến mãi đã tồn tại
+            if (_service.GetAll(null).Any(x => x.IdKhuyenmai == textBox1.Text))
+            {
+                MessageBox.Show("Mã Khuyến Mãi đã tồn tại");
                 return;
             }
 
@@ -87,15 +103,21 @@ namespace Project_SHOE
             var km = new Khuyenmai();
 
             km.IdKhuyenmai = _id_WhenClick;
+            //Tôi muốn mã khuyến mãi random
             km.IdKhuyenmai = textBox1.Text;
+          
+            
 
 
             km.Tenkhuyenmai = txt_tenKM.Text;
-            km.Ngayhethan = DateOnly.FromDateTime(dateTimePicker2.Value);
-            km.Ngaybatdau = DateOnly.FromDateTime(dateTimePicker1.Value);
-            km.Ngaytao = DateOnly.FromDateTime(dateTimePicker3.Value);
+            txt_tenKM.KeyPress += txt_tenKM_KeyPress;
+            km.Ngayhethan = dateTimePicker1.Value;
+            km.Ngaybatdau = dateTimePicker2.Value;
+            km.Ngaytao = dateTimePicker3.Value;
             km.Sophantramkhuyenmai = decimal.Parse(txt_chietkhau.Text);
             km.Soluong = int.Parse(txt_soluong.Text);
+            txt_soluong.KeyPress += txt_soluong_KeyPress;
+            txt_chietkhau.KeyPress += txt_chietkhau_KeyPress;
             //nếu số lượng khuyến mãi = 0 thì trạng thái sẽ là đã hết
             if (km.Soluong == 0)
             {
@@ -109,7 +131,9 @@ namespace Project_SHOE
             var option = MessageBox.Show("Bạn có chắc chắn muốn thêm khuyến mãi này không ?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (option == DialogResult.Yes)
             {
+
                 _service.Add(km);
+                MessageBox.Show("Thêm thành công");
                 LoadData();
             }
             else
@@ -117,7 +141,8 @@ namespace Project_SHOE
                 return;
             }
             btn_sua.Enabled = false;
-            btn_xoa.Enabled = false;
+            textBox1.Enabled = false;
+
 
 
 
@@ -145,23 +170,13 @@ namespace Project_SHOE
             {
                 dataGridView1.Rows.Add(stt++, kh.Tenkhuyenmai, kh.Sophantramkhuyenmai, kh.Trangthai, kh.Ngaybatdau, kh.Ngayhethan, kh.Ngaytao, kh.Soluong, kh.IdKhuyenmai);
             }
+            dateTimePicker3.Enabled = false;
 
         }
 
         private void btn_sua_Click(object sender, EventArgs e)
         {
-            //tôi muốn validate thông tin của khuyến mãi
-            if (string.IsNullOrEmpty(txt_tenKM.Text))
-            {
-                //Nếu tên khuyến mãi đã tồn tại thì sẽ thông báo tên khuyến mãi và check trống
-                if (_service.GetAll(null).Any(x => x.Tenkhuyenmai == txt_tenKM.Text))
-                {
-                    MessageBox.Show("Tên Khuyến Mãi đã tồn tại");
-                    return;
-                }
-                MessageBox.Show("Tên Khuyến Mãi không được để trống");
-                return;
-            }
+        
             if (string.IsNullOrEmpty(txt_chietkhau.Text))
             {
                 MessageBox.Show("Chiết Khấu không được để trống");
@@ -176,33 +191,46 @@ namespace Project_SHOE
                     return;
                 }
             }
-            //ngày bắt đầu phải nhỏ hơn ngày kết thúc
-            if (dateTimePicker1.Value > dateTimePicker2.Value)
-            {
-                MessageBox.Show("Ngày Bắt Đầu phải nhỏ hơn Ngày Kết Thúc");
-                return;
-            }
-            //ngày tạo phải nhỏ hơn ngày kết thúc
-            if (dateTimePicker3.Value > dateTimePicker2.Value)
-            {
-                MessageBox.Show("Ngày Tạo phải nhỏ hơn Ngày Kết Thúc");
-                return;
-            }
+           
+           
             //số phần tră, khuyến mãi không được có chữ
             if (txt_chietkhau.Text.Any(char.IsLetter))
             {
                 MessageBox.Show("Số Phần Trăm Khuyến Mãi không được chứa chữ ");
                 return;
             }
+            //Ngày bắt đầu không được để trống
+            if (dateTimePicker1.Value == null)
+            {
+                MessageBox.Show("Ngày Bắt Đầu không được để trống");
+                return;
+            }
+            //Ngày kết thúc không được để trống
+            if (dateTimePicker2.Value == null)
+            {
+                MessageBox.Show("Ngày Kết Thúc không được để trống");
+                return;
+            }
+            //Ngày tạo không được để trống
+            if (dateTimePicker3.Value == null)
+            {
+                MessageBox.Show("Ngày Tạo không được để trống");
+                return;
+            }
 
             var km = new Khuyenmai();
             km.IdKhuyenmai = _id_WhenClick;
+            
+            
             km.Tenkhuyenmai = txt_tenKM.Text;
-            km.Ngaybatdau = DateOnly.FromDateTime(dateTimePicker1.Value);
-            km.Ngayhethan = DateOnly.FromDateTime(dateTimePicker2.Value);
-            km.Ngaytao = DateOnly.FromDateTime(dateTimePicker3.Value);
+            txt_tenKM.KeyPress += txt_tenKM_KeyPress;
+            km.Ngaybatdau = dateTimePicker1.Value;
+            km.Ngayhethan = dateTimePicker2.Value;
+            km.Ngaytao = dateTimePicker3.Value;
             km.Soluong = int.Parse(txt_soluong.Text);
+            txt_soluong.KeyPress += txt_soluong_KeyPress;
             km.Sophantramkhuyenmai = decimal.Parse(txt_chietkhau.Text);
+            txt_chietkhau.KeyPress += txt_chietkhau_KeyPress;
             //nếu số lượng khuyến mãi = 0 thì trạng thái sẽ là đã hết
             if (km.Soluong == 0)
             {
@@ -226,53 +254,42 @@ namespace Project_SHOE
 
 
 
-            btn_xoa.Enabled = true;
             btn_them.Enabled = false;
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            //tôi muốn khi click vào 1 dòng thì tất cả các cột đều hiển thị lên datagridview
-            _id_WhenClick = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
-            txt_tenKM.Text = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
-            txt_chietkhau.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
-            txt_soluong.Text = dataGridView1.Rows[e.RowIndex].Cells[7].Value.ToString();
-            textBox1.Text = dataGridView1.Rows[e.RowIndex].Cells[8].Value.ToString();
+            //nếu sự kiện cell click sẽ lấy dữ liệu từ cell đó
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+                _id_WhenClick = row.Cells[8].Value.ToString();
+                txt_tenKM.Text = row.Cells[1].Value.ToString();
+                txt_chietkhau.Text = row.Cells[2].Value.ToString();
+                txt_soluong.Text = row.Cells[7].Value.ToString();
+                dateTimePicker1.Value = (DateTime)row.Cells[4].Value;
+                dateTimePicker2.Value = (DateTime)row.Cells[5].Value;
+                dateTimePicker3.Value = (DateTime)row.Cells[6].Value;
+                textBox1.Text = row.Cells[8].Value.ToString();
+                txt_idKM.Enabled = false;
+                btn_sua.Enabled = true;
+                btn_them.Enabled = false;
+            }
+
+          
+          
+            
+           
 
 
 
-
-            dateTimePicker1.Value = DateTime.Parse(dataGridView1.Rows[e.RowIndex].Cells[4].Value.ToString());
-            dateTimePicker2.Value = DateTime.Parse(dataGridView1.Rows[e.RowIndex].Cells[5].Value.ToString());
-            dateTimePicker3.Value = DateTime.Parse(dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString());
-
-            txt_idKM.Enabled = false;
-            btn_sua.Enabled = true;
-            btn_xoa.Enabled = true;
-            btn_them.Enabled = false;
 
 
 
 
         }
 
-        private void btn_xoa_Click(object sender, EventArgs e)
-        {
-            var km = new Khuyenmai();
-            km.IdKhuyenmai = _id_WhenClick;
-            var option = MessageBox.Show("Bạn có chắc chắn muốn xóa khuyến mãi này không ?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (option == DialogResult.Yes)
-            {
-                _service.Delete(km);
-                LoadData();
-            }
-            else
-            {
-                return;
-            }
 
-
-        }
 
         private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
         {
@@ -299,7 +316,7 @@ namespace Project_SHOE
         {
             txt_idKM.Enabled = true;
             btn_sua.Enabled = false;
-            btn_xoa.Enabled = false;
+
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -339,7 +356,74 @@ namespace Project_SHOE
             }
         }
 
+     
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //khi tôi ấn click vào button này sẽ clear tất cả các ô text và ngày tháng
+            txt_tenKM.Text = "";
+            txt_chietkhau.Text = "";
+            txt_soluong.Text = "";
+            textBox1.Text = ""; 
+            
+            dateTimePicker1.Value = DateTime.Now;
+            dateTimePicker2.Value = DateTime.Now;
+            dateTimePicker3.Value = DateTime.Now;
+            txt_idKM.Enabled = true;
+            btn_them.Enabled = true;
+            btn_sua.Enabled = false;
+
+        }
+
+        private void txt_tenKM_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txt_tenKM_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+
+
+        }
+
+        private void txt_chietkhau_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            //Kiểm tra chỉ nhập số
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true;
+            }
+            //Kiểm tra không có kí tự đặc biệt
+            if (e.KeyChar == 32)
+            {
+
+                MessageBox.Show("Số Phần Trăm Khuyến Mãi không được chứa kí tự đặc biệt");
+                e.Handled = true;
+            }
+
+        }
+
+        private void txt_soluong_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            //Kiểm tra chỉ nhập số
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true;
+            }
+            //Kiểm tra không có kí tự đặc biệt
+            if (e.KeyChar == 32)
+            {
+                MessageBox.Show("Số Lượng không được chứa kí tự đặc biệt");
+                e.Handled = true;
+            }
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
-    
+
 }

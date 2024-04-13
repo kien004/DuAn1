@@ -42,16 +42,12 @@
             topsToolStripMenuItem = new ToolStripMenuItem();
             thốngKêSảnPhẩmToolStripMenuItem = new ToolStripMenuItem();
             thốngKêKháchHàngToolStripMenuItem = new ToolStripMenuItem();
-            comboBox3 = new ComboBox();
-            label4 = new Label();
-            groupBox4 = new GroupBox();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgrTopKH).BeginInit();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgrTopSanPham).BeginInit();
             groupBox3.SuspendLayout();
             menuStrip1.SuspendLayout();
-            groupBox4.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -67,9 +63,9 @@
             // groupBox1
             // 
             groupBox1.Controls.Add(dgrTopKH);
-            groupBox1.Location = new Point(25, 259);
+            groupBox1.Location = new Point(25, 272);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(509, 375);
+            groupBox1.Size = new Size(509, 362);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "Top Khách ";
@@ -77,18 +73,18 @@
             // dgrTopKH
             // 
             dgrTopKH.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgrTopKH.Location = new Point(6, 68);
+            dgrTopKH.Location = new Point(6, 39);
             dgrTopKH.Name = "dgrTopKH";
             dgrTopKH.RowHeadersWidth = 51;
-            dgrTopKH.Size = new Size(497, 284);
+            dgrTopKH.Size = new Size(497, 313);
             dgrTopKH.TabIndex = 0;
             // 
             // groupBox2
             // 
             groupBox2.Controls.Add(dgrTopSanPham);
-            groupBox2.Location = new Point(551, 259);
+            groupBox2.Location = new Point(565, 272);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(700, 375);
+            groupBox2.Size = new Size(629, 362);
             groupBox2.TabIndex = 2;
             groupBox2.TabStop = false;
             groupBox2.Text = "Top bán chạy ";
@@ -96,7 +92,7 @@
             // dgrTopSanPham
             // 
             dgrTopSanPham.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgrTopSanPham.Location = new Point(51, 44);
+            dgrTopSanPham.Location = new Point(16, 26);
             dgrTopSanPham.Name = "dgrTopSanPham";
             dgrTopSanPham.RowHeadersWidth = 51;
             dgrTopSanPham.Size = new Size(607, 308);
@@ -108,12 +104,13 @@
             groupBox3.Controls.Add(label6);
             groupBox3.Controls.Add(label5);
             groupBox3.Controls.Add(textBox1);
-            groupBox3.Location = new Point(654, 31);
+            groupBox3.Location = new Point(503, 31);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(527, 211);
             groupBox3.TabIndex = 3;
             groupBox3.TabStop = false;
             groupBox3.Text = "Tổng doanh thu ";
+            groupBox3.Enter += groupBox3_Enter;
             // 
             // textBox2
             // 
@@ -137,7 +134,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(62, 72);
+            label5.Location = new Point(72, 65);
             label5.Name = "label5";
             label5.Size = new Size(72, 20);
             label5.TabIndex = 6;
@@ -149,7 +146,7 @@
             textBox1.Location = new Point(203, 35);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(200, 57);
+            textBox1.Size = new Size(293, 57);
             textBox1.TabIndex = 5;
             textBox1.TextChanged += textBox1_TextChanged;
             // 
@@ -159,7 +156,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { topsToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1299, 28);
+            menuStrip1.Size = new Size(1215, 28);
             menuStrip1.TabIndex = 4;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -184,40 +181,11 @@
             thốngKêKháchHàngToolStripMenuItem.Text = "Thống kê khách hàng";
             thốngKêKháchHàngToolStripMenuItem.Click += thốngKêKháchHàngToolStripMenuItem_Click;
             // 
-            // comboBox3
-            // 
-            comboBox3.FormattingEnabled = true;
-            comboBox3.Location = new Point(201, 34);
-            comboBox3.Name = "comboBox3";
-            comboBox3.Size = new Size(151, 28);
-            comboBox3.TabIndex = 5;
-            comboBox3.SelectedIndexChanged += comboBox3_SelectedIndexChanged;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(20, 42);
-            label4.Name = "label4";
-            label4.Size = new Size(142, 20);
-            label4.TabIndex = 6;
-            label4.Text = "Tính doanh thu theo";
-            // 
-            // groupBox4
-            // 
-            groupBox4.Controls.Add(comboBox3);
-            groupBox4.Controls.Add(label4);
-            groupBox4.Location = new Point(90, 115);
-            groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(394, 85);
-            groupBox4.TabIndex = 7;
-            groupBox4.TabStop = false;
-            // 
             // QLThongKe
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1299, 659);
-            Controls.Add(groupBox4);
+            ClientSize = new Size(1215, 659);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
@@ -235,8 +203,6 @@
             groupBox3.PerformLayout();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
-            groupBox4.ResumeLayout(false);
-            groupBox4.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -262,8 +228,5 @@
         private DataGridView dgrTopKH;
         private ToolStripMenuItem thốngKêSảnPhẩmToolStripMenuItem;
         private ToolStripMenuItem thốngKêKháchHàngToolStripMenuItem;
-        private ComboBox comboBox3;
-        private Label label4;
-        private GroupBox groupBox4;
     }
 }

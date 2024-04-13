@@ -16,39 +16,7 @@ namespace Project_SHOE.View
 {
     public partial class QuanLiNhanVien : Form
     {
-        public static class PasswordHasher
-        {
-            public static string HashPassword(string password)
-            {
-                // Create a new instance of MD5
-                using (MD5 md5 = MD5.Create())
-                {
-                    // Convert the input string to a byte array and compute the hash.
-                    byte[] data = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
 
-                    // Create a new StringBuilder to collect the bytes and create a string.
-                    StringBuilder stringBuilder = new StringBuilder();
-
-                    // Loop through each byte of the hashed data and format each one as a hexadecimal string.
-                    for (int i = 0; i < data.Length; i++)
-                    {
-                        stringBuilder.Append(data[i].ToString("x2"));
-                    }
-
-                    // Return the hexadecimal string.
-                    return stringBuilder.ToString();
-                }
-            }
-        }
-        public static bool VerifyPassword(string enteredPassword, string storedHash)
-        {
-            // Hash the entered password using the same method as before
-            string enteredPasswordHash = PasswordHasher.HashPassword(enteredPassword);
-            
-
-            // Compare the entered password hash with the stored hash
-            return string.Equals(enteredPasswordHash, storedHash, StringComparison.OrdinalIgnoreCase);
-        }
 
 
 
@@ -59,12 +27,14 @@ namespace Project_SHOE.View
 
         private NhanVienService _service;
         private int _idWhenClick;
-        public QuanLiNhanVien()
+        string username;
+        public QuanLiNhanVien(string username)
         {
             InitializeComponent();
             _service = new NhanVienService();
             LoadComboBox();
             LoadData();
+            this.username = username;
         }
 
 
@@ -110,7 +80,7 @@ namespace Project_SHOE.View
                     MessageBox.Show("Số điện thoại không được chứa chữ hoặc kí tự đặc biệt và không quá 10 kí tự");
                     return;
                 }
-              
+
             }
             if (string.IsNullOrEmpty(txt_diachi.Text))
             {
@@ -120,8 +90,8 @@ namespace Project_SHOE.View
                     MessageBox.Show("Địa chỉ không được chứa kí tự đặc biệt và không có kí tự đặc biệt");
                     return;
                 }
-               
-              
+
+
             }
             if (string.IsNullOrEmpty(txt_pass.Text))
             {
@@ -143,10 +113,20 @@ namespace Project_SHOE.View
                 return;
             }
             var nv = new Nhanvien();
+            nv.Ngaysinh = dateTimePicker1.Value;
             nv.Hovaten = txt_name.Text;
-            nv.Sdt = int.Parse(txt_sdt.Text);
+            nv.Sdt = txt_sdt.Text;
+            txt_sdt.KeyPress += txt_sdt_KeyPress;
             //ngaysinh được đặt là dateonly vậy có hàm nào để lấy ngày sinh không
-            nv.Ngaysinh = DateOnly.Parse(dateTimePicker1.Text);
+            //nv.Ngaysinh = dateTimePicker1.Value;
+            if (checkBox1.Checked)
+            {
+                nv.Trangthai = "Đang Hoạt Động";
+            }
+            else
+            {
+                nv.Trangthai = "Ngưng Hoạt Động";
+            }
 
 
             nv.Diachi = txt_diachi.Text;
@@ -159,9 +139,9 @@ namespace Project_SHOE.View
                 nv.Gioitinh = "Nữ";
             }
             nv.IdChucvu = int.Parse(cbb_chucvu.SelectedValue.ToString());
-            
-            nv.Matkhau = PasswordHasher.HashPassword(txt_pass.Text);
-          
+
+            nv.Matkhau = txt_pass.Text;
+
 
 
 
@@ -176,37 +156,40 @@ namespace Project_SHOE.View
                 return;
             }
             btn_sua.Enabled = false;
-            btn_xoa.Enabled = false;
+
 
 
 
         }
         public void LoadData()
         {
-
             int stt = 1;
-            dataGridView1.ColumnCount = 9;
+            dataGridView1.ColumnCount = 10;
             dataGridView1.Columns[0].Name = "STT";
             dataGridView1.Columns[1].Name = "ID Nhân Viên";
             dataGridView1.Columns[2].Name = "Tên Nhân Viên";
             dataGridView1.Columns[3].Name = "Số Điện Thoại";
-            dataGridView1.Columns[4].Name = "Ngày Sinh ";
+            dataGridView1.Columns[4].Name = "Ngày Sinh";
             dataGridView1.Columns[5].Name = "Địa Chỉ";
-            dataGridView1.Columns[6].Name = " Gioi Tính";
+            dataGridView1.Columns[6].Name = "Gioi Tính";
             dataGridView1.Columns[7].Name = "Chức Vụ";
             dataGridView1.Columns[8].Name = "Mật Khẩu";
+            dataGridView1.Columns[9].Name = "Trạng Thái";
             dataGridView1.Columns[1].Visible = false;
+            dataGridView1.Columns[8].Visible = false;
 
             dataGridView1.Rows.Clear();
 
-
             foreach (var nv in _service.GetAll(txt_seach.Text))
             {
-                
-                dataGridView1.Rows.Add(stt++, nv.IdNhanvien, nv.Hovaten, nv.Sdt, nv.Ngaysinh, nv.Diachi, nv.Gioitinh, nv.IdChucvu, "********");
-                //dataGridView1.Rows.Add(stt++, nv.IdNhanvien, nv.Hovaten, nv.Sdt, nv.Ngaysinh, nv.Diachi, nv.Gioitinh, nv.IdChucvu, nv.Matkhau);
+
+                dataGridView1.Rows.Add(stt++, nv.IdNhanvien, nv.Hovaten, nv.Sdt, nv.Ngaysinh, nv.Diachi, nv.Gioitinh, nv.IdChucvu, nv.Matkhau, nv.Trangthai);
             }
+
+            // Thiết lập RadioButton mặc định (nếu cần)
+            radioButton1.Checked = true;
         }
+
 
         private void btn_sua_Click(object sender, EventArgs e)
         {
@@ -271,9 +254,18 @@ namespace Project_SHOE.View
             var nv = new Nhanvien();
             nv.IdNhanvien = _idWhenClick;
             nv.Hovaten = txt_name.Text;
-            nv.Sdt = int.Parse(txt_sdt.Text);
-            nv.Ngaysinh = DateOnly.Parse(dateTimePicker1.Text);
+            nv.Sdt = txt_sdt.Text;
+            nv.Ngaysinh = dateTimePicker1.Value;
             nv.Diachi = txt_diachi.Text;
+            if (checkBox1.Checked)
+            {
+                nv.Trangthai = "Đang Hoạt Động";
+            }
+            else
+            {
+                nv.Trangthai = "Ngưng Hoạt Động";
+            }
+
             if (radioButton1.Checked)
             {
                 nv.Gioitinh = "Nam";
@@ -299,34 +291,24 @@ namespace Project_SHOE.View
 
         }
 
-        private void btn_xoa_Click(object sender, EventArgs e)
-        {
-            var nv = new Nhanvien();
-            nv.IdNhanvien = _idWhenClick;
-            var option = MessageBox.Show("Bạn Xác Nhận Muốn Xóa", "Xác Nhận", MessageBoxButtons.YesNo);
-            if (option == DialogResult.Yes)
-            {
-                MessageBox.Show(_service.Remove(nv));
-                LoadData();
-            }
-            else
-            {
-                return;
-            }
 
-        }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             //khi click vào 1 dòng trong datagridview sẽ hiện tất cả thông tin lên từng trường tương ứng
-            int rowindex = e.RowIndex;
-            _idWhenClick = int.Parse(dataGridView1.Rows[rowindex].Cells[1].Value.ToString());
-            var nv = _service.GetAll(null).FirstOrDefault(x => x.IdNhanvien == _idWhenClick);
-            txt_name.Text = nv.Hovaten;
-            txt_sdt.Text = nv.Sdt.ToString();
-            dateTimePicker1.Text = nv.Ngaysinh.ToString();
-            txt_diachi.Text = nv.Diachi;
-            if (nv.Gioitinh == "Nam")
+            _idWhenClick = int.Parse(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString());
+            txt_name.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
+            txt_sdt.Text = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
+            
+            //tôi muốn lấy dữ liệu ngày sinh từ datagridview
+            dateTimePicker1.Value = Convert.ToDateTime(dataGridView1.Rows[e.RowIndex].Cells[4].Value.ToString());
+            //nếu lấy ngày sinh từ cell click bị lỗi thông báo lỗi
+            
+           
+
+            txt_diachi.Text = dataGridView1.Rows[e.RowIndex].Cells[5].Value.ToString();
+            string gender = dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString();
+            if (gender.Equals("Nam"))
             {
                 radioButton1.Checked = true;
             }
@@ -334,12 +316,24 @@ namespace Project_SHOE.View
             {
                 radioButton2.Checked = true;
             }
-            cbb_chucvu.SelectedValue = nv.IdChucvu;
-            txt_pass.Text = nv.Matkhau;
-            
+
+
+
+            cbb_chucvu.SelectedValue = dataGridView1.Rows[e.RowIndex].Cells[7].Value;
+            txt_pass.Text = dataGridView1.Rows[e.RowIndex].Cells[8].Value.ToString();
+            string status = dataGridView1.Rows[e.RowIndex].Cells[9].Value.ToString();
+            if (status.Equals("Đang Hoạt Động"))
+            {
+                checkBox1.Checked = true;
+            } else if (status.Equals("Ngưng Hoạt Động"))
+            {
+                checkBox1.Checked = false;
+            }
+          
+
             btn_them.Enabled = false;
-            btn_xoa.Enabled = true;
             btn_sua.Enabled = true;
+
 
 
 
@@ -347,9 +341,62 @@ namespace Project_SHOE.View
 
         }
 
-        private void txt_viewpasswork_Click(object sender, EventArgs e)
+
+
+        private void txt_name_KeyPress(object sender, KeyPressEventArgs e)
         {
-            
+            //Kiểm tra tên không được có số 
+            if (char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+            //Kiểm tra tên không được có kí tự đặc biệt
+            if (char.IsPunctuation(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+
+        }
+
+        private void txt_sdt_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            //Kiểm tra số điện thoại không được có chữ
+            if (char.IsLetter(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+            //Kiểm tra số điện thoại không được có kí tự đặc biệt
+            if (char.IsPunctuation(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+            //Kiểm tra phải là số 0 đầu tiên
+            if (txt_sdt.Text.Length == 0 && e.KeyChar != '0')
+            {
+                e.Handled = true;
+            }
+            //Kiểm tra số điện thoại không quá 10 kí tự
+            if (txt_sdt.Text.Length >= 10)
+            {
+                e.Handled = true;
+            }
+
+        }
+
+        private void txt_seach_TextChanged(object sender, EventArgs e)
+        {
+            //Tôi muốn tìm kiếm bằng tên nhân viên
+            LoadData();
+        }
+
+        private void QuanLiNhanVien_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //khi tôi click button này sẽ hiện mật khẩu từ * ******* thành mật khẩu thật 
             if (txt_pass.PasswordChar == '*')
             {
                 txt_pass.PasswordChar = '\0';
@@ -358,8 +405,25 @@ namespace Project_SHOE.View
             {
                 txt_pass.PasswordChar = '*';
             }
-       
-            
+
+
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //Khi tôi click vào button này sẽ xóa tất cả thông tin trong các ô
+            txt_name.Text = "";
+            txt_sdt.Text = "";
+            txt_diachi.Text = "";
+            txt_pass.Text = "";
+            radioButton1.Checked = false;
+            dateTimePicker1.Value = DateTime.Now;
+            radioButton2.Checked = false;
+            checkBox1.Checked = false;
+            cbb_chucvu.SelectedIndex = 0;
+            btn_them.Enabled = true;
+            btn_sua.Enabled = false;
 
         }
     }

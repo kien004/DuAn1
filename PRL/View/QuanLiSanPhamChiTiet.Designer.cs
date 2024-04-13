@@ -60,6 +60,11 @@
             dataGridView1 = new DataGridView();
             txt_Idspct = new TextBox();
             label_NhanVien = new Label();
+            groupBox5 = new GroupBox();
+            backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            label4 = new Label();
+            radioButton1 = new RadioButton();
+            radioButton2 = new RadioButton();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             menuStrip1.SuspendLayout();
@@ -67,16 +72,17 @@
             groupBox3.SuspendLayout();
             groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            groupBox5.SuspendLayout();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(53, 29);
+            label1.Location = new Point(21, 30);
             label1.Name = "label1";
-            label1.Size = new Size(57, 20);
+            label1.Size = new Size(77, 20);
             label1.TabIndex = 1;
-            label1.Text = " Mã SP:";
+            label1.Text = "Sản Phẩm:";
             // 
             // groupBox1
             // 
@@ -90,11 +96,11 @@
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(label6);
             groupBox1.Controls.Add(label5);
-            groupBox1.Location = new Point(103, 243);
+            groupBox1.Location = new Point(85, 243);
             groupBox1.Margin = new Padding(3, 4, 3, 4);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(3, 4, 3, 4);
-            groupBox1.Size = new Size(715, 119);
+            groupBox1.Size = new Size(733, 119);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "Thông Tin";
@@ -280,7 +286,7 @@
             groupBox3.Controls.Add(btn_add);
             groupBox3.Controls.Add(btn_update);
             groupBox3.Controls.Add(btn_delete);
-            groupBox3.Location = new Point(85, 369);
+            groupBox3.Location = new Point(85, 422);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(763, 76);
             groupBox3.TabIndex = 26;
@@ -337,7 +343,7 @@
             groupBox4.Controls.Add(cbb_LocSize);
             groupBox4.Controls.Add(dataGridView1);
             groupBox4.Controls.Add(txt_Idspct);
-            groupBox4.Location = new Point(85, 451);
+            groupBox4.Location = new Point(85, 513);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new Size(763, 304);
             groupBox4.TabIndex = 27;
@@ -391,11 +397,54 @@
             label_NhanVien.TabIndex = 39;
             label_NhanVien.Text = "label11";
             // 
+            // groupBox5
+            // 
+            groupBox5.Controls.Add(radioButton2);
+            groupBox5.Controls.Add(radioButton1);
+            groupBox5.Controls.Add(label4);
+            groupBox5.Location = new Point(91, 369);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Size = new Size(733, 55);
+            groupBox5.TabIndex = 40;
+            groupBox5.TabStop = false;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(61, 23);
+            label4.Name = "label4";
+            label4.Size = new Size(81, 20);
+            label4.TabIndex = 13;
+            label4.Text = "Trạng Thái:";
+            // 
+            // radioButton1
+            // 
+            radioButton1.AutoSize = true;
+            radioButton1.Location = new Point(185, 21);
+            radioButton1.Name = "radioButton1";
+            radioButton1.Size = new Size(96, 24);
+            radioButton1.TabIndex = 14;
+            radioButton1.TabStop = true;
+            radioButton1.Text = "Còn Hàng";
+            radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            radioButton2.AutoSize = true;
+            radioButton2.Location = new Point(450, 21);
+            radioButton2.Name = "radioButton2";
+            radioButton2.Size = new Size(94, 24);
+            radioButton2.TabIndex = 15;
+            radioButton2.TabStop = true;
+            radioButton2.Text = "Hết Hàng";
+            radioButton2.UseVisualStyleBackColor = true;
+            // 
             // QuanLiSanPhamChiTiet
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(914, 775);
+            ClientSize = new Size(914, 836);
+            Controls.Add(groupBox5);
             Controls.Add(label_NhanVien);
             Controls.Add(groupBox1);
             Controls.Add(groupBox4);
@@ -420,6 +469,8 @@
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            groupBox5.ResumeLayout(false);
+            groupBox5.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -457,5 +508,10 @@
         private ComboBox cbb_LocSize;
         private ToolStripMenuItem quảnLýSảnPhẩmToolStripMenuItem;
         private Label label_NhanVien;
+        private GroupBox groupBox5;
+        private RadioButton radioButton2;
+        private RadioButton radioButton1;
+        private Label label4;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

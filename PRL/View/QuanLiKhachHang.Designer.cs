@@ -43,12 +43,10 @@
             txt_seach = new TextBox();
             groupBox1 = new GroupBox();
             dataGridView1 = new DataGridView();
-            pictureBox1 = new PictureBox();
             label5 = new Label();
             groupBox2.SuspendLayout();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // groupBox2
@@ -158,6 +156,8 @@
             txt_phonenumber.Name = "txt_phonenumber";
             txt_phonenumber.Size = new Size(316, 27);
             txt_phonenumber.TabIndex = 2;
+            txt_phonenumber.TextChanged += txt_phonenumber_TextChanged;
+            txt_phonenumber.KeyPress += txt_phonenumber_KeyPress;
             // 
             // txt_name
             // 
@@ -167,6 +167,7 @@
             txt_name.Size = new Size(316, 27);
             txt_name.TabIndex = 1;
             txt_name.TextChanged += txt_name_TextChanged;
+            txt_name.KeyPress += txt_name_KeyPress;
             // 
             // label4
             // 
@@ -210,17 +211,6 @@
             dataGridView1.TabIndex = 0;
             dataGridView1.CellClick += dataGridView1_CellClick;
             // 
-            // pictureBox1
-            // 
-            pictureBox1.Image = PRL.Properties.Resources.z5226148314135_0842741586d8fa7aca6c0d1cf49c9da2;
-            pictureBox1.Location = new Point(16, 28);
-            pictureBox1.Margin = new Padding(3, 4, 3, 4);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(147, 129);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabIndex = 3;
-            pictureBox1.TabStop = false;
-            // 
             // label5
             // 
             label5.AutoSize = true;
@@ -238,7 +228,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1028, 461);
             Controls.Add(label5);
-            Controls.Add(pictureBox1);
             Controls.Add(groupBox1);
             Controls.Add(label4);
             Controls.Add(groupBox2);
@@ -252,7 +241,6 @@
             groupBox2.PerformLayout();
             groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -273,7 +261,6 @@
         private Button txt_delete;
         private GroupBox groupBox1;
         private DataGridView dataGridView1;
-        private PictureBox pictureBox1;
         private Label label5;
         private Button btn_Clean;
     }

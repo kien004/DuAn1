@@ -22,10 +22,14 @@ namespace Project_SHOE
         KhachHangRepository khachHangRepository;
         private KhachHangService _service;
         private int _id_whenClick;
-        public QuanLiKhachHang()
+        string username;
+        private HoaDonSer hoadonser = new HoaDonSer();
+        public QuanLiKhachHang(string username)
         {
             InitializeComponent();
             _service = new KhachHangService();
+            this.username = username;
+            LoadData();
         }
         private bool IsValidPhoneNumber(string phoneNumber)
         {
@@ -35,7 +39,9 @@ namespace Project_SHOE
         }
         private void txt_add_Click(object sender, EventArgs e)
         {
-            string sdt = txt_phonenumber.Text;
+            string? sdt = txt_phonenumber.Text;
+            txt_phonenumber.KeyPress += txt_phonenumber_KeyPress;
+            txt_name.KeyPress += txt_name_KeyPress;
             string tenKhachHang = txt_name.Text;
             string diaChi = txt_location.Text;
             // Kiểm tra xem các trường thông tin có được điền đầy đủ không
@@ -52,12 +58,8 @@ namespace Project_SHOE
                 return;
             }
 
-            // Kiểm tra xem số điện thoại đã tồn tại trong cơ sở dữ liệu hay chưa
-            if (khachHangRepository.IsSDTExist(sdt))
-            {
-                MessageBox.Show("Số điện thoại này đã tồn tại trong cơ sở dữ liệu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return; // Không thực hiện thêm nếu số điện thoại đã tồn tại
-            }
+
+
             var kh = new Khachhang();
             kh.Diachi = txt_location.Text;
             kh.Hovaten = txt_name.Text;
@@ -66,31 +68,36 @@ namespace Project_SHOE
             if (option == DialogResult.Yes)
             {
                 MessageBox.Show(_service.Add(kh));
+                LoadData();
             }
             else
             {
                 return;
             }
+           //khi tôi add xong thì sẽ load lại dữ liệu
+           
             txt_update.Enabled = false;
             txt_delete.Enabled = false;
             txt_add.Enabled = true;
+            
         }
-        public void LoadData(dynamic vl)
+        public void LoadData()
         {
             dataGridView1.Rows.Clear();
             int stt = 1;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView1.ColumnCount = 6;
+            dataGridView1.ColumnCount = 5;
             dataGridView1.Columns[0].Name = "STT";
             dataGridView1.Columns[1].Name = "ID Khách Hàng";
             dataGridView1.Columns[2].Name = "Họ và Tên";
             dataGridView1.Columns[3].Name = "Số Điện Thoại";
-            dataGridView1.Columns[4].Name = "Email";
-            dataGridView1.Columns[5].Name = "Địa Chỉ";
+            
+            dataGridView1.Columns[4].Name = "Địa Chỉ";
             dataGridView1.Columns[1].Visible = false;
-            foreach (var kh in vl)
+          foreach(var item in _service.GetAll(txt_seach.Text))
             {
-                dataGridView1.Rows.Add(stt++, kh.IdKhachhang, kh.Hovaten, kh.Sdt, kh.Diachi);
+                dataGridView1.Rows.Add(stt, item.IdKhachhang, item.Hovaten, item.Sdt, item.Diachi);
+                stt++;
             }
 
         }
@@ -141,11 +148,13 @@ namespace Project_SHOE
             if (option == DialogResult.Yes)
             {
                 MessageBox.Show(_service.Update(kh));
+                LoadData();
             }
             else
             {
                 return;
             }
+            
             txt_add.Enabled = false;
             txt_delete.Enabled = true;
             txt_update.Enabled = true;
@@ -155,22 +164,37 @@ namespace Project_SHOE
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            int rowindex = e.RowIndex;
-            _id_whenClick = int.Parse(dataGridView1.Rows[rowindex].Cells[1].Value.ToString());
-            var kh = _service.GetAll(null).FirstOrDefault(x => x.IdKhachhang == _id_whenClick);
-            txt_name.Text = kh.Hovaten;
-            txt_location.Text = kh.Diachi;
-            txt_phonenumber.Text = kh.Sdt;
-            txt_add.Enabled = false;
-            txt_delete.Enabled = true;
-            txt_update.Enabled = true;
+            if (e.RowIndex >= 0 && e.RowIndex < dataGridView1.Rows.Count - 1)
+            {
+                int rowindex = e.RowIndex;
+                _id_whenClick = int.Parse(dataGridView1.Rows[rowindex].Cells[1].Value.ToString());
+                var kh = _service.GetAll(null).FirstOrDefault(x => x.IdKhachhang == _id_whenClick);
+                txt_name.Text = kh.Hovaten;
+                txt_location.Text = kh.Diachi;
+                txt_phonenumber.Text = kh.Sdt;
+                txt_add.Enabled = false;
+                txt_delete.Enabled = true;
+                txt_update.Enabled = true;
+
+            }
+            else
+            {
+                // Nếu người dùng bấm vào bảng trống hoặc bảng tiêu đề, hiển thị một thông báo
+                MessageBox.Show("Vui lòng chọn một dòng dữ liệu hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
 
 
         }
 
         private void txt_delete_Click(object sender, EventArgs e)
         {
-
+            //nếu khách hàng đã tồn tại trong hóa đơn thì sẽ không được xóa và thông báo
+            if (_service.GetAll(null).Any(x => x.IdKhachhang == _id_whenClick))
+            {
+                MessageBox.Show("Khách hàng đã tồn tại trong hóa đơn không thể xóa");
+                return;
+            }
             var kh = new Khachhang();
             kh.IdKhachhang = _id_whenClick;
             var option = MessageBox.Show("Xác nhận muốn Xóa?", "Xác nhận", MessageBoxButtons.YesNo);
@@ -187,7 +211,9 @@ namespace Project_SHOE
 
         private void txt_seach_TextChanged(object sender, EventArgs e)
         {
-            LoadData(_service.GetSearch1(txt_seach.Text));
+            //tôi muốn tìm kiếm theo tên khách hàng
+            LoadData();
+            
         }
         private void txt_KhachHangMoi_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -216,8 +242,51 @@ namespace Project_SHOE
 
         private void QuanLiKhachHang_Load(object sender, EventArgs e)
         {
-            LoadData(_service.Getview());
+           
             txt_name.KeyPress += txt_KhachHangMoi_KeyPress;
+        }
+
+        private void txt_name_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Kiểm tra không được nhập số
+            if (char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+
+            }
+            //kiểm tra không được nhập kí tự đặc biệt
+            if (char.IsPunctuation(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+
+        }
+
+        private void txt_phonenumber_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txt_phonenumber_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            
+            //kiểm tra không được nhập kí tự đặc biệt
+          
+            //kiểm tra không được nhập quá 10 kí tự
+            if (txt_phonenumber.Text.Length > 10)
+            {
+                MessageBox.Show("Số điện thoại không được quá 10 kí tự");
+                txt_phonenumber.Text = "";
+            }
+            //kiểm tra phải là số 0 đầu tiên
+            if (txt_phonenumber.Text.Length == 1)
+            {
+                if (txt_phonenumber.Text != "0")
+                {
+                    MessageBox.Show("Số điện thoại phải bắt đầu bằng số 0");
+                    txt_phonenumber.Text = "";
+                }
+            }
         }
     }
 }

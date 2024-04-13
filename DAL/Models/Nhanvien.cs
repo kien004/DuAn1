@@ -22,7 +22,9 @@ public partial class Nhanvien
     public string? Gioitinh { get; set; }
 
     [Column("SDT")]
-    public int? Sdt { get; set; }
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? Sdt { get; set; }
 
     [Column("DIACHI")]
     [StringLength(50)]
@@ -31,12 +33,16 @@ public partial class Nhanvien
     [Column("ID_CHUCVU")]
     public int? IdChucvu { get; set; }
 
-    [Column("NGAYSINH")]
-    public DateOnly? Ngaysinh { get; set; }
+    [Column("NGAYSINH", TypeName = "datetime")]
+    public DateTime? Ngaysinh { get; set; }
 
     [Column("MATKHAU")]
     [StringLength(50)]
     public string? Matkhau { get; set; }
+
+    [Column("TRANGTHAI")]
+    [StringLength(50)]
+    public string? Trangthai { get; set; }
 
     [InverseProperty("IdNhanvienNavigation")]
     public virtual ICollection<Hoadon> Hoadons { get; set; } = new List<Hoadon>();

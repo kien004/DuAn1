@@ -37,6 +37,10 @@ public partial class Sanphamct
     [Column("ID_NHANVIEN")]
     public int? IdNhanvien { get; set; }
 
+    [Column("TRANGTHAI")]
+    [StringLength(50)]
+    public string? Trangthai { get; set; }
+
     [InverseProperty("IdSanphamctNavigation")]
     public virtual ICollection<Hoadonct> Hoadoncts { get; set; } = new List<Hoadonct>();
 

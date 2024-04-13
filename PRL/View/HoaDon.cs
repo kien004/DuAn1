@@ -14,6 +14,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -22,10 +26,22 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using OfficeOpenXml;
 using System.ComponentModel;
 using Microsoft.IdentityModel.Tokens;
+using System.Drawing.Printing;
+using PRL.View;
+using IronSoftware;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using SixLabors.Fonts;
+using System.Reflection.Metadata;
+using iText.StyledXmlParser.Jsoup.Nodes;
+using Microsoft.Office.Interop.Excel;
+using SixLabors.ImageSharp.Drawing.Processing;
+using System.Xml.Linq;
+using ZXing.QrCode.Internal;
+using QRCoder;
 
 namespace PRL.Views
 {
-    public partial class QuanLiBanHang : Form
+    public partial class HoaDon : Form
     {
         string username;
         HashSet<string> addedColors = new HashSet<string>();
@@ -38,8 +54,9 @@ namespace PRL.Views
         KhachHangRepository KhachHangRepository = new KhachHangRepository();
         KhuyenMaiService KhuyenMaiService = new KhuyenMaiService();
         NhanVienService NhanVienService = new NhanVienService();
+        HoaDonSer hoaDonSer = new HoaDonSer();
 
-        public QuanLiBanHang(string username)
+        public HoaDon(string username)
         {
             this.username = username;
             KhuyenMaiService = new KhuyenMaiService();
@@ -49,6 +66,7 @@ namespace PRL.Views
             SanPhamChiTietRepos = new SanPhamCTSer();
             SanPhamRepos = new SanPhamSer();
             InitializeComponent();
+
         }
         private void HoaDon_Load(object sender, EventArgs e)
         {
@@ -58,35 +76,41 @@ namespace PRL.Views
             cbb_KieuKH.Items.Add("Thành Viên");
             foreach (var sanPhamChiTiet in SanPhamChiTietRepos.GetAllSPCT())
             {
-                int? idSanPhamNullable = sanPhamChiTiet.IdSanpham;
-                if (idSanPhamNullable.HasValue && !addedIds.Contains(idSanPhamNullable.Value))
+                // Kiểm tra nếu số lượng sản phẩm lớn hơn hoặc bằng 1
+                if (sanPhamChiTiet.Soluong >= 1 || sanPhamChiTiet.Trangthai == "Hết Hàng")
                 {
-                    int idSanPham = idSanPhamNullable.Value; // Ép kiểu từ int? sang int
-                    string tenSanPham = SanPhamRepos.GetTenSanPhamById(idSanPham);
-                    cbb_SanPham.Items.Add(tenSanPham);
-                    addedIds.Add(idSanPham); // Thêm id đã thêm vào HashSet
+                    int? idSanPhamNullable = sanPhamChiTiet.IdSanpham;
+                    if (idSanPhamNullable.HasValue && !addedIds.Contains(idSanPhamNullable.Value))
+                    {
+                        int idSanPham = idSanPhamNullable.Value; // Ép kiểu từ int? sang int
+                        string tenSanPham = SanPhamRepos.GetTenSanPhamById(idSanPham);
+                        cbb_SanPham.Items.Add(tenSanPham);
+                        addedIds.Add(idSanPham); // Thêm id đã thêm vào HashSet
+                    }
                 }
             }
-            foreach (var i in KhachHangRepository.GetAllKH())
-            {
-                cbb_KhachHang.Items.Add(i.Hovaten);
-            }
+
+
             foreach (var i in KhuyenMaiService.GetALLKhuyenMai())
             {
                 Cbb_MKM.Items.Add(i.IdKhuyenmai);
             }
+            LoadData(hoaDonSer.Getview());
+            groupBox7.Enabled = false;
+            txtHoaDon.Text = GenerateInvoiceCode();
             txt_KhachHangMoi.Enabled = false;
-            cbb_KhachHang.Enabled = false;
+
+            txtHoaDon.Enabled = false;
             txt_sdtKH.Enabled = false;
             btn_TimSDTKH.Enabled = false;
             dtp_NgayTao.Enabled = false;
             txt_GiaSP.Enabled = false;
+            btn_ThanhToan.Enabled = false;
             txt_SoLuongConTrongKhoSP.Enabled = false;
             txt_ChietKhau.Enabled = false;
             txt_SoLuongSP.Enabled = false;
             txt_TongTienHang.Enabled = false;
             txt_XoaSP.Enabled = false;
-            btn_InHoaDon.Enabled = false;
             cbb_SizeSP.Enabled = false;
             cbb_mauSP.Enabled = false;
             txt_diachiKH.Enabled = false;
@@ -96,15 +120,12 @@ namespace PRL.Views
             txt_SDTTK.Enabled = false;
             cbb_SanPham.Enabled = false;
             Cbb_MKM.Enabled = false;
-            textBox2.Enabled = false;
-            textBox1.Enabled = false;
+            btn_InHoaDon.Enabled = false;
             cbb_PhuongThucThanhToan.Enabled = false;
             txt_KhachHangMoi.KeyPress += txt_KhachHangMoi_KeyPress;
             txt_sdtKH.KeyPress += txt_sdtKH_KeyPress;
             txt_SoLuongSP.KeyPress += txt_sdtKH_KeyPress;
-            textBox1.KeyPress += txt_sdtKH_KeyPress;
-            cbb_KhachHang.KeyDown += comboBox1_KeyDown;
-            cbb_KhachHang.KeyPress += comboBox1_KeyPress;
+
             cbb_KieuKH.KeyDown += comboBox1_KeyDown;
             cbb_KieuKH.KeyPress += comboBox1_KeyPress;
             cbb_mauSP.KeyDown += comboBox1_KeyDown;
@@ -120,6 +141,40 @@ namespace PRL.Views
             UpdateDateTimePickerValue();
             label_NhanVien.Text = username;
         }
+        private void LoadData(dynamic data)
+        {
+            dataGridView1.Rows.Clear();
+            int stt = 1;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView1.ColumnCount = 9;
+            // Đặt tên cho các cột
+            dataGridView1.Columns[0].Name = "STT";
+            dataGridView1.Columns[1].Name = "ID Hóa Đơn";
+            dataGridView1.Columns[2].Name = "ID Khuyến Mãi";
+            dataGridView1.Columns[3].Name = "Ngày Tạo";
+            dataGridView1.Columns[4].Name = "Tổng Tiền";
+            dataGridView1.Columns[5].Name = "Số Điện Thoại";
+            dataGridView1.Columns[6].Name = "ID Nhân Viên";
+            dataGridView1.Columns[7].Name = "Phương Thức Thanh Toán";
+            dataGridView1.Columns[8].Name = "Trạng Thái";
+            dataGridView1.Columns[8].Visible = false; // 8 là chỉ số của cột "Trạng Thái"
+            dataGridView1.Columns[7].Visible = false; // 8 là chỉ số của cột "Phương Thức Thanh Toán"
+            dataGridView1.Columns[6].Visible = false; // 8 là chỉ số của cột "ID Nhân Viên"
+            dataGridView1.Columns[3].Visible = false; // 8 là chỉ số của cột "Ngày Tạo"
+            dataGridView1.Columns[4].Visible = false; // 8 là chỉ số của cột "Tổng Tiền"
+
+            foreach (var sp in data)
+            {
+                // Kiểm tra trạng thái của hóa đơn là "Chưa Thanh Toán" và ngày tạo là ngày hôm nay
+                if (sp.TrangThai == "Chưa thanh toán" && sp.NgayTao.Date == DateTime.Today)
+                {
+                    dataGridView1.Rows.Add(stt++, sp.IdHoaDon, sp.IdKhuyenMai, sp.NgayTao, sp.TongTien, sp.SoDienThoai, sp.idnhanvien, sp.PhuongThucThanhToan, sp.TrangThai);
+                }
+            }
+
+        }
+
+
         private void UpdateDateTimePickerValue()
         {
             // Lấy thời gian hiện tại
@@ -146,20 +201,7 @@ namespace PRL.Views
         }
 
 
-        private void cbb_KhachHang_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // Kiểm tra xem combobox có dữ liệu nào hay không
-            if (cbb_KhachHang.SelectedIndex >= 0 && cbb_KhachHang.SelectedIndex < KhachHangRepository.GetAllKH().Count)
-            {
-                txt_sdtKH.Text = KhachHangRepository.GetAllKH().ElementAt(cbb_KhachHang.SelectedIndex).Sdt;
-                txt_diachiKH.Text = KhachHangRepository.GetAllKH().ElementAt(cbb_KhachHang.SelectedIndex).Diachi;
-            }
-            else
-            {
-                // Hiển thị thông báo hoặc xử lý theo ý của bạn khi không có dữ liệu trong combobox
-                MessageBox.Show("Không có dữ liệu khách hàng để hiển thị!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
+
         private void cbb_KieuKH_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbb_KieuKH.Text == "Khách Lẻ")
@@ -167,7 +209,7 @@ namespace PRL.Views
                 // Các thay đổi khi chọn Khách Lẻ
                 txt_sdtKH.Enabled = true;
                 txt_diachiKH.Enabled = true;
-                cbb_KhachHang.Enabled = false;
+
                 txt_KhachHangMoi.Enabled = true;
                 btn_TimSDTKH.Enabled = false;
                 txt_SDTTK.Enabled = false;
@@ -182,13 +224,12 @@ namespace PRL.Views
                 // Các thay đổi khi chọn Thành Viên
                 txt_sdtKH.Enabled = false;
                 txt_diachiKH.Enabled = false;
-                cbb_KhachHang.Enabled = true;
+
                 btn_TimSDTKH.Enabled = true;
                 txt_KhachHangMoi.Enabled = false;
                 txt_SDTTK.Enabled = true;
                 cbb_SanPham.Enabled = true;
                 Cbb_MKM.Enabled = true;
-                cbb_PhuongThucThanhToan.Enabled = true;
                 ResetSP();
 
                 // Xoá dữ liệu trong các TextBox và ComboBox
@@ -209,7 +250,7 @@ namespace PRL.Views
         {
             txt_sdtKH.Enabled = false;
             txt_diachiKH.Enabled = false;
-            cbb_KhachHang.Enabled = false;
+
             btn_TimSDTKH.Enabled = false;
             txt_KhachHangMoi.Enabled = false;
             txt_SDTTK.Enabled = false;
@@ -222,7 +263,7 @@ namespace PRL.Views
         {
             txt_sdtKH.Text = "";
             txt_diachiKH.Text = "";
-            cbb_KhachHang.SelectedIndex = -1;
+
             txt_KhachHangMoi.Text = "";
         }
         private void label8_Click(object sender, EventArgs e)
@@ -272,42 +313,20 @@ namespace PRL.Views
                 return; // Không thực hiện thêm nếu số điện thoại đã tồn tại
             }
 
-            // Hiển thị hộp thoại xác nhận
-            DialogResult confirmation = MessageBox.Show("Bạn có chắc muốn thêm khách hàng này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-            // Nếu người dùng xác nhận muốn thêm
-            if (confirmation == DialogResult.Yes)
+            // Tạo đối tượng Khachhang mới
+            Khachhang newCustomer = new Khachhang
             {
-                // Tạo đối tượng Khachhang mới
-                Khachhang newCustomer = new Khachhang
-                {
-                    Hovaten = tenKhachHang,
-                    Sdt = sdt,
-                    Diachi = diaChi
-                };
+                Hovaten = tenKhachHang,
+                Sdt = sdt,
+                Diachi = diaChi
+            };
 
-                // Thực hiện thêm khách hàng vào cơ sở dữ liệu
-                bool result = KhachHangRepository.AddKH(newCustomer);
+            // Thực hiện thêm khách hàng vào cơ sở dữ liệu
+            bool result = KhachHangRepository.AddKH(newCustomer);
 
-                // Kiểm tra kết quả thêm
-                // Thêm khách hàng vào danh sách và cập nhật combobox
-                if (result)
-                {
-                    MessageBox.Show("Thêm khách hàng thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Kiểm tra kết quả thêm
 
-                    // Sau khi thêm thành công, làm mới các TextBox và cập nhật danh sách khách hàng
-                    ClearTextBoxes();
-                    cbb_KhachHang.Items.Clear(); // Xoá tất cả các mục trong combobox trước khi cập nhật
-                    foreach (var i in KhachHangRepository.GetAllKH())
-                    {
-                        cbb_KhachHang.Items.Add(i.Hovaten);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Thêm khách hàng thất bại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
         }
 
         // Phương thức kiểm tra định dạng số điện thoại
@@ -319,7 +338,7 @@ namespace PRL.Views
         }
         private void ClearTextBoxes()
         {
-            cbb_KhachHang.ResetText();
+
             txt_sdtKH.Clear();
             txt_KhachHangMoi.Clear();
             txt_diachiKH.Clear();
@@ -341,7 +360,8 @@ namespace PRL.Views
             }
 
             // Hiển thị thông tin của khách hàng trong các TextBox
-            cbb_KhachHang.Text = customer.Hovaten;
+            txt_KhachHangMoi.Text = customer.Hovaten;
+
             txt_sdtKH.Text = customer.Sdt;
             txt_diachiKH.Text = customer.Diachi;
         }
@@ -361,7 +381,10 @@ namespace PRL.Views
                 // Gán giá trị rỗng cho ComboBox màu và ComboBox size để chỉ hiển thị một dòng trống
                 cbb_mauSP.Text = "";
                 cbb_SizeSP.Text = "";
-
+                txt_SoLuongConTrongKhoSP.Text = "";
+                txt_GiaSP.Text = "";
+                txt_SoLuongSP.Text = "";
+                txt_SoLuongSP.Enabled = false;
                 // Vô hiệu hóa cbb_SizeSP
                 cbb_SizeSP.Enabled = false;
 
@@ -417,6 +440,10 @@ namespace PRL.Views
                 // Xóa dữ liệu cũ trong ComboBox kích thước
                 cbb_SizeSP.Items.Clear();
                 cbb_SizeSP.Text = "";
+                txt_SoLuongConTrongKhoSP.Text = "";
+                txt_GiaSP.Text = "";
+                txt_SoLuongSP.Text = "";
+                txt_SoLuongSP.Enabled = false;
 
                 // Lấy ID sản phẩm từ ComboBox sản phẩm
                 string selectedSanPham = cbb_SanPham.SelectedItem as string;
@@ -460,10 +487,14 @@ namespace PRL.Views
 
                 // Ẩn ComboBox kích thước nếu không có sản phẩm nào hoặc không có màu nào được chọn
                 cbb_SizeSP.Enabled = cbb_SizeSP.Items.Count > 0;
+                cbb_SizeSP.Enabled = true;
+
+
             }
 
             // Lưu lại màu được chọn mới vào biến previousSelectedMau
             previousSelectedMau = selectedMau;
+            cbb_SizeSP.Enabled = true;
         }
         private void cbb_SizeSP_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -592,29 +623,30 @@ namespace PRL.Views
         }
         private void btn_ThanhToan_Click(object sender, EventArgs e)
         {
-            // Kiểm tra xem có trường nào trống không
-            if (string.IsNullOrWhiteSpace(textBox2.Text))
+            string idhoadon = txtHoaDon.Text;
+            string pttt = cbb_PhuongThucThanhToan.Text;
+            if (string.IsNullOrEmpty(cbb_PhuongThucThanhToan.Text))
             {
-                MessageBox.Show("Vui lòng nhập số tiền thanh toán!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Phương Thức Thanh Toán Không Được Bỏ Trống");
                 return;
             }
-
-            // Kiểm tra xem số tiền thanh toán có hợp lệ không
-            if (decimal.TryParse(textBox2.Text, out decimal soTien) && soTien >= 0)
+            // Gọi phương thức để cập nhật trạng thái hóa đơn
+            if (HoaDonRepos.CapNhatTrangThaiHoaDon(idhoadon, pttt, "Đã Thanh Toán"))
             {
-                // Số tiền thanh toán hợp lệ, tiến hành cập nhật trạng thái của hóa đơn
-                var hoadon = new Hoadon();
-                hoadon.Trangthai = "Đã Thanh Toán";
+                // Thông báo cho người dùng rằng hóa đơn đã được thanh toán thành công
+                MessageBox.Show("Hóa đơn đã được thanh toán thành công!");
 
-                // Thực hiện các thao tác cần thiết với hóa đơn tại đây (ví dụ: lưu vào cơ sở dữ liệu)
-
-                MessageBox.Show("Thanh toán thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                btn_InHoaDon.Enabled = true;
+                
+                // Cập nhật giao diện hoặc các hoạt động khác nếu cần thiết
+                // Ví dụ: cập nhật giao diện để hiển thị rằng hóa đơn đã được thanh toán
             }
             else
             {
-                // Hiển thị thông báo nếu số tiền thanh toán không hợp lệ
-                MessageBox.Show("Số tiền thanh toán không hợp lệ!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Có lỗi xảy ra khi cập nhật trạng thái của hóa đơn!");
+                return;
             }
+            LoadData(hoaDonSer.Getview());
         }
 
 
@@ -627,9 +659,9 @@ namespace PRL.Views
             if (confirmation == DialogResult.Yes)
             {
                 var hoadon = new Hoadon();
-                int idnhanvien = NhanVienService.GetIdNhanVien(int.Parse(label_NhanVien.Text));
+                int idnhanvien = NhanVienService.GetIdNhanVien(label_NhanVien.Text);
                 // Lấy thông tin khách hàng từ ComboBox và TextBox
-                string tenKhachHang = cbb_KhachHang.Text;
+                string tenKhachHang = txt_KhachHangMoi.Text;
                 string sdtKhachHang = txt_sdtKH.Text;
 
                 // Kiểm tra xem loại khách hàng là Khách Lẻ hay Thành Viên
@@ -638,7 +670,6 @@ namespace PRL.Views
                     MessageBox.Show("Thông Báo Bạn Đang Thêm Khách Hàng.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     // Nếu là Khách Lẻ, tự động thêm mới khách hàng
                     btn_ThemKH_Click();
-                    return;
                 }
                 else if (cbb_KieuKH.Text == "Thành Viên")
                 {
@@ -659,13 +690,12 @@ namespace PRL.Views
                     MessageBox.Show($"Không tìm thấy khách hàng có tên '{tenKhachHang}' và số điện thoại '{sdtKhachHang}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if(string.IsNullOrEmpty(cbb_PhuongThucThanhToan.Text))
+                if (string.IsNullOrEmpty(cbb_PhuongThucThanhToan.Text))
                 {
-                    MessageBox.Show($"Phương Thức Thanh Toán Đang Bỏ Trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }    
+                    hoadon.Phuongthucthanhtoan = "";
+                }
                 // Lấy ngày tạo từ DateTimePicker
-                DateOnly ngayTao = DateOnly.FromDateTime(dtp_NgayTao.Value);
+                DateTime ngayTao = dtp_NgayTao.Value;
 
                 // Gán giá trị cho hóa đơn
                 hoadon.IdNhanvien = Convert.ToInt32(label_NhanVien.Text);
@@ -690,9 +720,10 @@ namespace PRL.Views
                 {
                     // Kiểm tra khuyến mại và xử lý tương ứng
                     string khuyenmaiStatus = KhuyenMaiService.CheckKhuyenMai(idKhachHang, idKhuyenMai);
-                    if (khuyenmaiStatus == "Khách Hàng Đã Sử Dụng Mã Khuyến Mại")
+                    if (khuyenmaiStatus == "Khách hàng đã sử dụng mã khuyến mại.")
                     {
                         MessageBox.Show(khuyenmaiStatus, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        Cbb_MKM.Text = "";
                         return; // Ngăn người dùng tiếp tục quá trình lưu hóa đơn
                     }
                     else
@@ -700,7 +731,7 @@ namespace PRL.Views
                         // Gọi phương thức UpdateSoLuongKhuyenMai từ KhuyenMaiService
                         string updateStatus = KhuyenMaiService.UpdateSoLuongKhuyenMai(idKhuyenMai);
                         // Kiểm tra kết quả trả về từ phương thức và xử lý tương ứng
-                        if (updateStatus == "Áp Dụng Khuyến Mại Thành Công")
+                        if (updateStatus == "Áp dụng khuyến mại thành công.")
                         {
                             hoadon.IdKhuyenmai = idKhuyenMai;
                         }
@@ -720,91 +751,199 @@ namespace PRL.Views
                 }
                 hoadon.Tongtien = tongThanhToan;
 
-                // Thêm hóa đơn vào danh sách
-                HoaDonRepos.AddHoaDon(hoadon);
-
                 // Lấy id hóa đơn vừa thêm
-                int idHoaDon = hoadon.IdHoadon;
-
-                // Kiểm tra xem ListView có mục nào không
-                if (listView1.Items.Count == 0)
+                string idHoaDon = txtHoaDon.Text;
+                bool isExistAndMatch = HoaDonRepos.CheckExistAndMatchIdHoadon(idHoaDon);
+                // Kiểm tra xem hóa đơn đã tồn tại và trùng khớp chưa
+                if (isExistAndMatch)
                 {
-                    MessageBox.Show("Danh sách sản phẩm trống. Vui lòng thêm ít nhất một sản phẩm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    // Nếu hóa đơn đã tồn tại và trùng khớp, thực hiện cập nhật
+                    DialogResult confirmation2 = MessageBox.Show("Hóa Đơn Đã Tồn Tại, Bạn Có Muốn Cập Nhật Không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (confirmation2 == DialogResult.Yes)
+                    {
+                        // Gọi phương thức cập nhật hóa đơn
+                        bool result = HoaDonRepos.UpdateHoaDon(idHoaDon);
+                        if (result)
+                        {
+                            // Thực hiện cập nhật dữ liệu sau khi kiểm tra và trùng khớp id hóa đơn
+                            UpdateDataAfterChecking(idHoaDon);
+                            MessageBox.Show("Cập nhật hóa đơn thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Cập nhật hóa đơn không thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    else
+                    {
+                        // Người dùng không muốn cập nhật, thoát khỏi phương thức
+                        return;
+                    }
+                }
+                else
+                {
+                    hoadon.IdHoadon = idHoaDon;
+                    // Thêm hóa đơn vào danh sách
+                    HoaDonRepos.AddHoaDon(hoadon);
+
+                    // Kiểm tra xem ListView có mục nào không
+                    if (listView1.Items.Count == 0)
+                    {
+                        MessageBox.Show("Danh sách sản phẩm trống. Vui lòng thêm ít nhất một sản phẩm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // Lưu thông tin cho từng sản phẩm trong ListView
+                    foreach (ListViewItem lv in listView1.Items)
+                    {
+                        // Lấy thông tin từ ListView
+                        string tenSanPham = lv.SubItems[1].Text;
+                        int soLuong = int.Parse(lv.SubItems[4].Text);
+                        float gia = float.Parse(lv.SubItems[5].Text);
+                        string mau = lv.SubItems[2].Text;
+                        int size = int.Parse(lv.SubItems[3].Text);
+
+                        // Tìm ID của sản phẩm từ tên sản phẩm
+                        int IdSanPham = SanPhamRepos.GetSanPhamId(tenSanPham);
+                        if (IdSanPham == -1)
+                        {
+                            MessageBox.Show($"Không tìm thấy sản phẩm '{tenSanPham}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        // Tìm ID của màu từ tên màu
+                        int IdMau = SanPhamChiTietRepos.GetMauId(mau);
+                        if (IdMau == -1)
+                        {
+                            MessageBox.Show($"Không tìm thấy màu '{mau}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        // Tìm ID của kích thước từ tên kích thước
+                        int IdKichThuoc = SanPhamChiTietRepos.GetSizeId(size);
+                        if (IdKichThuoc == -1)
+                        {
+                            MessageBox.Show($"Không tìm thấy kích thước '{size}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        // Tìm idsanphamchitiet dựa trên IdSanPham, IdMau và IdKichThuoc
+                        int idSanPhamCT = SanPhamChiTietRepos.GetIdSPCT(IdSanPham, IdMau, IdKichThuoc);
+                        if (idSanPhamCT == -1)
+                        {
+                            MessageBox.Show($"Không tìm thấy sản phẩm chi tiết cho '{tenSanPham}', màu '{mau}' và kích thước '{size}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        // Kiểm tra và cập nhật số lượng tồn kho của sản phẩm chi tiết
+                        int soLuongTonKho = SanPhamChiTietRepos.GetSoLuongTonKho(idSanPhamCT);
+                        if (soLuongTonKho < soLuong)
+                        {
+                            MessageBox.Show($"Số lượng tồn kho không đủ cho sản phẩm '{tenSanPham}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        // Trừ số lượng đã bán từ số lượng tồn kho
+                        soLuongTonKho -= soLuong;
+
+                        // Cập nhật số lượng tồn kho mới của sản phẩm chi tiết
+                        SanPhamChiTietRepos.UpdateSoLuongTonKho(idSanPhamCT, soLuongTonKho);
+
+                        // Thêm hóa đơn chi tiết cho mỗi sản phẩm
+                        Hoadonct hoadonct = new Hoadonct
+                        {
+                            IdHoadon = idHoaDon,
+                            IdSanphamct = idSanPhamCT,
+                            Soluong = soLuong,
+                            Giasp = gia,
+                        };
+
+                        HoaDonCTRepos.AddHoaDonCT(hoadonct);
+                    }
+
+                    // Hiển thị thông báo thành công
+                    MessageBox.Show("Thêm hóa đơn thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                btn_ThanhToan.Enabled = true;
+                cbb_PhuongThucThanhToan.Enabled = true;
+                LoadData(hoaDonSer.Getview());
+                cbb_SanPham.ResetText();
+                foreach (var sanPhamChiTiet in SanPhamChiTietRepos.GetAllSPCT())
+                {
+                    // Kiểm tra nếu số lượng sản phẩm lớn hơn hoặc bằng 1
+                    if (sanPhamChiTiet.Soluong >= 1)
+                    {
+                        int? idSanPhamNullable = sanPhamChiTiet.IdSanpham;
+                        if (idSanPhamNullable.HasValue && !addedIds.Contains(idSanPhamNullable.Value))
+                        {
+                            int idSanPham = idSanPhamNullable.Value; // Ép kiểu từ int? sang int
+                            string tenSanPham = SanPhamRepos.GetTenSanPhamById(idSanPham);
+                            cbb_SanPham.Items.Add(tenSanPham);
+                            addedIds.Add(idSanPham); // Thêm id đã thêm vào HashSet
+                        }
+                    }
+                }
+            }
+        }
+        private void UpdateDataAfterChecking(string idHoaDon)
+        {
+            // Lấy danh sách sản phẩm chi tiết mới từ ListView
+            var danhSachChiTietMoi = new List<Hoadonct>();
+            foreach (ListViewItem lv in listView1.Items)
+            {
+                // Lấy thông tin từ ListView
+                string tenSanPham = lv.SubItems[1].Text;
+                int soLuong = int.Parse(lv.SubItems[4].Text);
+                double gia = double.Parse(lv.SubItems[5].Text);
+                string mau = lv.SubItems[2].Text;
+                int size = int.Parse(lv.SubItems[3].Text); // Sửa lại chỉ số cột
+
+                // Tìm ID của sản phẩm từ tên sản phẩm
+                int IdSanPham = SanPhamRepos.GetSanPhamId(tenSanPham);
+                if (IdSanPham == -1)
+                {
+                    MessageBox.Show($"Không tìm thấy sản phẩm '{tenSanPham}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Lưu thông tin cho từng sản phẩm trong ListView
-                foreach (ListViewItem lv in listView1.Items)
+                // Tìm ID của màu từ tên màu
+                int IdMau = SanPhamChiTietRepos.GetMauId(mau);
+                if (IdMau == -1)
                 {
-                    // Lấy thông tin từ ListView
-                    string tenSanPham = lv.SubItems[1].Text;
-                    int soLuong = int.Parse(lv.SubItems[4].Text);
-                    float gia = float.Parse(lv.SubItems[5].Text);
-                    string mau = lv.SubItems[2].Text;
-                    int size = int.Parse(lv.SubItems[3].Text);
-
-                    // Tìm ID của sản phẩm từ tên sản phẩm
-                    int IdSanPham = SanPhamRepos.GetSanPhamId(tenSanPham);
-                    if (IdSanPham == -1)
-                    {
-                        MessageBox.Show($"Không tìm thấy sản phẩm '{tenSanPham}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    // Tìm ID của màu từ tên màu
-                    int IdMau = SanPhamChiTietRepos.GetMauId(mau);
-                    if (IdMau == -1)
-                    {
-                        MessageBox.Show($"Không tìm thấy màu '{mau}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    // Tìm ID của kích thước từ tên kích thước
-                    int IdKichThuoc = SanPhamChiTietRepos.GetSizeId(size);
-                    if (IdKichThuoc == -1)
-                    {
-                        MessageBox.Show($"Không tìm thấy kích thước '{size}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    // Tìm idsanphamchitiet dựa trên IdSanPham, IdMau và IdKichThuoc
-                    int idSanPhamCT = SanPhamChiTietRepos.GetIdSPCT(IdSanPham, IdMau, IdKichThuoc);
-                    if (idSanPhamCT == -1)
-                    {
-                        MessageBox.Show($"Không tìm thấy sản phẩm chi tiết cho '{tenSanPham}', màu '{mau}' và kích thước '{size}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    // Kiểm tra và cập nhật số lượng tồn kho của sản phẩm chi tiết
-                    int soLuongTonKho = SanPhamChiTietRepos.GetSoLuongTonKho(idSanPhamCT);
-                    if (soLuongTonKho < soLuong)
-                    {
-                        MessageBox.Show($"Số lượng tồn kho không đủ cho sản phẩm '{tenSanPham}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-                    // Trừ số lượng đã bán từ số lượng tồn kho
-                    soLuongTonKho -= soLuong;
-
-                    // Cập nhật số lượng tồn kho mới của sản phẩm chi tiết
-                    SanPhamChiTietRepos.UpdateSoLuongTonKho(idSanPhamCT, soLuongTonKho);
-
-                    // Thêm hóa đơn chi tiết cho mỗi sản phẩm
-                    Hoadonct hoadonct = new Hoadonct
-                    {
-                        IdHoadon = idHoaDon,
-                        IdSanphamct = idSanPhamCT,
-                        Soluong = soLuong,
-                        Giasp = gia,
-                    };
-
-                    HoaDonCTRepos.AddHoaDonCT(hoadonct);
+                    MessageBox.Show($"Không tìm thấy màu '{mau}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
 
-                // Hiển thị thông báo thành công
-                MessageBox.Show("Thêm hóa đơn thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                btn_ThanhToan.Enabled = true;
+                // Tìm ID của kích thước từ tên kích thước
+                int IdKichThuoc = SanPhamChiTietRepos.GetSizeId(size);
+                if (IdKichThuoc == -1)
+                {
+                    MessageBox.Show($"Không tìm thấy kích thước '{size}'.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Tạo một đối tượng Hoadonct mới từ thông tin lấy được
+                var hoadonct = new Hoadonct
+                {
+                    IdHoadon = idHoaDon,
+                    IdSanphamct = SanPhamChiTietRepos.GetIdSPCT(IdSanPham, IdMau, IdKichThuoc),
+                    Soluong = soLuong,
+                    Giasp = gia
+                };
+                danhSachChiTietMoi.Add(hoadonct);
+            }
+
+            // Thực hiện cập nhật dữ liệu
+            bool updateResult = HoaDonRepos.XoaVaCapNhatChiTietHoaDon(idHoaDon, danhSachChiTietMoi);
+            if (updateResult)
+            {
+                MessageBox.Show("Cập nhật hóa đơn thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Cập nhật hóa đơn không thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void txt_ThemSP_Click(object sender, EventArgs e)
         {
             int stt = 1;
@@ -845,21 +984,35 @@ namespace PRL.Views
                 }
             }
 
-            //Thêm sản phẩm vào danh sách
+            // Tạo một ListViewItem mới
             ListViewItem lv1 = new ListViewItem(stt.ToString());
+
+            // Thêm các SubItems vào ListViewItem
             lv1.SubItems.Add(cbb_SanPham.Text);
             lv1.SubItems.Add(cbb_mauSP.Text);
             lv1.SubItems.Add(cbb_SizeSP.Text);
             lv1.SubItems.Add(txt_SoLuongSP.Text);
-            lv1.SubItems.Add(txt_GiaSP.Text);
-            listView1.Items.Add(lv1);
+
+            // Tính tổng tiền cho sản phẩm
+            decimal giaSP = Convert.ToDecimal(txt_GiaSP.Text);
+            int soLuongSP = Convert.ToInt32(txt_SoLuongSP.Text);
+            decimal tongTien = giaSP * soLuongSP;
+            lv1.SubItems.Add(tongTien.ToString()); // Thêm tổng tiền vào cột giá
 
             // Tăng biến STT lên 1 để sử dụng cho sản phẩm tiếp theo
             stt++;
+            // Thêm ListViewItem vào ListView
+            listView1.Items.Add(lv1);
+
             CapNhatGiaTriTongTien();
-            btn_Luu.Enabled = true;
-            textBox1.Enabled = true;
+          
             ResetSP();
+            btn_Luu.Enabled = true;
+            txt_ThemSP .Enabled = false;
+            txt_SoLuongSP.Enabled = false;
+            cbb_SizeSP.Enabled = false;
+            cbb_mauSP.Enabled = false;
+
         }
         public void ResetSP()
         {
@@ -876,11 +1029,10 @@ namespace PRL.Views
             foreach (ListViewItem item in listView1.Items)
             {
                 decimal donGia;
-                int soLuong;
 
-                if (decimal.TryParse(item.SubItems[5].Text, out donGia) && int.TryParse(item.SubItems[4].Text, out soLuong))
+                if (decimal.TryParse(item.SubItems[5].Text, out donGia))
                 {
-                    tongTienHang += donGia * soLuong;
+                    tongTienHang += donGia;
                 }
             }
 
@@ -913,6 +1065,7 @@ namespace PRL.Views
 
         private void txt_XoaSP_Click(object sender, EventArgs e)
         {
+            // Kiểm tra xem có mục nào được chọn trong listView1 hay không
             if (listView1.SelectedItems.Count > 0)
             {
                 // Lấy giá trị của mục được chọn để trừ đi từ tổng giá trị
@@ -922,15 +1075,36 @@ namespace PRL.Views
                 listView1.Items.RemoveAt(listView1.SelectedItems[0].Index);
 
                 // Cập nhật lại tổng giá trị
-                float tongGia = 0;
-                foreach (ListViewItem item in listView1.Items)
-                {
-                    tongGia += float.Parse(item.SubItems[5].Text);
-                }
-                txt_TongTienHang.Text = tongGia.ToString();
+                float tongTienHang = float.Parse(txt_TongTienHang.Text);
+                tongTienHang -= giaCanTru;
+                txt_TongTienHang.Text = tongTienHang.ToString();
+
+                // Cập nhật lại giá trị chiết khấu và tổng thanh toán
                 CapNhatGiaTriTongTien();
-                // Vô hiệu hóa nút Xoá nếu không còn mục được chọn
-                txt_XoaSP.Enabled = false;
+
+                // Kiểm tra số lượng nếu bằng 0 thì vô hiệu hóa nút Xoá
+                if (listView1.Items.Count == 0)
+                {
+                    txt_XoaSP.Enabled = false;
+                }
+
+                //Kiểm tra nếu đã thêm sản phẩm mà thay đổi không muốn thêm nữa thì sẽ trả lại số lượng ban đầu
+                int soLuongTrongKho = 0;
+                if (int.TryParse(txt_SoLuongConTrongKhoSP.Text, out soLuongTrongKho))
+                {
+                    txt_SoLuongConTrongKhoSP.Text = (soLuongTrongKho + int.Parse(listView1.SelectedItems[0].SubItems[4].Text)).ToString();
+                    if (soLuongTrongKho == 0)
+                    {
+                        MessageBox.Show("Vui lòng chọn một sản phẩm để xoá.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                // Hiển thị thông báo lỗi nếu không có mục nào được chọn trong listView1
+                MessageBox.Show("Vui lòng chọn một sản phẩm để xoá.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
         }
 
@@ -967,48 +1141,7 @@ namespace PRL.Views
             }
         }
 
-        private void btn_InHoaDon_Click(object sender, EventArgs e)
-        {
-            Hoadon hoaDon = new Hoadon();
-            // Tạo tên file Excel
-            string fileName = $"HoaDon_{hoaDon.IdHoadon}.xlsx";
 
-            // Đường dẫn để lưu tệp Excel, bạn có thể thay đổi đường dẫn này theo nhu cầu của mình
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName);
-
-            // Tạo một tệp Excel mới
-            FileInfo fileInfo = new FileInfo(filePath);
-            using (ExcelPackage package = new ExcelPackage(fileInfo))
-            {
-                // Tạo một bảng tính mới
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("HoaDon");
-
-                // Định dạng tiêu đề
-                worksheet.Cells["A1"].Value = "Tên Sản Phẩm";
-                worksheet.Cells["B1"].Value = "Số Lượng";
-                worksheet.Cells["C1"].Value = "Giá";
-                worksheet.Cells["D1"].Value = "Màu";
-                worksheet.Cells["E1"].Value = "Kích Thước";
-
-                // Ghi thông tin hóa đơn chi tiết vào tệp Excel
-                int row = 2;
-                foreach (ListViewItem lv in listView1.Items)
-                {
-                    worksheet.Cells[$"A{row}"].Value = lv.SubItems[1].Text;
-                    worksheet.Cells[$"B{row}"].Value = lv.SubItems[2].Text;
-                    worksheet.Cells[$"C{row}"].Value = lv.SubItems[3].Text;
-                    worksheet.Cells[$"D{row}"].Value = lv.SubItems[4].Text;
-                    worksheet.Cells[$"E{row}"].Value = lv.SubItems[5].Text;
-                    row++;
-                }
-
-                // Lưu và đóng gói tệp Excel
-                package.Save();
-            }
-
-            // Hiển thị thông báo in hoá đơn thành công
-            MessageBox.Show($"Đã xuất hoá đơn thành công vào file {fileName}.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
 
         private void Cbb_MKM_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1042,7 +1175,7 @@ namespace PRL.Views
                 }
 
                 // Kiểm tra hạn khuyến mại đã hết hạn chưa
-                if (khuyenMai.Ngayhethan < DateOnly.FromDateTime(DateTime.Today))
+                if (khuyenMai.Ngayhethan < DateTime.Today)
                 {
                     // Nếu đã hết hạn, hiển thị thông báo và trả về -1 để chỉ ra rằng hạn khuyến mại đã hết
                     MessageBox.Show("Mã khuyến mại đã hết hạn sử dụng. Vui lòng chọn khuyến mại khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1085,26 +1218,7 @@ namespace PRL.Views
             UpdateDateTimePickerValue();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            // Kiểm tra xem nếu textBox1 không rỗng và có thể được chuyển đổi sang decimal
-            if (!string.IsNullOrEmpty(textBox1.Text) && decimal.TryParse(textBox1.Text, out decimal tienkhachtra))
-            {
-                // Gọi phương thức capnhattienkhachphaitra để cập nhật tổng số tiền khách phải trả
-                capnhattienkhachphaitra(tienkhachtra);
-            }
-        }
 
-        private void capnhattienkhachphaitra(decimal tienkhachtra)
-        {
-            decimal tienhang = decimal.Parse(txt_TongThanhToan.Text.Replace(",", "")); // Lấy giá trị tổng tiền hàng
-
-            // Tính toán số tiền khách phải trả
-            decimal tienkhachphaitra = tienkhachtra - tienhang;
-
-            // Hiển thị số tiền khách phải trả
-            textBox2.Text = tienkhachphaitra.ToString("N0"); // Định dạng số tiền với dấu phân cách ngàn
-        }
         private void FormatCurrencyTextBox(System.Windows.Forms.TextBox textBox)
         {
             // Kiểm tra xem TextBox có giá trị hay không
@@ -1128,6 +1242,321 @@ namespace PRL.Views
         }
 
         private void cbb_PhuongThucThanhToan_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private static int indexer = 1;
+
+        private void txtHoaDon_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        public void ExportPDFfile()
+        {
+            PrintDocument printDocument = new PrintDocument();
+            printDocument.PrintPage += printDocument1_PrintPage;
+            printDocument.Print();
+
+
+        }
+
+        private void btn_InHoaDon_Click(object sender, EventArgs e)
+        {
+            ExportPDFfile();
+            MessageBox.Show("In Hoá Đơn Thành Công","Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public static string GenerateInvoiceCode()
+        {
+            DateTime currentDate = DateTime.Now;
+            string day = currentDate.Day < 10 ? currentDate.Day.ToString() : currentDate.Day.ToString("D2");
+            string month = currentDate.Month.ToString("D2");
+            string year = currentDate.Year.ToString();
+            string gio = currentDate.Hour.ToString();
+            string phut = currentDate.Minute.ToString();
+            string giay = currentDate.Second.ToString();
+
+            return $"{day}{month}{year}{gio}{phut}{giay}";
+        }
+
+        private void btn_lammoihd_Click(object sender, EventArgs e)
+        {
+            //khi tôi click vào nút làm mới hóa đơn thì tất cả các ô sẽ trở về giá trị ban đầu và các button sẽ trở về trạng thái ban đầu
+            ResetSP();
+            listView1.Items.Clear();
+            ResetText();
+
+            txtHoaDon.Text = GenerateInvoiceCode().ToString();
+
+            txt_sdtKH.Text = "";
+            txt_diachiKH.Text = "";
+            cbb_PhuongThucThanhToan.Text = "";
+            txt_TongTienHang.Text = "";
+            txt_ChietKhau.Text = "";
+            txt_TongThanhToan.Text = "";
+            listView1.Items.Clear();
+            txtHoaDon.Text = "";
+            Cbb_MKM.Text = "";
+            dtp_NgayTao.Value = DateTime.Now;
+            txt_TongTienHang.Text = "";
+            txt_ChietKhau.Text = "";
+            txt_TongThanhToan.Text = "";
+            txt_sdtKH.Text = "";
+            txt_diachiKH.Text = "";
+            cbb_PhuongThucThanhToan.Text = "";
+            txt_GiaSP.Text = "";
+            txt_SoLuongSP.Text = "";
+            txt_SoLuongConTrongKhoSP.Text = "";
+            cbb_KieuKH.Enabled = true;
+            cbb_KieuKH.Text = "";
+
+
+
+        }
+
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (!groupBox7.Enabled)
+            {
+                // Nếu groupBox7 đang bị disable, enable dataGridView1 và groupBox7
+                dataGridView1.Enabled = true;
+                groupBox7.Enabled = true;
+            }
+            else
+            {
+                // Nếu groupBox7 đang được enable, disable dataGridView1 và groupBox7
+                dataGridView1.Enabled = false;
+                groupBox7.Enabled = false;
+            }
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+            if (e.RowIndex >= 0 && e.RowIndex < dataGridView1.Rows.Count - 1)
+            {
+                int index = e.RowIndex;
+                var selectChild = dataGridView1.Rows[index];
+                txtHoaDon.Text = selectChild.Cells[1].Value.ToString();
+                //nếu cbb_mkm không có giá trị thì sẽ bo qua
+                if (selectChild.Cells[2].Value == null)
+                {
+                    Cbb_MKM.Text = "";
+                }
+                cbb_KieuKH.Text = ("Thành Viên");
+                dtp_NgayTao.Value = Convert.ToDateTime(selectChild.Cells[3].Value); // Đảm bảo hiển thị ngày tháng nếu dữ liệu là kiểu DateTime
+                txt_TongThanhToan.Text = selectChild.Cells[4].Value.ToString();
+                // Lấy số điện thoại từ cell 5
+                string soDienThoai = selectChild.Cells[5].Value.ToString();
+                // Hiển thị số điện thoại trong TextBox
+                txt_sdtKH.Text = soDienThoai;
+
+
+                // Chuyển số điện thoại thành ID khách hàng
+                int idKhachHang = KhachHangRepository.GetIdSPCT1(soDienThoai);
+                // Lấy tên khách hàng từ ID khách hàng
+                string tenKhachHang = KhachHangRepository.GetTenKhachHang(idKhachHang);
+                // Hiển thị tên khách hàng trong ComboBox
+
+                string diachi = KhachHangRepository.GetDiaChiKhachHang(idKhachHang);
+                // Hiển thị địa chỉ khách hàng
+                txt_diachiKH.Text = diachi;
+                txt_KhachHangMoi.Text = tenKhachHang;
+
+                cbb_PhuongThucThanhToan.Text = selectChild.Cells[7].Value.ToString();
+
+                // Xuất sản phẩm chi tiết vào ListView dựa vào ID hóa đơn đã chọn
+                LoadChiTietHoaDon(txtHoaDon.Text);
+                //Hiển thị thông tin liên quan đến lisview
+
+                cbb_KieuKH.Enabled = false;
+
+                txt_sdtKH.Enabled = false;
+                txt_diachiKH.Enabled = false;
+                Cbb_MKM.Enabled = false;
+                btn_Luu.Enabled = true;
+                cbb_PhuongThucThanhToan.Enabled = true;
+                btn_ThanhToan.Enabled = true;
+                btn_TimSDTKH.Enabled = false;
+                txt_SDTTK.Enabled = false;
+                LoadData(hoaDonSer.Getview());
+            }
+            else
+            {
+                // Nếu người dùng bấm vào bảng trống hoặc bảng tiêu đề, hiển thị một thông báo
+                MessageBox.Show("Vui lòng chọn một dòng dữ liệu hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void LoadChiTietHoaDon(string idHoaDon)
+        {
+            // Xóa dữ liệu cũ trong ListView
+            listView1.Items.Clear();
+
+            // Lấy danh sách ID sản phẩm chi tiết của hóa đơn có ID là idHoaDon
+            int? idhoadonct = HoaDonRepos.GetIdHoaDonToHoaDonCT(idHoaDon);
+
+            // Kiểm tra xem idhoadonct có giá trị hay không
+            if (idhoadonct.HasValue)
+            {
+                // Lấy danh sách chi tiết hóa đơn từ ID sản phẩm chi tiết
+                List<int?> danhSachChiTiet = HoaDonRepos.GetIdHoaDonCTToSanPhamCTList(idhoadonct.Value);
+
+                if (danhSachChiTiet != null && danhSachChiTiet.Count > 0)
+                {
+                    // Duyệt qua danh sách chi tiết và thêm vào ListView
+                    int STT = 1;
+                    foreach (var sanphamctId in danhSachChiTiet)
+                    {
+                        // Lấy thông tin sản phẩm từ ID sản phẩm chi tiết
+                        int? idsanpham = SanPhamChiTietRepos.GetIdSanPhamSPCT(sanphamctId);
+                        int? idmau = SanPhamChiTietRepos.GetIdMauSPCT(sanphamctId);
+                        int? idkichthuoc = SanPhamChiTietRepos.GetIdSizeSPCT(sanphamctId);
+
+                        string tensanpham = SanPhamChiTietRepos.GetTenSanPhamById(idsanpham);
+                        string tenmau = SanPhamChiTietRepos.GetMauById(idmau);
+                        int? size = SanPhamChiTietRepos.GetSizeById(idkichthuoc);
+                        int? soluong = HoaDonRepos.GetSoluongByIdHoaDonCT(idhoadonct);
+                        double? gia = HoaDonRepos.GetGiaByIdHoaDonCT(idhoadonct);
+
+                        // Tạo một ListViewItem mới
+                        ListViewItem item = new ListViewItem(STT.ToString());
+                        STT++;
+
+                        // Thêm các sub-items vào ListViewItem
+                        item.SubItems.Add(tensanpham);
+                        item.SubItems.Add(tenmau);
+                        item.SubItems.Add(size.ToString());
+                        item.SubItems.Add(soluong.ToString());
+                        item.SubItems.Add(gia.ToString());
+
+                        // Thêm ListViewItem vào ListView
+                        listView1.Items.Add(item);
+                    }
+                }
+                else
+                {
+                    // Hiển thị thông báo nếu không có dữ liệu
+                    MessageBox.Show("Không có dữ liệu chi tiết hóa đơn cho hóa đơn này.");
+                }
+            }
+            else
+            {
+                // Xử lý trường hợp khi không tìm thấy ID sản phẩm chi tiết
+                MessageBox.Show("Không tìm thấy ID sản phẩm chi tiết cho hóa đơn này.");
+            }
+        }
+        private Bitmap GenerateQRCode(string data)
+        {
+
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(data, QRCodeGenerator.ECCLevel.Q);
+            QRCoder.QRCode qrCode = new QRCoder.QRCode(qrCodeData);
+            Bitmap qrCodeImage = qrCode.GetGraphic(5);
+            return qrCodeImage;
+
+
+
+        }
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            LoadData(hoaDonSer.GetSearch1(textBox1.Text));
+        }
+
+        private void printDocument1_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            // Thiết lập font chữ và màu sắc
+            System.Drawing.Font titleFont = new System.Drawing.Font("Arial", 20, System.Drawing.FontStyle.Bold);
+            System.Drawing.Font contentFont = new System.Drawing.Font("Arial", 12);
+            System.Drawing.Brush blackBrush = System.Drawing.Brushes.Black;
+
+            // Thiết lập các khoảng cách và kích thước
+            int margin = 50;
+            int headerHeight = 30; // Giảm chiều cao tiêu đề để tạo không gian giữa các dòng nhỏ hơn
+            int spacing = 10; // Giảm khoảng cách giữa các dòng để tạo không gian giữa chúng nhỏ hơn
+            int yPos = margin;
+
+            string maHoaDon = txtHoaDon.Text;
+            string sdtKhachHang = txt_sdtKH.Text;
+            string phuongThucThanhToan = cbb_PhuongThucThanhToan.Text;
+            string maKhuyenMai = Cbb_MKM.Text;
+            DateTime ngayTaoHoaDon = dtp_NgayTao.Value;
+            string Tenkhachhang = txt_KhachHangMoi.Text;
+
+            // Tiêu đề hóa đơn
+            string title = "Hóa Đơn Bán Hàng";
+            SizeF titleSize = e.Graphics.MeasureString(title, titleFont);
+            e.Graphics.DrawString(title, titleFont, blackBrush, (e.PageBounds.Width - titleSize.Width) / 2, yPos);
+            yPos += (int)titleSize.Height + spacing;
+
+            // Thông tin hóa đơn
+            e.Graphics.DrawString($"Mã Hóa Đơn: {maHoaDon}", contentFont, blackBrush, margin, yPos);
+            yPos += headerHeight + spacing; // Thêm khoảng cách giữa các dòng
+            e.Graphics.DrawString($"Tên Khách Hàng: {Tenkhachhang}", contentFont, blackBrush, margin, yPos);
+            yPos += headerHeight + spacing;
+            e.Graphics.DrawString($"Số Điện Thoại Khách Hàng: {sdtKhachHang}", contentFont, blackBrush, margin, yPos);
+            yPos += headerHeight + spacing;
+            e.Graphics.DrawString($"Phương Thức Thanh Toán: {phuongThucThanhToan}", contentFont, blackBrush, margin, yPos);
+            yPos += headerHeight + spacing;
+            e.Graphics.DrawString($"Mã Khuyến Mãi: {maKhuyenMai}", contentFont, blackBrush, margin, yPos);
+            yPos += headerHeight + spacing;
+            e.Graphics.DrawString($"Ngày Tạo Hóa Đơn: {ngayTaoHoaDon.ToString("dd/MM/yyyy")}", contentFont, blackBrush, margin, yPos);
+            yPos += headerHeight + spacing;
+
+            // Tiêu đề danh sách sản phẩm
+            string productListTitle = "Danh Sách Sản Phẩm";
+            SizeF productListTitleSize = e.Graphics.MeasureString(productListTitle, titleFont);
+            yPos += spacing;
+            e.Graphics.DrawString(productListTitle, titleFont, blackBrush, (e.PageBounds.Width - productListTitleSize.Width) / 2, yPos);
+            yPos += (int)productListTitleSize.Height + spacing;
+
+            // Tạo các biến để lưu trữ vị trí của từng cột
+            int col1Pos = margin; // Vị trí bắt đầu của cột Tên Sản Phẩm
+            int col2Pos = col1Pos + 100; // Vị trí bắt đầu của cột Màu
+            int col3Pos = col2Pos + 300; // Vị trí bắt đầu của cột Size
+            int col4Pos = col3Pos + 300;  // Vị trí bắt đầu của cột Số Lượng
+            int col5Pos = col4Pos + 400; // Vị trí bắt đầu của cột Giá Sản Phẩm
+            int currentRow = 0;
+
+            // Lặp qua danh sách sản phẩm và vẽ thông tin của từng sản phẩm
+            // Tạo một biến để lưu trữ chiều cao của mỗi dòng
+            int rowHeight = headerHeight + spacing;
+
+            // Lặp qua danh sách sản phẩm và vẽ thông tin của từng sản phẩm
+            foreach (ListViewItem item in listView1.Items)
+            {
+                // Lấy thông tin sản phẩm từ các subitems của mỗi item
+                string tenSP = item.SubItems[1].Text;
+                string mauSP = item.SubItems[2].Text;
+                string sizeSP = item.SubItems[3].Text;
+                string soLuongSP = item.SubItems[4].Text;
+                string giaSP = item.SubItems[5].Text;
+
+                // Vẽ thông tin sản phẩm tại vị trí hàng tương ứng
+                e.Graphics.DrawString($"Tên Sản Phẩm {tenSP}", contentFont, blackBrush, margin, yPos + currentRow * rowHeight);
+                e.Graphics.DrawString($"Màu {mauSP}", contentFont, blackBrush, col2Pos, yPos + currentRow * rowHeight);
+                e.Graphics.DrawString($"Size {sizeSP}", contentFont, blackBrush, col3Pos, yPos + currentRow * rowHeight);
+                e.Graphics.DrawString($"Số Lượng{soLuongSP}", contentFont, blackBrush, col4Pos, yPos + currentRow * rowHeight);
+                e.Graphics.DrawString($"Giá Sản Phẩm {giaSP}", contentFont, blackBrush, col5Pos, yPos + currentRow * rowHeight);
+
+                // Tăng vị trí hàng
+                currentRow++;
+            }
+
+            // Tăng vị trí hàng
+            yPos += currentRow * rowHeight;
+            // Tăng vị trí hàng
+            yPos += currentRow * (headerHeight + spacing);
+
+            // Mã QR
+            string qrData = txt_TongThanhToan.Text;
+            Bitmap qrCodeImage = GenerateQRCode(qrData);
+            e.Graphics.DrawImage(qrCodeImage, new PointF(margin, yPos + spacing));
+        }
+
+        private void txt_SDTTK_TextChanged(object sender, EventArgs e)
         {
 
         }

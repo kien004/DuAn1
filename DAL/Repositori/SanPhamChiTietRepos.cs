@@ -87,6 +87,57 @@ namespace DAL.Repositori
                 return -1;
             }
         }
+        public int? GetIdSanPhamSPCT(int? id)
+        {
+            // Tìm kiếm IdSanphamct dựa trên id của sản phẩm, màu và kích thước
+            var sanPhamCT = _Contex.Sanphamcts.FirstOrDefault(spct => spct.IdSanphamct == id);
+
+            if (sanPhamCT != null)
+            {
+                // Nếu tìm thấy, trả về IdSanphamct
+                return sanPhamCT.IdSanpham;
+            }
+            else
+            {
+                // Nếu không tìm thấy, trả về giá trị mặc định hoặc thực hiện xử lý phù hợp
+                // Ở đây, ta có thể trả về giá trị mặc định là -1 hoặc một giá trị thích hợp khác
+                return -1;
+            }
+        }
+        public int? GetIdMauSPCT(int? id)
+        {
+            // Tìm kiếm IdSanphamct dựa trên id của sản phẩm, màu và kích thước
+            var sanPhamCT = _Contex.Sanphamcts.FirstOrDefault(spct => spct.IdSanphamct == id);
+
+            if (sanPhamCT != null)
+            {
+                // Nếu tìm thấy, trả về IdSanphamct
+                return sanPhamCT.IdMau;
+            }
+            else
+            {
+                // Nếu không tìm thấy, trả về giá trị mặc định hoặc thực hiện xử lý phù hợp
+                // Ở đây, ta có thể trả về giá trị mặc định là -1 hoặc một giá trị thích hợp khác
+                return -1;
+            }
+        }
+        public int? GetIdSizeSPCT(int? id)
+        {
+            // Tìm kiếm IdSanphamct dựa trên id của sản phẩm, màu và kích thước
+            var sanPhamCT = _Contex.Sanphamcts.FirstOrDefault(spct => spct.IdSanphamct == id);
+
+            if (sanPhamCT != null)
+            {
+                // Nếu tìm thấy, trả về IdSanphamct
+                return sanPhamCT.IdKichthuoc;
+            }
+            else
+            {
+                // Nếu không tìm thấy, trả về giá trị mặc định hoặc thực hiện xử lý phù hợp
+                // Ở đây, ta có thể trả về giá trị mặc định là -1 hoặc một giá trị thích hợp khác
+                return -1;
+            }
+        }
         public int GetSoLuongTonKho(int idSanPhamCT)
         {
             var mau = _Contex.Sanphamcts.FirstOrDefault(sp => sp.IdSanphamct == idSanPhamCT);
@@ -143,7 +194,7 @@ namespace DAL.Repositori
             }
             return -1; // Trả về -1 nếu không tìm thấy sản phẩm chi tiết
         }
-        public string GetTenSanPhamById(int idSanPham)
+        public string GetTenSanPhamById(int? idSanPham)
         {
             var sanPham = _Contex.Sanphams.FirstOrDefault(sp => sp.IdSanpham == idSanPham);
             if (sanPham != null)
@@ -152,7 +203,7 @@ namespace DAL.Repositori
             }
             return null; // Trả về null nếu không tìm thấy sản phẩm
         }
-        public string GetMauById(int idSanPham)
+        public string GetMauById(int? idSanPham)
         {
             var sanPham = _Contex.Maus.FirstOrDefault(sp => sp.IdMau == idSanPham);
             if (sanPham != null)
@@ -161,7 +212,7 @@ namespace DAL.Repositori
             }
             return null; // Trả về null nếu không tìm thấy sản phẩm
         }
-        public int? GetSizeById(int idKichThuoc)
+        public int? GetSizeById(int? idKichThuoc)
         {
             var kichThuoc = _Contex.Kichthuocs.FirstOrDefault(kt => kt.IdKichthuoc == idKichThuoc);
             if (kichThuoc != null)
@@ -288,6 +339,7 @@ namespace DAL.Repositori
         }
         public bool DeleteSPCT(int id)
         {
+
             try
             {
                 var exist = _Contex.Sanphamcts.Find(id);
@@ -301,7 +353,18 @@ namespace DAL.Repositori
                 return false;
             }
         }
-    
+        public int checkspctcotronghoadon(int id)
+        {
+            var spct = _Contex.Hoadoncts.FirstOrDefault(sp => sp.IdSanphamct == id);
+            if (spct != null)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
         public int UpdateSPCT(int id, Sanphamct spct)
         {
             try

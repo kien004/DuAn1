@@ -45,9 +45,9 @@
             groupBox2.Controls.Add(dateBatDau);
             groupBox2.Controls.Add(dateTimePicker1);
             groupBox2.Controls.Add(dgrTopKhachHang);
-            groupBox2.Location = new Point(50, 38);
+            groupBox2.Location = new Point(0, 12);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(1063, 602);
+            groupBox2.Size = new Size(1063, 536);
             groupBox2.TabIndex = 3;
             groupBox2.TabStop = false;
             groupBox2.Text = "Top 10 nạp vip";
@@ -96,7 +96,7 @@
             dgrTopKhachHang.Location = new Point(62, 96);
             dgrTopKhachHang.Name = "dgrTopKhachHang";
             dgrTopKhachHang.RowHeadersWidth = 51;
-            dgrTopKhachHang.Size = new Size(964, 480);
+            dgrTopKhachHang.Size = new Size(964, 388);
             dgrTopKhachHang.TabIndex = 0;
             dgrTopKhachHang.CellContentClick += dataGridView2_CellContentClick;
             // 
@@ -104,7 +104,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1162, 652);
+            ClientSize = new Size(1076, 563);
             Controls.Add(groupBox2);
             Name = "TopKhachHang";
             Text = "TopKhachHang";

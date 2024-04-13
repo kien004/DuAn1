@@ -27,7 +27,9 @@ public partial class Hoadonct
     public int? IdSanphamct { get; set; }
 
     [Column("ID_HOADON")]
-    public int? IdHoadon { get; set; }
+    [StringLength(50)]
+    [Unicode(false)]
+    public string? IdHoadon { get; set; }
 
     [ForeignKey("IdHoadon")]
     [InverseProperty("Hoadoncts")]

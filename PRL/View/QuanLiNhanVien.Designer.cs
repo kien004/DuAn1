@@ -30,7 +30,8 @@
         {
             dataGridView1 = new DataGridView();
             groupBox1 = new GroupBox();
-            btn_xoa = new Button();
+            button2 = new Button();
+            checkBox1 = new CheckBox();
             btn_sua = new Button();
             btn_them = new Button();
             dateTimePicker1 = new DateTimePicker();
@@ -52,7 +53,6 @@
             label9 = new Label();
             pictureBox1 = new PictureBox();
             label1 = new Label();
-            txt_viewpasswork = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -71,7 +71,8 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(btn_xoa);
+            groupBox1.Controls.Add(button2);
+            groupBox1.Controls.Add(checkBox1);
             groupBox1.Controls.Add(btn_sua);
             groupBox1.Controls.Add(btn_them);
             groupBox1.Controls.Add(dateTimePicker1);
@@ -98,16 +99,26 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Thông tin";
             // 
-            // btn_xoa
+            // button2
             // 
-            btn_xoa.Location = new Point(848, 171);
-            btn_xoa.Margin = new Padding(3, 4, 3, 4);
-            btn_xoa.Name = "btn_xoa";
-            btn_xoa.Size = new Size(97, 31);
-            btn_xoa.TabIndex = 20;
-            btn_xoa.Text = "Xóa";
-            btn_xoa.UseVisualStyleBackColor = true;
-            btn_xoa.Click += btn_xoa_Click;
+            button2.Location = new Point(848, 170);
+            button2.Margin = new Padding(3, 4, 3, 4);
+            button2.Name = "button2";
+            button2.Size = new Size(97, 31);
+            button2.TabIndex = 21;
+            button2.Text = "Clear";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(107, 211);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(148, 24);
+            checkBox1.TabIndex = 20;
+            checkBox1.Text = "Đang Hoạt Động";
+            checkBox1.UseVisualStyleBackColor = true;
             // 
             // btn_sua
             // 
@@ -196,6 +207,7 @@
             txt_sdt.Name = "txt_sdt";
             txt_sdt.Size = new Size(238, 27);
             txt_sdt.TabIndex = 10;
+            txt_sdt.KeyPress += txt_sdt_KeyPress;
             // 
             // txt_name
             // 
@@ -204,6 +216,7 @@
             txt_name.Name = "txt_name";
             txt_name.Size = new Size(248, 27);
             txt_name.TabIndex = 9;
+            txt_name.KeyPress += txt_name_KeyPress;
             // 
             // label8
             // 
@@ -275,6 +288,7 @@
             txt_seach.Name = "txt_seach";
             txt_seach.Size = new Size(248, 27);
             txt_seach.TabIndex = 22;
+            txt_seach.TextChanged += txt_seach_TextChanged;
             // 
             // label9
             // 
@@ -307,22 +321,11 @@
             label1.TabIndex = 28;
             label1.Text = "Quản Lí Nhân Viên";
             // 
-            // txt_viewpasswork
-            // 
-            txt_viewpasswork.Location = new Point(869, 430);
-            txt_viewpasswork.Name = "txt_viewpasswork";
-            txt_viewpasswork.Size = new Size(141, 29);
-            txt_viewpasswork.TabIndex = 29;
-            txt_viewpasswork.Text = "Hiện Mật Khẩu";
-            txt_viewpasswork.UseVisualStyleBackColor = true;
-            txt_viewpasswork.Click += txt_viewpasswork_Click;
-            // 
             // QuanLiNhanVien
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1028, 697);
-            Controls.Add(txt_viewpasswork);
             Controls.Add(label1);
             Controls.Add(txt_seach);
             Controls.Add(label9);
@@ -333,6 +336,7 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "QuanLiNhanVien";
             Text = "QuanLiNhanVien";
+            Load += QuanLiNhanVien_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
@@ -345,7 +349,6 @@
 
         private DataGridView dataGridView1;
         private GroupBox groupBox1;
-        private Button btn_xoa;
         private Button btn_sua;
         private Button btn_them;
         private DateTimePicker dateTimePicker1;
@@ -367,6 +370,7 @@
         private Label label9;
         private PictureBox pictureBox1;
         private Label label1;
-        private Button txt_viewpasswork;
+        private CheckBox checkBox1;
+        private Button button2;
     }
 }

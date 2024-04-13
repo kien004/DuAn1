@@ -27,33 +27,72 @@ namespace Project_SHOE.View
             }
 
             string Sodienthoai = txt_sdt.Text;
+            string MatkhauCu = textBox1.Text;
             string MatkhauMoi = txt_newpass.Text;
             string XacNhanMatKhau = txt_confirmpass.Text;
 
-           
-            if (MatkhauMoi != XacNhanMatKhau)
-            {
-                MessageBox.Show("Mật khẩu mới và xác nhận mật khẩu không trùng khớp!");
-                return;
-            }
-
+            //check mật khẩu cũ có đúng không
             string connectionString = @"Data Source=HHUNGDZ\SQLEXPRESS;Initial Catalog=CuaHangBanHang_1;Integrated Security=True;TrustServerCertificate=true";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                
-                string query = "UPDATE NHANVIEN SET MATKHAU = @MatKhauMoi WHERE SDT = @SDT";
+                string query = "SELECT * FROM NHANVIEN WHERE SDT = @SDT AND MATKHAU = @MatKhauCu";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@SDT", Sodienthoai);
-                    command.Parameters.AddWithValue("@MatKhauMoi", MatkhauMoi);
+                    command.Parameters.AddWithValue("@MatKhauCu", MatkhauCu);
 
                     connection.Open();
-                    command.ExecuteNonQuery();
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (!reader.HasRows)
+                    {
+                        MessageBox.Show("Mật khẩu cũ không đúng!");
+                        return;
+                    }
+                }
+            }
+            // Kiểm tra mật khẩu mới và xác nhận mật khẩu
+            if (MatkhauMoi != XacNhanMatKhau)
+            {
+                MessageBox.Show("Mật khẩu mới và xác nhận mật khẩu không khớp!");
+                return;
+            }
+
+            // Update mật khẩu mới vào cơ sở dữ liệu
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string updateQuery = "UPDATE NHANVIEN SET MATKHAU = @MatKhauMoi WHERE SDT = @SDT";
+                using (SqlCommand updateCommand = new SqlCommand(updateQuery, connection))
+                {
+                    updateCommand.Parameters.AddWithValue("@MatKhauMoi", MatkhauMoi);
+                    updateCommand.Parameters.AddWithValue("@SDT", Sodienthoai);
+
+                    connection.Open();
+                    int rowsAffected = updateCommand.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show("Đổi mật khẩu thành công!");
+                        // Reset các ô nhập liệu
+                        textBox1.Text = "";
+                        txt_newpass.Text = "";
+                        txt_confirmpass.Text = "";
+                    }
+                    else
+                    {
+                        MessageBox.Show("Đổi mật khẩu thất bại!");
+                    }
                 }
             }
 
-            MessageBox.Show("Mật khẩu đã được cập nhật thành công!");
+
+
+
+
+
+
+
         }
+        //nếu mật khẩu cũ không đúng thì sẽ hiển thị thông báo lỗi
 
         private bool ValidateInput()
         {
@@ -65,11 +104,15 @@ namespace Project_SHOE.View
                 errorMessage += "Số điện thoại không được trống!\n";
                 isValid = false;
             }
-            else if (!ValidatePhoneNumber(txt_sdt.Text)) 
+            // Kiểm tra số điện thoại có hợp lệ không và không được quá 10 kí tự
+            if (!ValidatePhoneNumber(txt_sdt.Text))
             {
                 errorMessage += "Số điện thoại không hợp lệ!\n";
                 isValid = false;
             }
+
+
+          
 
             if (string.IsNullOrEmpty(txt_newpass.Text))
             {
@@ -94,23 +137,30 @@ namespace Project_SHOE.View
         private bool ValidatePhoneNumber(string phoneNumber)
         {
             string regex = @"^[0-9]+$";
-            if(!Regex.IsMatch(phoneNumber, regex))
+            if (!Regex.IsMatch(phoneNumber, regex))
             {
                 MessageBox.Show("Mật khẩu không được có A-Z,a-z và kí tự đặc biệt");
             }
             return Regex.IsMatch(phoneNumber, regex);
         }
 
-        private string GenerateNewPassword() 
+        private string GenerateNewPassword()
         {
-           
+
             string password = "";
             return password;
         }
 
         private void SendEmail(string email, string password) // xóa
         {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
            
+
+            
         }
     }
 }

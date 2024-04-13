@@ -127,8 +127,20 @@ namespace PRL.View
             button1.Enabled = true;
             button2.Enabled = true;
             button3.Enabled = false;
-            _idWhenClick = int.Parse(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString());
-            textBox2.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
+            if (e.RowIndex >= 0 && e.RowIndex < dataGridView1.Rows.Count - 1)
+            {
+                int index = e.RowIndex;
+                var selectChild = dataGridView1.Rows[index];
+                _idWhenClick = int.Parse(selectChild.Cells[1].Value.ToString());
+                textBox2.Text = selectChild.Cells[2].Value.ToString();
+               
+            }
+            else
+            {
+                // Nếu người dùng bấm vào bảng trống hoặc bảng tiêu đề, hiển thị một thông báo
+                MessageBox.Show("Vui lòng chọn một dòng dữ liệu hợp lệ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+           
 
         }
     }

@@ -120,11 +120,11 @@ namespace BUS.Services
         {
             return _repos.GetAllSPCT().ToList();
         }
-        public string GetMauById(int idSanPham)
+        public string GetMauById(int? idSanPham)
         {
             return _repos.GetMauById(idSanPham);
         }
-        public int? GetSizeById(int idKichThuoc)
+        public int? GetSizeById(int? idKichThuoc)
         {
             return _repos.GetSizeById(idKichThuoc);
         }
@@ -144,9 +144,21 @@ namespace BUS.Services
         {
             return _repos.GetByIdSanPham(idSanPhamCT, idSanPham);
         }
-        public string GetTenSanPhamById(int idSanPham)
+        public string GetTenSanPhamById(int? idSanPham)
         {
             return _repos.GetTenSanPhamById(idSanPham);
+        }
+        public int? GetIdSanPhamSPCT(int? id)
+        {
+            return _repos.GetIdSanPhamSPCT(id);
+        }
+        public int? GetIdMauSPCT(int? id)
+        {
+            return _repos.GetIdSanPhamSPCT(id);
+        }
+        public int? GetIdSizeSPCT(int? id)
+        {
+            return _repos.GetIdSanPhamSPCT(id);
         }
         public int GetSanPhamId(string mau1)
         {
@@ -160,6 +172,10 @@ namespace BUS.Services
         {
             return (_repos.DeleteSPCT(id));
         }
+        public int checkspctcotronghoadon(int id)
+        {
+            return _repos.checkspctcotronghoadon(id);
+        }   
 
         public int UpdateSPCT(int id, Sanphamct kh)
         {
@@ -185,7 +201,7 @@ namespace BUS.Services
                                Soluong = spct.Soluong,
                                Dongia = spct.Dongia,
                                IdNhanvien = spct.IdNhanvien,
-                              
+                               TrangThai = spct.Trangthai,
                            };
             return joinData.ToList();
         }
@@ -209,6 +225,7 @@ namespace BUS.Services
                                Soluong = spct.Soluong,
                                Dongia = spct.Dongia,
                                IdNhanvien = spct.IdNhanvien,
+                               TrangThai = spct.Trangthai,
                            };
 
             if (searchCombobox != 0)

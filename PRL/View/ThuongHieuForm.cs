@@ -105,8 +105,15 @@ namespace PRL.View
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            _idWhenClick = int.Parse(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString());
-            textBox2.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
+            if (e.RowIndex >= 0 && e.RowIndex < dataGridView1.Rows.Count - 1)
+            {
+                _idWhenClick = int.Parse(dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString());
+                textBox2.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn dòng khác", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             button1.Enabled = true;
             button2.Enabled = true;
             button3.Enabled = false;

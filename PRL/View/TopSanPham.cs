@@ -1,6 +1,8 @@
 ﻿using BUS.Services;
 using BUS.ViewModel;
-
+using ExcelDataReader;
+using IronXL;
+using System.Data;
 using System.Windows.Forms;
 
 namespace PRL.Views
@@ -8,6 +10,7 @@ namespace PRL.Views
     public partial class TopSanPham : Form
     {
         TopSanPhamService _topSanPhamService = new TopSanPhamService();
+        double tongTien = 0;
 
         public TopSanPham()
         {
@@ -24,7 +27,7 @@ namespace PRL.Views
             if (toDate < fromDate)
             {
                 MessageBox.Show("Ngày kết thúc phải lớn hơn ngày bắt đầu.");
-           DateOnly date1 = DateOnly.FromDateTime(dateTimePicker1.Value);
+                DateOnly date1 = DateOnly.FromDateTime(dateTimePicker1.Value);
                 DateOnly date2 = DateOnly.FromDateTime(dateTimePicker2.Value);
                 return;
             }
@@ -57,36 +60,114 @@ namespace PRL.Views
                     item.soLuong ?? 0,
                     item.tongTien ?? 0,
                     item.TrangThai ?? "N/A",
-                    item.TenThuongHieu ?? "N/A");
+                    item.TenThuongHieu ?? "N/A",
+                    tongTien += item.tongTien);
             }
         }
         private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
         {
-           LoadData(_topSanPhamService.GetTopSellingProducts(DateOnly.FromDateTime(dateTimePicker1.Value),DateOnly.FromDateTime(dateTimePicker2.Value)));
-            
+            LoadData(_topSanPhamService.GetTopSellingProducts(dateTimePicker1.Value, dateTimePicker2.Value));
 
-           
+
+
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-            LoadData(_topSanPhamService.GetTopSellingProducts(DateOnly.FromDateTime(dateTimePicker1.Value), DateOnly.FromDateTime(dateTimePicker2.Value)));
+            LoadData(_topSanPhamService.GetTopSellingProducts(dateTimePicker1.Value, dateTimePicker2.Value));
         }
 
         private void TopSanPham_Load_2(object sender, EventArgs e)
         {
             dateTimePicker1.Value = DateTime.Now.Date;
-            dateTimePicker2.Value = DateTime.Now.Date;
-            LoadData(_topSanPhamService.GetTopSellingProducts(DateOnly.FromDateTime(dateTimePicker1.Value), DateOnly.FromDateTime(dateTimePicker2.Value)));
+            dateTimePicker2.Value = DateTime.Now.Date; LoadData(_topSanPhamService.GetTopSellingProducts(dateTimePicker1.Value, dateTimePicker2.Value));
+            textBox1.Text = tongTien.ToString();
+            textBox1.Enabled = false;
+
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
         {
 
         }
+
+        /// <summary>
+        /// this method will read the excel file and copy its data into a datatable
+        /// </summary>
+        /// <param name="fileName">name of the file</param>
+        /// <returns>DataTable</returns>
+        //private DataTable ReadExcel(string fileName)
+        //{
+        //    WorkBook workbook = WorkBook.Load(fileName);
+        //    //// Work with a single WorkSheet.
+        //    ////you can pass static sheet name like Sheet1 to get that sheet
+        //    ////WorkSheet sheet = workbook.GetWorkSheet("Sheet1");
+        //    //You can also use workbook.DefaultWorkSheet to get default in case you want to get first sheet only
+        //    WorkSheet sheet = workbook.DefaultWorkSheet;
+        //    //Convert the worksheet to System.Data.DataTable
+        //    //Boolean parameter sets the first row as column names of your table.
+        //    return sheet.ToDataTable(true);
+        //}
+
+
+
+
         private void button1_Click(object sender, EventArgs e)
         {
-           
+            //OpenFileDialog file = new OpenFileDialog(); //open dialog to choose file
+            //if (file.ShowDialog() == DialogResult.OK) //if there is a file chosen by the user
+            //{
+            //    string fileExt = Path.GetExtension(file.FileName); //get the file extension
+            //    if (fileExt.CompareTo(".xls") == 0 || fileExt.CompareTo(".xlsx") == 0)
+            //    {
+            //        try
+            //        {
+            //            DataTable dtExcel = ReadExcel(file.FileName); //read excel file
+            //            dgrTopSP.Visible = true;
+            //            dgrTopSP.DataSource = dtExcel;
+
+
+
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            MessageBox.Show(ex.Message.ToString());
+            //        }
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("Please choose .xls or .xlsx file only.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error); //custom messageBox to show error
+            //    }
+            //}
         }
+    
+
+
+
+
+                /// <summary>
+                /// this method will close the windows form
+                /// </summary>
+                /// <param name="sender"></param>
+                /// <param name="e"></param>
+
+
+
+            
+        
+
+
+
+
+
+            private void textBox1_TextChanged(object sender, EventArgs e)
+            {
+
+            }
+
+
+        
     }
 }
+
+

@@ -29,23 +29,18 @@
         private void InitializeComponent()
         {
             groupBox2 = new GroupBox();
+            button1 = new Button();
             button7 = new Button();
             button6 = new Button();
             button5 = new Button();
             button4 = new Button();
             button3 = new Button();
             button2 = new Button();
-            groupBox1 = new GroupBox();
-            label4 = new Label();
-            label2 = new Label();
-            label1 = new Label();
+            label_NhanVien = new Label();
             pictureBox1 = new PictureBox();
-            pictureBox2 = new PictureBox();
-            button1 = new Button();
+            panel1 = new Panel();
             groupBox2.SuspendLayout();
-            groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             // 
             // groupBox2
@@ -61,10 +56,23 @@
             groupBox2.Margin = new Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(4, 3, 4, 3);
-            groupBox2.Size = new Size(312, 650);
+            groupBox2.Size = new Size(312, 672);
             groupBox2.TabIndex = 4;
             groupBox2.TabStop = false;
             groupBox2.Text = "Chức năng";
+            // 
+            // button1
+            // 
+            button1.BackColor = Color.LightSalmon;
+            button1.ForeColor = SystemColors.ActiveCaptionText;
+            button1.Location = new Point(8, 471);
+            button1.Margin = new Padding(4, 3, 4, 3);
+            button1.Name = "button1";
+            button1.Size = new Size(296, 60);
+            button1.TabIndex = 7;
+            button1.Text = "Thống Kê";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click;
             // 
             // button7
             // 
@@ -76,6 +84,7 @@
             button7.TabIndex = 6;
             button7.Text = "Đăng Xuất";
             button7.UseVisualStyleBackColor = false;
+            button7.Click += button7_Click;
             // 
             // button6
             // 
@@ -142,58 +151,19 @@
             button2.UseVisualStyleBackColor = false;
             button2.Click += button2_Click;
             // 
-            // groupBox1
+            // label_NhanVien
             // 
-            groupBox1.Controls.Add(label4);
-            groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(label1);
-            groupBox1.Controls.Add(pictureBox1);
-            groupBox1.Location = new Point(18, 17);
-            groupBox1.Margin = new Padding(4, 3, 4, 3);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(1131, 222);
-            groupBox1.TabIndex = 3;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Tiện ích";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 30F, FontStyle.Bold);
-            label4.ForeColor = SystemColors.HotTrack;
-            label4.Location = new Point(302, 26);
-            label4.Name = "label4";
-            label4.Size = new Size(267, 67);
-            label4.TabIndex = 22;
-            label4.Text = "Trang Chủ";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Arial Rounded MT Bold", 19.8000011F, FontStyle.Italic, GraphicsUnit.Point, 0);
-            label2.ForeColor = Color.DeepSkyBlue;
-            label2.Location = new Point(768, 169);
-            label2.Name = "label2";
-            label2.Size = new Size(240, 39);
-            label2.TabIndex = 2;
-            label2.Text = "Trao Hy Vọng";
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Arial Rounded MT Bold", 19.8000011F, FontStyle.Italic, GraphicsUnit.Point, 0);
-            label1.ForeColor = Color.DeepSkyBlue;
-            label1.Location = new Point(545, 109);
-            label1.Name = "label1";
-            label1.Size = new Size(378, 39);
-            label1.TabIndex = 1;
-            label1.Text = "ShoePro Gửi Niềm Tin";
+            label_NhanVien.AutoSize = true;
+            label_NhanVien.Location = new Point(1282, 9);
+            label_NhanVien.Name = "label_NhanVien";
+            label_NhanVien.Size = new Size(69, 23);
+            label_NhanVien.TabIndex = 39;
+            label_NhanVien.Text = "label11";
             // 
             // pictureBox1
             // 
             pictureBox1.Image = PRL.Properties.Resources.z5226148314135_0842741586d8fa7aca6c0d1cf49c9da2;
-            pictureBox1.Location = new Point(34, 31);
+            pictureBox1.Location = new Point(35, 12);
             pictureBox1.Margin = new Padding(4, 3, 4, 3);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(169, 169);
@@ -201,47 +171,34 @@
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
-            // pictureBox2
+            // panel1
             // 
-            pictureBox2.Image = PRL.Properties.Resources.fd8ce35196281612dd9fa4d50ac8c2e6;
-            pictureBox2.Location = new Point(344, 259);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(805, 638);
-            pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox2.TabIndex = 5;
-            pictureBox2.TabStop = false;
-            // 
-            // button1
-            // 
-            button1.BackColor = Color.LightSalmon;
-            button1.ForeColor = SystemColors.ActiveCaptionText;
-            button1.Location = new Point(8, 471);
-            button1.Margin = new Padding(4, 3, 4, 3);
-            button1.Name = "button1";
-            button1.Size = new Size(296, 60);
-            button1.TabIndex = 7;
-            button1.Text = "Thống Kê";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += button1_Click;
+            panel1.BackgroundImage = PRL.Properties.Resources._3346420938cfb96218d6a88ddcec7ed1;
+            panel1.BackgroundImageLayout = ImageLayout.Stretch;
+            panel1.Location = new Point(337, 12);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1349, 1031);
+            panel1.TabIndex = 5;
             // 
             // TrangChu
             // 
             AutoScaleDimensions = new SizeF(10F, 23F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1165, 902);
-            Controls.Add(pictureBox2);
+            BackColor = Color.PeachPuff;
+            ClientSize = new Size(1724, 1055);
+            Controls.Add(pictureBox1);
+            Controls.Add(label_NhanVien);
+            Controls.Add(panel1);
             Controls.Add(groupBox2);
-            Controls.Add(groupBox1);
             Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 163);
             Margin = new Padding(4, 5, 4, 5);
             Name = "TrangChu";
             Text = "TrangChu";
+            Load += TrangChu_Load;
             groupBox2.ResumeLayout(false);
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -252,12 +209,9 @@
         private Button button4;
         private Button button3;
         private Button button2;
-        private GroupBox groupBox1;
         private PictureBox pictureBox1;
-        private Label label2;
-        private Label label1;
-        private Label label4;
-        private PictureBox pictureBox2;
         private Button button1;
+        private Label label_NhanVien;
+        private Panel panel1;
     }
 }

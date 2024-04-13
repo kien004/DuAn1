@@ -19,7 +19,7 @@ namespace Project_SHOE.Controller.Servicer
         {
             _repos = new NhanvienRepository();
         }
-        public int GetIdNhanVien(int sdt)
+        public int GetIdNhanVien(string sdt)
         {
             return _repos.GetIdNhanVien(sdt);
         }
@@ -80,6 +80,7 @@ namespace Project_SHOE.Controller.Servicer
             clone.IdChucvu = nv.IdChucvu;
             clone.Diachi = nv.Diachi;
             clone.Gioitinh = nv.Gioitinh;
+           clone.Trangthai = nv.Trangthai;
 
             clone.Diachi = nv.Diachi;
             if (_repos.UpdateNV(clone) == true)

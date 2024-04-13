@@ -21,22 +21,16 @@ namespace PRL.Views
         }
         private void LoadData(dynamic data)
         {
-            DateOnly fromDate = DateOnly.FromDateTime(dateTimePicker1.Value);
-            DateOnly toDate = DateOnly.FromDateTime(dateTimePicker2.Value);
+            DateTime fromDate = dateTimePicker1.Value;
+            DateTime toDate = dateTimePicker2.Value;
+
 
 
             if (toDate < fromDate)
             {
-                //dateTimePicker1.Value = DateTime.Now.Date;
-                
-                //dateTimePicker2.Value = DateTime.Now.Date;
-                
-                //dateTimePicker1.Value = DateOnly.FromDateTime(dateTimePicker1.Value).ToDateTime();
-                fromDate = toDate;
+                dateTimePicker1.Value = DateTime.Now.Date;
+                dateTimePicker2.Value = DateTime.Now.Date;
 
-
-                //dateTimePicker2.Value = DateOnly.FromDateTime(dateTimePicker2.Value).ToDateTime();
-                
                 MessageBox.Show("Ngày kết thúc phải lớn hơn ngày bắt đầu.");
               
                 return;
@@ -78,19 +72,20 @@ namespace PRL.Views
         {
             dateTimePicker1.Value = DateTime.Now.Date;
             dateTimePicker2.Value = DateTime.Now.Date;
-            LoadData(services.GetTopCustomers(DateOnly.FromDateTime(dateTimePicker1.Value), DateOnly.FromDateTime(dateTimePicker2.Value)));
+            LoadData(services.GetTopCustomers(dateTimePicker1.Value, dateTimePicker2.Value));
         }
 
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+            private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-           
-            LoadData(services.GetTopCustomers(DateOnly.FromDateTime(dateTimePicker1.Value), DateOnly.FromDateTime(dateTimePicker2.Value)));
+
+            LoadData(services.GetTopCustomers(dateTimePicker1.Value, dateTimePicker2.Value));
         }
 
         private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
         {
-           
-            LoadData(services.GetTopCustomers(DateOnly.FromDateTime(dateTimePicker1.Value), DateOnly.FromDateTime(dateTimePicker2.Value)));
+
+
+            LoadData(services.GetTopCustomers(dateTimePicker1.Value, dateTimePicker2.Value));
         }
     }
 }

@@ -40,7 +40,6 @@
             label3 = new Label();
             label2 = new Label();
             label1 = new Label();
-            pictureBox1 = new PictureBox();
             btn_delete = new Button();
             btn_update = new Button();
             btn_add = new Button();
@@ -50,11 +49,15 @@
             thuonghieuBindingSource = new BindingSource(components);
             menuStrip1 = new MenuStrip();
             sảnPhẩmChiTiếtToolStripMenuItem = new ToolStripMenuItem();
+            thươngHiệuToolStripMenuItem = new ToolStripMenuItem();
+            chấtLiệuToolStripMenuItem = new ToolStripMenuItem();
+            màuSảnPhẩmToolStripMenuItem = new ToolStripMenuItem();
+            loạiSảnPhẩmToolStripMenuItem = new ToolStripMenuItem();
+            màuSảnPhẩmToolStripMenuItem1 = new ToolStripMenuItem();
             label_NhanVien = new Label();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)thuonghieuBindingSource).BeginInit();
             menuStrip1.SuspendLayout();
@@ -105,6 +108,7 @@
             dataGridView1.Size = new Size(869, 257);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellClick += dataGridView1_CellClick;
+            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
             // groupBox1
             // 
@@ -178,15 +182,6 @@
             label1.TabIndex = 0;
             label1.Text = "Mã SP:";
             // 
-            // pictureBox1
-            // 
-            pictureBox1.Location = new Point(14, 35);
-            pictureBox1.Margin = new Padding(3, 4, 3, 4);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(122, 112);
-            pictureBox1.TabIndex = 17;
-            pictureBox1.TabStop = false;
-            // 
             // btn_delete
             // 
             btn_delete.Location = new Point(383, 37);
@@ -258,7 +253,7 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { sảnPhẩmChiTiếtToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { sảnPhẩmChiTiếtToolStripMenuItem, thươngHiệuToolStripMenuItem, chấtLiệuToolStripMenuItem, màuSảnPhẩmToolStripMenuItem, loạiSảnPhẩmToolStripMenuItem, màuSảnPhẩmToolStripMenuItem1 });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(6, 3, 0, 3);
@@ -273,6 +268,41 @@
             sảnPhẩmChiTiếtToolStripMenuItem.Size = new Size(142, 24);
             sảnPhẩmChiTiếtToolStripMenuItem.Text = "Sản Phẩm Chi Tiết";
             sảnPhẩmChiTiếtToolStripMenuItem.Click += sảnPhẩmChiTiếtToolStripMenuItem_Click;
+            // 
+            // thươngHiệuToolStripMenuItem
+            // 
+            thươngHiệuToolStripMenuItem.Name = "thươngHiệuToolStripMenuItem";
+            thươngHiệuToolStripMenuItem.Size = new Size(109, 24);
+            thươngHiệuToolStripMenuItem.Text = "Thương Hiệu";
+            thươngHiệuToolStripMenuItem.Click += thươngHiệuToolStripMenuItem_Click;
+            // 
+            // chấtLiệuToolStripMenuItem
+            // 
+            chấtLiệuToolStripMenuItem.Name = "chấtLiệuToolStripMenuItem";
+            chấtLiệuToolStripMenuItem.Size = new Size(84, 24);
+            chấtLiệuToolStripMenuItem.Text = "Chất Liệu";
+            chấtLiệuToolStripMenuItem.Click += chấtLiệuToolStripMenuItem_Click;
+            // 
+            // màuSảnPhẩmToolStripMenuItem
+            // 
+            màuSảnPhẩmToolStripMenuItem.Name = "màuSảnPhẩmToolStripMenuItem";
+            màuSảnPhẩmToolStripMenuItem.Size = new Size(121, 24);
+            màuSảnPhẩmToolStripMenuItem.Text = "Màu Sản Phẩm";
+            màuSảnPhẩmToolStripMenuItem.Click += màuSảnPhẩmToolStripMenuItem_Click;
+            // 
+            // loạiSảnPhẩmToolStripMenuItem
+            // 
+            loạiSảnPhẩmToolStripMenuItem.Name = "loạiSảnPhẩmToolStripMenuItem";
+            loạiSảnPhẩmToolStripMenuItem.Size = new Size(120, 24);
+            loạiSảnPhẩmToolStripMenuItem.Text = "Loại Sản Phẩm";
+            loạiSảnPhẩmToolStripMenuItem.Click += loạiSảnPhẩmToolStripMenuItem_Click;
+            // 
+            // màuSảnPhẩmToolStripMenuItem1
+            // 
+            màuSảnPhẩmToolStripMenuItem1.Name = "màuSảnPhẩmToolStripMenuItem1";
+            màuSảnPhẩmToolStripMenuItem1.Size = new Size(121, 24);
+            màuSảnPhẩmToolStripMenuItem1.Text = "Màu Sản Phẩm";
+            màuSảnPhẩmToolStripMenuItem1.Click += màuSảnPhẩmToolStripMenuItem1_Click;
             // 
             // label_NhanVien
             // 
@@ -293,7 +323,6 @@
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
-            Controls.Add(pictureBox1);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Margin = new Padding(3, 4, 3, 4);
@@ -305,7 +334,6 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)thuonghieuBindingSource).EndInit();
             menuStrip1.ResumeLayout(false);
@@ -323,7 +351,6 @@
         private Label label3;
         private Label label2;
         private Label label1;
-        private PictureBox pictureBox1;
         private DataGridView dataGridView1;
         private Button btn_delete;
         private Button btn_add;
@@ -337,5 +364,10 @@
         private TextBox txt_TimKiem;
         private ToolStripMenuItem sảnPhẩmChiTiếtToolStripMenuItem;
         private Label label_NhanVien;
+        private ToolStripMenuItem thươngHiệuToolStripMenuItem;
+        private ToolStripMenuItem chấtLiệuToolStripMenuItem;
+        private ToolStripMenuItem màuSảnPhẩmToolStripMenuItem;
+        private ToolStripMenuItem loạiSảnPhẩmToolStripMenuItem;
+        private ToolStripMenuItem màuSảnPhẩmToolStripMenuItem1;
     }
 }

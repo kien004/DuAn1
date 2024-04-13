@@ -11,7 +11,7 @@ namespace DAL.IRepository
     {
         IEnumerable<Hoadon> GetALLHoadons();
         bool AddHoaDon(Hoadon hoadon);
-        bool UpdateHoaDon(int id);
+        bool UpdateHoaDon(string id);
         bool DeleteHoaDon(int id);
     }
 }

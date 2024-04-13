@@ -30,6 +30,7 @@ namespace Project_SHOE.Controller.Servicer
 
             }
         }
+      
         public List<Khachhang> GetAll(string search)
         {
             if (search == null)

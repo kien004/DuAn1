@@ -30,14 +30,23 @@ namespace Project_SHOE.Controller.Repositori
         }
         public bool IsSDTExist(string? sdt)
         {
+            
             // Kiểm tra xem sdt có null không
-            if (sdt == null)
+            if (string.IsNullOrEmpty(sdt))
             {
-                return false; // Trả về false nếu sdt là null
+                return false;
             }
-
-            // Kiểm tra xem có bất kỳ khách hàng nào có số điện thoại như vậy không
-            return _dbContext.Khachhangs.Any(kh => kh.Sdt == sdt);
+            // Kiểm tra xem sdt đã tồn tại trong cơ sở dữ liệu hay chưa
+            var khachhang = _dbContext.Khachhangs.FirstOrDefault(kh => kh.Sdt == sdt);
+            if (khachhang != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+          
         }
 
         public IEnumerable<Khachhang> GetAllKH1()
@@ -57,6 +66,48 @@ namespace Project_SHOE.Controller.Repositori
             else
             {
                 return -1;
+            }
+        }
+        public int GetIdSPCT1( string sdt)
+        {
+            // Tìm kiếm IdKhachhang dựa trên họ và tên và số điện thoại
+            var khachhang = _dbContext.Khachhangs.FirstOrDefault(kh => kh.Sdt == sdt);
+
+            if (khachhang != null)
+            {
+                return khachhang.IdKhachhang;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        public string GetTenKhachHang(int id)
+        {
+            // Tìm kiếm IdKhachhang dựa trên họ và tên và số điện thoại
+            var khachhang = _dbContext.Khachhangs.FirstOrDefault(kh => kh.IdKhachhang == id);
+
+            if (khachhang != null)
+            {
+                return khachhang.Hovaten;
+            }
+            else
+            {
+                return "Fail";
+            }
+        }
+        public string GetDiaChiKhachHang(int id)
+        {
+            // Tìm kiếm IdKhachhang dựa trên họ và tên và số điện thoại
+            var khachhang = _dbContext.Khachhangs.FirstOrDefault(kh => kh.IdKhachhang == id);
+
+            if (khachhang != null)
+            {
+                return khachhang.Diachi;
+            }
+            else
+            {
+                return "Fail";
             }
         }
 

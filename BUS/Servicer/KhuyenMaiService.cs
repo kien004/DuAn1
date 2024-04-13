@@ -85,6 +85,8 @@ namespace Project_SHOE.Controller.Servicer
             clone.Sophantramkhuyenmai = km.Sophantramkhuyenmai;
             clone.Ngaybatdau = km.Ngaybatdau;
             clone.Ngaytao = km.Ngaytao;
+            clone.Soluong = km.Soluong;
+            clone.IdKhuyenmai = km.IdKhuyenmai;
 
 
             if (_repos.UpdateKM(clone) == true)

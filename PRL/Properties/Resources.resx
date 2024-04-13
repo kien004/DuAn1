@@ -118,13 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="fd8ce35196281612dd9fa4d50ac8c2e6" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\fd8ce35196281612dd9fa4d50ac8c2e6.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="z5226148314135_0842741586d8fa7aca6c0d1cf49c9da2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\z5226148314135_0842741586d8fa7aca6c0d1cf49c9da2.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="fe8e1fc15ae197835c2b1411d6d24ba7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\fe8e1fc15ae197835c2b1411d6d24ba7.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="75334c8f3565be116ff15edc4c6b39ec" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\75334c8f3565be116ff15edc4c6b39ec.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fd8ce35196281612dd9fa4d50ac8c2e6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\fd8ce35196281612dd9fa4d50ac8c2e6.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="3346420938cfb96218d6a88ddcec7ed1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\3346420938cfb96218d6a88ddcec7ed1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

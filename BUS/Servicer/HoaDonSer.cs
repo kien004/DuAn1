@@ -28,11 +28,16 @@ namespace BUS.Services
         {
             return _repos.AddHoaDon(hoadon);
         }
+        public bool CheckExistAndMatchIdHoadon(string idHoaDon)
+        {
+            return _repos.CheckExistAndMatchIdHoadon(idHoaDon);
+        }
+
         public bool DeleteHoaDon(int id)
         {
             return _repos.DeleteHoaDon(id);
         }
-        public bool UpdateHoaDon(int id)
+        public bool UpdateHoaDon(string id)
         {
             return _repos.UpdateHoaDon(id);
         }
@@ -42,21 +47,41 @@ namespace BUS.Services
         }
         public List<HoaDon> Getview()
         {
-            var joinData = from Khachhang in khachHangService.GetAllKH()
-                           join HoaDon1 in _repos.GetALLHoadons() on Khachhang.IdKhachhang equals HoaDon1.IdKhachhang
-                           join Khuyenmai in khuyenMaiService.GetALLKhuyenMai() on HoaDon1.IdKhuyenmai equals Khuyenmai.IdKhuyenmai
+            var joinData = from hoadon in _repos.GetALLHoadons()
+                           join khachhang in khachHangService.GetAllKH() on hoadon.IdKhachhang equals khachhang.IdKhachhang
                            select new HoaDon
                            {
-                               IdHoaDon = HoaDon1.IdHoadon,
-                               NgayTao = HoaDon1.Ngaytao,
-                               TongTien = HoaDon1.Tongtien,
-                               TenKhachHang = Khachhang.Hovaten,
-                               SoDienThoai = Khachhang.Sdt,
-                               DiaChi = Khachhang.Diachi,
-                               IdKhuyenMai = Khuyenmai.IdKhuyenmai,
-                               TrangThai = HoaDon1.Trangthai,
+                               IdHoaDon = hoadon.IdHoadon,
+                               IdKhuyenMai = hoadon.IdKhuyenmai,
+                               NgayTao = hoadon.Ngaytao.Value.Date,
+                               TongTien = hoadon.Tongtien.Value,
+                               SoDienThoai = khachhang.Sdt,
+                               idnhanvien = hoadon.IdNhanvien.Value,
+                               PhuongThucThanhToan = hoadon.Phuongthucthanhtoan,
+                               TrangThai = hoadon.Trangthai,
                            };
             return joinData.ToList();
+        }
+        public List<HoaDon> GetSearch1(string searchText)
+        {
+            var joinData = from hoadon in _repos.GetALLHoadons()
+                           join khachhang in khachHangService.GetAllKH() on hoadon.IdKhachhang equals khachhang.IdKhachhang
+                           select new HoaDon
+                           {
+                               IdHoaDon = hoadon.IdHoadon,
+                               IdKhuyenMai = hoadon.IdKhuyenmai,
+                               NgayTao = hoadon.Ngaytao.Value.Date,
+                               TongTien = hoadon.Tongtien.Value,
+                               SoDienThoai = khachhang.Sdt,
+                               idnhanvien = hoadon.IdNhanvien.Value,
+                               PhuongThucThanhToan = hoadon.Phuongthucthanhtoan,
+                               TrangThai = hoadon.Trangthai,
+                           };
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                return joinData.ToList();
+            }
+            return joinData.Where(c => c.SoDienThoai.Contains(searchText)).ToList();
         }
     }
 }

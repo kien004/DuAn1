@@ -36,13 +36,15 @@
             txt_newpass = new TextBox();
             txt_confirmpass = new TextBox();
             label1 = new Label();
+            textBox1 = new TextBox();
+            label5 = new Label();
             SuspendLayout();
             // 
             // label2
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
-            label2.Location = new Point(41, 146);
+            label2.Location = new Point(41, 95);
             label2.Name = "label2";
             label2.Size = new Size(130, 25);
             label2.TabIndex = 1;
@@ -71,7 +73,7 @@
             // button1
             // 
             button1.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
-            button1.Location = new Point(223, 311);
+            button1.Location = new Point(219, 324);
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
             button1.TabIndex = 4;
@@ -81,7 +83,7 @@
             // 
             // txt_sdt
             // 
-            txt_sdt.Location = new Point(248, 147);
+            txt_sdt.Location = new Point(248, 96);
             txt_sdt.Name = "txt_sdt";
             txt_sdt.Size = new Size(242, 27);
             txt_sdt.TabIndex = 5;
@@ -105,17 +107,37 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 19.8000011F, FontStyle.Bold, GraphicsUnit.Point, 163);
             label1.ForeColor = SystemColors.HotTrack;
-            label1.Location = new Point(133, 59);
+            label1.Location = new Point(133, 19);
             label1.Name = "label1";
             label1.Size = new Size(269, 46);
             label1.TabIndex = 22;
             label1.Text = "Quên Mật Khẩu";
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(246, 145);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(242, 27);
+            textBox1.TabIndex = 24;
+            textBox1.TextChanged += textBox1_TextChanged;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold);
+            label5.Location = new Point(39, 144);
+            label5.Name = "label5";
+            label5.Size = new Size(122, 25);
+            label5.TabIndex = 23;
+            label5.Text = "Mật Khẩu Cũ";
             // 
             // ResetPass
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(534, 365);
+            Controls.Add(textBox1);
+            Controls.Add(label5);
             Controls.Add(label1);
             Controls.Add(txt_confirmpass);
             Controls.Add(txt_newpass);
@@ -139,5 +161,7 @@
         private TextBox txt_newpass;
         private TextBox txt_confirmpass;
         private Label label1;
+        private TextBox textBox1;
+        private Label label5;
     }
 }
